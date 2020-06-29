@@ -1,7 +1,6 @@
 package com.asuka.common.system.dao;
 
 import org.beetl.sql.core.mapper.BaseMapper;
-import com.asuka.common.core.web.PageParam;
 import com.asuka.common.system.entity.Organization;
 
 
@@ -14,14 +13,6 @@ import java.util.Map;
  */
 public interface OrganizationDao extends BaseMapper<Organization> {
 
-    /**
-     * 分页查询
-     */
-    List<Organization> listPage(PageParam<Organization> page);
 
-    /**
-     * 查询全部
-     */
-    List<Organization> listAll(Map<String, Object> page);
 
 }

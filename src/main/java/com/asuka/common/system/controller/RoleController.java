@@ -1,13 +1,15 @@
 package com.asuka.common.system.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
 import com.asuka.common.core.utils.CoreUtil;
+import com.asuka.common.system.entity.Dictionary;
+import com.asuka.common.system.entity.DictionaryData;
 import com.asuka.common.system.entity.Role;
-import com.asuka.common.system._service.RoleService;
+import com.asuka.common.system.service.RoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.beetl.sql.core.engine.PageQuery;
+import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +23,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping("/sys/role")
-public class RoleController extends BaseController {
-    @Autowired
-    private RoleService roleService;
+public class RoleController extends BaseQueryController<Role, RoleService> {
 
     @RequiresPermissions("sys:role:view")
     @RequestMapping()
@@ -39,8 +39,8 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<Role> page(HttpServletRequest request) {
-        PageParam<Role> pageParam = new PageParam<>(request);
-        return new PageResult<>(roleService.page(pageParam, pageParam.getWrapper()).getRecords(), pageParam.getTotal());
+        PageQuery<Role> query = createPageQuery(request);
+        return new PageResult<Role>(query.getList(), query.getTotalRow());
     }
 
     /**
@@ -51,8 +51,9 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
-        PageParam<Role> pageParam = new PageParam<>(request);
-        return JsonResult.ok().setData(roleService.list(pageParam.getOrderWrapper()));
+        Query<Role> query = createQuery(request);
+        List<Role> records = service.queryAll(query);
+        return JsonResult.ok().setData(records);
     }
 
     /**
@@ -63,7 +64,7 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
-        return JsonResult.ok().setData(roleService.getById(id));
+        return JsonResult.ok().setData(service.queryById(id));
     }
 
     /**
@@ -74,13 +75,15 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Role role) {
-        if (roleService.count(new QueryWrapper<Role>().eq("role_code", role.getRoleCode())) > 0) {
+        long codeCnt = service.lambdaQuery().andEq(Role::getRoleCode, role.getRoleCode()).count();
+        if (codeCnt > 0) {
             return JsonResult.error("角色标识已存在");
         }
-        if (roleService.count(new QueryWrapper<Role>().eq("role_name", role.getRoleName())) > 0) {
+        long nameCnt = service.lambdaQuery().andEq(Role::getRoleName, role.getRoleName()).count();
+        if (nameCnt > 0) {
             return JsonResult.error("角色名称已存在");
         }
-        if (roleService.save(role)) {
+        if (service.save(role)) {
             return JsonResult.ok("添加成功");
         }
         return JsonResult.error("添加失败");
@@ -94,15 +97,21 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(Role role) {
-        if (role.getRoleCode() != null && roleService.count(new QueryWrapper<Role>().eq("role_code", role.getRoleCode())
-                .ne("role_id", role.getRoleId())) > 0) {
+        long codeCnt = service.lambdaQuery()
+                .andEq(Role::getRoleCode, role.getRoleCode())
+                .andNotEq(Role::getRoleId, role.getRoleId())
+                .count();
+        if (codeCnt > 0) {
             return JsonResult.error("角色标识已存在");
         }
-        if (role.getRoleName() != null && roleService.count(new QueryWrapper<Role>().eq("role_name", role.getRoleName())
-                .ne("role_id", role.getRoleId())) > 0) {
+        long nameCnt = service.lambdaQuery()
+                .andEq(Role::getRoleName, role.getRoleName())
+                .andNotEq(Role::getRoleId, role.getRoleId())
+                .count();
+        if (nameCnt > 0) {
             return JsonResult.error("角色名称已存在");
         }
-        if (roleService.updateById(role)) {
+        if (service.update(role)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");
@@ -116,7 +125,7 @@ public class RoleController extends BaseController {
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
-        if (roleService.removeById(id)) {
+        if (service.deleteById(id)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");
@@ -138,15 +147,15 @@ public class RoleController extends BaseController {
         sb.append(CoreUtil.listCheckRepeat(list, "roleName", "角色名称"));
         if (sb.length() != 0) return JsonResult.error(sb.toString());
         // 数据库层面校验
-        if (roleService.count(new QueryWrapper<Role>().in("role_code",
-                list.stream().map(Role::getRoleCode).collect(Collectors.toList()))) > 0) {
+        long codeCnt = service.lambdaQuery().andIn(Role::getRoleCode, list.stream().map(Role::getRoleCode).collect(Collectors.toList())).count();
+        if (codeCnt > 0) {
             return JsonResult.error("角色标识已存在");
         }
-        if (roleService.count(new QueryWrapper<Role>().in("role_name",
-                list.stream().map(Role::getRoleName).collect(Collectors.toList()))) > 0) {
+        long nameCnt = service.lambdaQuery().andIn(Role::getRoleName, list.stream().map(Role::getRoleName).collect(Collectors.toList())).count();
+        if (nameCnt > 0) {
             return JsonResult.error("角色名称已存在");
         }
-        if (roleService.saveBatch(list)) {
+        if (service.saveBatch(list)) {
             return JsonResult.ok("添加成功");
         }
         return JsonResult.error("添加失败");
@@ -159,8 +168,8 @@ public class RoleController extends BaseController {
     @RequiresPermissions("sys:role:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
-    public JsonResult removeBatch(@RequestBody List<Integer> ids) {
-        if (roleService.removeByIds(ids)) {
+    public JsonResult removeBatch(@RequestBody List<Long> ids) {
+        if (service.deleteBatchById(ids)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");

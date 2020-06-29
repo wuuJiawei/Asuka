@@ -16,6 +16,9 @@ public class OperRecordService extends BaseService<OperRecord, OperRecordDao> {
 
     @Async
     public void saveAsync(OperRecord operRecord) {
+        if (operRecord.getState() == null) {
+            operRecord.setState(0);
+        }
         dao().insert(operRecord);
     }
 

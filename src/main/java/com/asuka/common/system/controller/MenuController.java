@@ -2,10 +2,11 @@ package com.asuka.common.system.controller;
 
 import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
+import com.asuka.common.system.entity.DictionaryData;
 import com.asuka.common.system.entity.Menu;
-import com.asuka.common.system._service.MenuService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.beetl.sql.core.engine.PageQuery;
+import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +19,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/sys/menu")
-public class MenuController extends BaseController {
-    @Autowired
-    private MenuService menuService;
+public class MenuController extends BaseQueryController<Menu, com.asuka.common.system.service.MenuService> {
 
     @RequiresPermissions("sys:menu:view")
     @RequestMapping()
@@ -36,9 +35,8 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<Menu> page(HttpServletRequest request) {
-        PageParam<Menu> pageParam = new PageParam<>(request);
-        pageParam.setDefaultOrder(new String[]{"sort_number"}, null);
-        return menuService.listPage(pageParam);
+        PageQuery<Menu> query = createPageQuery(request);
+        return new PageResult<>(query.getList(), query.getTotalRow());
     }
 
     /**
@@ -49,9 +47,9 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
-        PageParam<Menu> pageParam = new PageParam<>(request);
-        pageParam.setDefaultOrder(new String[]{"sort_number"}, null);
-        return JsonResult.ok().setData(menuService.list(pageParam.getOrderWrapper()));
+        Query<Menu> query = createQuery(request);
+        List<Menu> records = service.queryAll(query);
+        return JsonResult.ok().setData(records);
     }
 
     /**
@@ -62,7 +60,7 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
-        return JsonResult.ok().setData(menuService.getById(id));
+        return JsonResult.ok().setData(service.queryById(id));
     }
 
     /**
@@ -73,7 +71,7 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Menu menu) {
-        if (menuService.save(menu)) {
+        if (service.save(menu)) {
             return JsonResult.ok("添加成功");
         }
         return JsonResult.error("添加失败");
@@ -87,7 +85,7 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(Menu menu) {
-        if (menuService.updateById(menu)) {
+        if (service.update(menu)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");
@@ -101,7 +99,7 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
-        if (menuService.removeById(id)) {
+        if (service.deleteById(id)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");
@@ -115,7 +113,7 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/saveBatch")
     public JsonResult saveBatch(@RequestBody List<Menu> menuList) {
-        if (menuService.saveBatch(menuList)) {
+        if (service.saveBatch(menuList)) {
             return JsonResult.ok("添加成功");
         }
         return JsonResult.error("添加失败");
@@ -128,8 +126,8 @@ public class MenuController extends BaseController {
     @RequiresPermissions("sys:menu:update")
     @ResponseBody
     @RequestMapping("/updateBatch")
-    public JsonResult updateBatch(@RequestBody BatchParam<Menu> batchParam) {
-        if (batchParam.update(menuService, "menu_id")) {
+    public JsonResult updateBatch(@RequestBody List<Menu> list) {
+        if (service.updateTemplateBatch(list)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");
@@ -142,8 +140,8 @@ public class MenuController extends BaseController {
     @RequiresPermissions("sys:menu:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
-    public JsonResult removeBatch(@RequestBody List<Integer> ids) {
-        if (menuService.removeByIds(ids)) {
+    public JsonResult removeBatch(@RequestBody List<Long> ids) {
+        if (service.deleteBatchById(ids)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");

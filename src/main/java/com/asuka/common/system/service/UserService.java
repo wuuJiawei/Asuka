@@ -2,12 +2,7 @@ package com.asuka.common.system.service;
 
 import com.asuka.common.core.exception.BusinessException;
 import com.asuka.common.core.web.BaseService;
-import com.asuka.common.core.web.PageParam;
-import com.asuka.common.core.web.PageResult;
-import com.asuka.common.system.service.UserRoleService;
-import com.asuka.common.system.dao.MenuDao;
 import com.asuka.common.system.dao.UserDao;
-import com.asuka.common.system.dao.UserRoleDao;
 import com.asuka.common.system.entity.Menu;
 import com.asuka.common.system.entity.Role;
 import com.asuka.common.system.entity.User;

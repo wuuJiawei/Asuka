@@ -1,7 +1,6 @@
 package com.asuka.common.system.dao;
 
 import org.beetl.sql.core.mapper.BaseMapper;
-import com.asuka.common.core.web.PageParam;
 import com.asuka.common.system.entity.User;
 
 

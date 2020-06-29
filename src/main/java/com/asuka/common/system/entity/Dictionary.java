@@ -1,6 +1,8 @@
 package com.asuka.common.system.entity;
 
 import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Table;
+import org.beetl.sql.core.annotatoin.Tail;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -9,6 +11,8 @@ import java.io.Serializable;
  * 字典
  * Created by wangfan on 2020-03-14 11:29:03
  */
+@Table(name = "sys_dictionary")
+@Tail
 public class Dictionary implements Serializable {
     private static final long serialVersionUID = 1L;
     /**

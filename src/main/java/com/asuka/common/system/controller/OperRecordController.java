@@ -1,14 +1,13 @@
 package com.asuka.common.system.controller;
 
 import com.asuka.common.core.annotation.OperLog;
-import com.asuka.common.core.web.BaseController;
-import com.asuka.common.core.web.JsonResult;
-import com.asuka.common.core.web.PageParam;
-import com.asuka.common.core.web.PageResult;
+import com.asuka.common.core.web.*;
+import com.asuka.common.system.entity.Dictionary;
+import com.asuka.common.system.entity.DictionaryData;
 import com.asuka.common.system.entity.OperRecord;
-import com.asuka.common.system._service.OperRecordService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.beetl.sql.core.engine.PageQuery;
+import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,9 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/sys/operRecord")
-public class OperRecordController extends BaseController {
-    @Autowired
-    private OperRecordService operLogService;
+public class OperRecordController extends BaseQueryController<OperRecord, com.asuka.common.system.service.OperRecordService> {
 
     @RequiresPermissions("sys:oper_record:view")
     @RequestMapping()
@@ -40,9 +37,8 @@ public class OperRecordController extends BaseController {
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<OperRecord> page(HttpServletRequest request) {
-        PageParam<OperRecord> pageParam = new PageParam<>(request);
-        pageParam.setDefaultOrder(null, new String[]{"create_time"});
-        return operLogService.listPage(pageParam);
+        PageQuery<OperRecord> query = createPageQuery(request);
+        return new PageResult<>(query.getList(), query.getTotalRow());
     }
 
     /**
@@ -53,9 +49,9 @@ public class OperRecordController extends BaseController {
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
-        PageParam<OperRecord> pageParam = new PageParam<>(request);
-        List<OperRecord> records = operLogService.listAll(pageParam.getNoPageParam());
-        return JsonResult.ok().setData(pageParam.sortRecords(records));
+        Query<OperRecord> query = createQuery(request);
+        List<OperRecord> records = service.queryAll(query);
+        return JsonResult.ok().setData(records);
     }
 
     /**
@@ -66,10 +62,7 @@ public class OperRecordController extends BaseController {
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
-        PageParam<OperRecord> pageParam = new PageParam<>();
-        pageParam.put("id", id);
-        List<OperRecord> records = operLogService.listAll(pageParam.getNoPageParam());
-        return JsonResult.ok().setData(pageParam.getOne(records));
+        return JsonResult.ok().setData(service.queryById(id));
     }
 
 }

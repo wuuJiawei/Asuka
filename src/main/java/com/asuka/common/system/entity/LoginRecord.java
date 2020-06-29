@@ -2,6 +2,7 @@ package com.asuka.common.system.entity;
 
 import org.beetl.sql.core.TailBean;
 import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Table;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
  * 登录日志
  * Created by wangfan on 2018-12-24 16:10
  */
+@Table(name = "sys_login_record")
 public class LoginRecord extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final int TYPE_LOGIN = 0;  // 登录

@@ -2,6 +2,7 @@ package com.asuka.common.system.entity;
 
 import org.beetl.sql.core.TailBean;
 import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Table;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
  * 角色
  * Created by AutoGenerator on 2018-12-24 16:10
  */
+@Table(name = "sys_role")
 public class Role extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     /**

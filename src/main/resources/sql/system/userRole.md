@@ -1,9 +1,9 @@
 listByUserIds
 ===
-        SELECT a.user_id, b.* FROM sys_user_role a
+        SELECT a.user_id, b.* 
+        FROM sys_user_role a
         LEFT JOIN sys_role b ON a.role_id=b.role_id
-        WHERE a.user_id IN
-        #join(userIds)#
+        WHERE a.user_id IN ( #join(userIds)# )
         AND b.deleted=0
 
 

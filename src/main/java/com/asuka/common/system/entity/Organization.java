@@ -1,6 +1,7 @@
 package com.asuka.common.system.entity;
 
 import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Table;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * 组织机构
  * Created by AutoGenerator on 2020-03-14 11:29:04
  */
+@Table(name = "sys_organization")
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
     /**

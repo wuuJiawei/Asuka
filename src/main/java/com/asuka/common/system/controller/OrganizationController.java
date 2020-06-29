@@ -1,14 +1,17 @@
 package com.asuka.common.system.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
+import com.asuka.common.system.entity.Dictionary;
+import com.asuka.common.system.entity.DictionaryData;
 import com.asuka.common.system.entity.Organization;
-import com.asuka.common.system._service.DictionaryDataService;
-import com.asuka.common.system._service.OrganizationService;
-import com.asuka.common.system._service.RoleService;
+import com.asuka.common.system.service.DictionaryDataService;
+import com.asuka.common.system.service.OrganizationService;
+import com.asuka.common.system.service.RoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.beetl.sql.core.engine.PageQuery;
+import org.beetl.sql.core.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +26,8 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/sys/organization")
-public class OrganizationController extends BaseController {
-    @Autowired
-    private OrganizationService organizationService;
+public class OrganizationController extends BaseQueryController<Organization, OrganizationService> {
+
     @Autowired
     private DictionaryDataService dictionaryDataService;
     @Autowired
@@ -36,7 +38,7 @@ public class OrganizationController extends BaseController {
     public String view(Model model) {
         model.addAttribute("sexList", dictionaryDataService.listByDictCode("sex"));
         model.addAttribute("organizationTypeList", dictionaryDataService.listByDictCode("organization_type"));
-        model.addAttribute("rolesJson", JSON.toJSONString(roleService.list()));
+        model.addAttribute("rolesJson", JSON.toJSONString(roleService.dao().all()));
         return "system/organization.html";
     }
 
@@ -48,8 +50,8 @@ public class OrganizationController extends BaseController {
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<Organization> page(HttpServletRequest request) {
-        PageParam<Organization> pageParam = new PageParam<>(request);
-        return organizationService.listPage(pageParam);
+        PageQuery<Organization> query = createPageQuery(request);
+        return new PageResult<Organization>(query.getList(), query.getTotalRow());
     }
 
     /**
@@ -60,9 +62,9 @@ public class OrganizationController extends BaseController {
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
-        PageParam<Organization> pageParam = new PageParam<>(request);
-        List<Organization> records = organizationService.listAll(pageParam.getNoPageParam());
-        return JsonResult.ok().setData(pageParam.sortRecords(records));
+        Query<Organization> query = createQuery(request);
+        List<Organization> records = service.queryAll(query);
+        return JsonResult.ok().setData(records);
     }
 
     /**
@@ -73,10 +75,7 @@ public class OrganizationController extends BaseController {
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
-        PageParam<Organization> pageParam = new PageParam<>();
-        pageParam.put("organizationId", id);
-        List<Organization> records = organizationService.listAll(pageParam.getNoPageParam());
-        return JsonResult.ok().setData(pageParam.getOne(records));
+        return JsonResult.ok().setData(service.queryById(id));
     }
 
     /**
@@ -87,13 +86,17 @@ public class OrganizationController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult add(Organization organization) {
-        if (organization.getParentId() == null) organization.setParentId(0);
-        if (organizationService.count(new QueryWrapper<Organization>()
-                .eq("organization_name", organization.getOrganizationName())
-                .eq("parent_id", organization.getParentId())) > 0) {
+        if (organization.getParentId() == null) {
+            organization.setParentId(0);
+        }
+        long nameCnt = service.lambdaQuery()
+                .andEq(Organization::getOrganizationName, organization.getOrganizationName())
+                .andEq(Organization::getParentId, organization.getParentId())
+                .count();
+        if (nameCnt > 0) {
             return JsonResult.error("机构名称已存在");
         }
-        if (organizationService.save(organization)) {
+        if (service.save(organization)) {
             return JsonResult.ok("添加成功");
         }
         return JsonResult.error("添加失败");
@@ -108,15 +111,19 @@ public class OrganizationController extends BaseController {
     @RequestMapping("/update")
     public JsonResult update(Organization organization) {
         if (organization.getOrganizationName() != null) {
-            if (organization.getParentId() == null) organization.setParentId(0);
-            if (organizationService.count(new QueryWrapper<Organization>()
-                    .eq("organization_name", organization.getOrganizationName())
-                    .eq("parent_id", organization.getParentId())
-                    .ne("organization_id", organization.getOrganizationId())) > 0) {
+            if (organization.getParentId() == null) {
+                organization.setParentId(0);
+            }
+            long nameCnt = service.lambdaQuery()
+                    .andEq(Organization::getOrganizationName, organization.getOrganizationName())
+                    .andEq(Organization::getParentId, organization.getParentId())
+                    .andNotEq(Organization::getOrganizationId, organization.getOrganizationId())
+                    .count();
+            if (nameCnt > 0) {
                 return JsonResult.error("机构名称已存在");
             }
         }
-        if (organizationService.updateById(organization)) {
+        if (service.update(organization)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");
@@ -130,7 +137,7 @@ public class OrganizationController extends BaseController {
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
-        if (organizationService.removeById(id)) {
+        if (service.deleteById(id)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");
@@ -144,7 +151,7 @@ public class OrganizationController extends BaseController {
     @ResponseBody
     @RequestMapping("/saveBatch")
     public JsonResult saveBatch(@RequestBody List<Organization> organizationList) {
-        if (organizationService.saveBatch(organizationList)) {
+        if (service.saveBatch(organizationList)) {
             return JsonResult.ok("添加成功");
         }
         return JsonResult.error("添加失败");
@@ -157,8 +164,8 @@ public class OrganizationController extends BaseController {
     @RequiresPermissions("sys:org:update")
     @ResponseBody
     @RequestMapping("/updateBatch")
-    public JsonResult updateBatch(@RequestBody BatchParam<Organization> batchParam) {
-        if (batchParam.update(organizationService, "organization_id")) {
+    public JsonResult updateBatch(@RequestBody List<Organization> list) {
+        if (service.updateTemplateBatch(list)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");
@@ -171,8 +178,8 @@ public class OrganizationController extends BaseController {
     @RequiresPermissions("sys:org:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
-    public JsonResult removeBatch(@RequestBody List<Integer> ids) {
-        if (organizationService.removeByIds(ids)) {
+    public JsonResult removeBatch(@RequestBody List<Long> ids) {
+        if (service.deleteBatchById(ids)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");

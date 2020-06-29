@@ -157,8 +157,8 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
     @RequiresPermissions("sys:dict:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
-    public JsonResult removeBatch(@RequestBody List<Integer> ids) {
-        if (service.forceDelete(ids)) {
+    public JsonResult removeBatch(@RequestBody List<Long> ids) {
+        if (service.deleteBatchById(ids)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");

@@ -2,6 +2,7 @@ package com.asuka.common.system.entity;
 
 import org.beetl.sql.core.TailBean;
 import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Table;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.io.Serializable;
  * 字典项
  * Created by wangfan on 2020-03-14 11:29:04
  */
+@Table(name = "sys_dictionary_data")
 public class DictionaryData extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     /**

@@ -1,12 +1,13 @@
 package com.asuka.common.system.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.asuka.common.system.entity.Dictionary;
+import com.asuka.common.system.service.DictionaryDataService;
 import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
 import com.asuka.common.system.entity.DictionaryData;
-import com.asuka.common.system._service.DictionaryDataService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.beetl.sql.core.engine.PageQuery;
+import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/sys/dictdata")
-public class DictionaryDataController extends BaseController {
-    @Autowired
-    private DictionaryDataService dictionaryDataService;
+public class DictionaryDataController extends BaseQueryController<DictionaryData, DictionaryDataService> {
 
     /**
      * 分页查询字典项
@@ -31,8 +30,8 @@ public class DictionaryDataController extends BaseController {
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<DictionaryData> page(HttpServletRequest request) {
-        PageParam<DictionaryData> pageParam = new PageParam<>(request);
-        return dictionaryDataService.listPage(pageParam);
+        PageQuery<DictionaryData> query = createPageQuery(request);
+        return new PageResult<>(query.getList(), query.getTotalRow());
     }
 
     /**
@@ -43,9 +42,9 @@ public class DictionaryDataController extends BaseController {
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
-        PageParam<DictionaryData> pageParam = new PageParam<>(request);
-        List<DictionaryData> records = dictionaryDataService.listAll(pageParam.getNoPageParam());
-        return JsonResult.ok().setData(pageParam.sortRecords(records));
+        Query<DictionaryData> query = createQuery(request);
+        List<DictionaryData> records = service.queryAll(query);
+        return JsonResult.ok().setData(records);
     }
 
     /**
@@ -56,10 +55,7 @@ public class DictionaryDataController extends BaseController {
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
-        PageParam<DictionaryData> pageParam = new PageParam<>();
-        pageParam.put("dictDataId", id);
-        List<DictionaryData> records = dictionaryDataService.listAll(pageParam.getNoPageParam());
-        return JsonResult.ok().setData(pageParam.getOne(records));
+        return JsonResult.ok().setData(service.queryById(id));
     }
 
     /**
@@ -70,17 +66,15 @@ public class DictionaryDataController extends BaseController {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult add(DictionaryData dictionaryData) {
-        if (dictionaryDataService.count(new QueryWrapper<DictionaryData>()
-                .eq("dict_id", dictionaryData.getDictId())
-                .eq("dict_data_name", dictionaryData.getDictDataName())) > 0) {
+        long nameCnt = service.lambdaQuery().andEq(DictionaryData::getDictId, dictionaryData.getDictId()).andEq(DictionaryData::getDictDataName, dictionaryData.getDictDataName()).count();
+        if (nameCnt > 0) {
             return JsonResult.error("字典项名称已存在");
         }
-        if (dictionaryDataService.count(new QueryWrapper<DictionaryData>()
-                .eq("dict_id", dictionaryData.getDictId())
-                .eq("dict_data_code", dictionaryData.getDictDataCode())) > 0) {
+        long codeCnt = service.lambdaQuery().andEq(DictionaryData::getDictId, dictionaryData.getDictId()).andEq(DictionaryData::getDictDataCode, dictionaryData.getDictDataCode()).count();
+        if (codeCnt > 0) {
             return JsonResult.error("字典项标识已存在");
         }
-        if (dictionaryDataService.save(dictionaryData)) {
+        if (service.save(dictionaryData)) {
             return JsonResult.ok("添加成功");
         }
         return JsonResult.error("添加失败");
@@ -94,19 +88,23 @@ public class DictionaryDataController extends BaseController {
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(DictionaryData dictionaryData) {
-        if (dictionaryDataService.count(new QueryWrapper<DictionaryData>()
-                .eq("dict_id", dictionaryData.getDictId())
-                .eq("dict_data_name", dictionaryData.getDictDataName())
-                .ne("dict_data_id", dictionaryData.getDictDataId())) > 0) {
+        long nameCnt = service.lambdaQuery()
+                .andEq(DictionaryData::getDictId, dictionaryData.getDictId())
+                .andEq(DictionaryData::getDictDataName, dictionaryData.getDictDataName())
+                .andNotEq(DictionaryData::getDictDataId, dictionaryData.getDictDataId())
+                .count();
+        if (nameCnt > 0) {
             return JsonResult.error("字典项名称已存在");
         }
-        if (dictionaryDataService.count(new QueryWrapper<DictionaryData>()
-                .eq("dict_id", dictionaryData.getDictId())
-                .eq("dict_data_code", dictionaryData.getDictDataCode())
-                .ne("dict_data_id", dictionaryData.getDictDataId())) > 0) {
+        long codeCnt = service.lambdaQuery()
+                .andEq(DictionaryData::getDictId, dictionaryData.getDictId())
+                .andEq(DictionaryData::getDictDataCode, dictionaryData.getDictDataCode())
+                .andNotEq(DictionaryData::getDictDataId, dictionaryData.getDictDataId())
+                .count();
+        if (codeCnt > 0) {
             return JsonResult.error("字典项标识已存在");
         }
-        if (dictionaryDataService.updateById(dictionaryData)) {
+        if (service.update(dictionaryData)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");
@@ -120,7 +118,7 @@ public class DictionaryDataController extends BaseController {
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
-        if (dictionaryDataService.removeById(id)) {
+        if (service.deleteById(id)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");
@@ -134,7 +132,7 @@ public class DictionaryDataController extends BaseController {
     @ResponseBody
     @RequestMapping("/saveBatch")
     public JsonResult saveBatch(@RequestBody List<DictionaryData> dictDataList) {
-        if (dictionaryDataService.saveBatch(dictDataList)) {
+        if (service.saveBatch(dictDataList)) {
             return JsonResult.ok("添加成功");
         }
         return JsonResult.error("添加失败");
@@ -147,8 +145,8 @@ public class DictionaryDataController extends BaseController {
     @RequiresPermissions("sys:dict:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
-    public JsonResult removeBatch(@RequestBody List<Integer> ids) {
-        if (dictionaryDataService.removeByIds(ids)) {
+    public JsonResult removeBatch(@RequestBody List<Long> ids) {
+        if (service.deleteBatchById(ids)) {
             return JsonResult.ok("删除成功");
         }
         return JsonResult.error("删除失败");

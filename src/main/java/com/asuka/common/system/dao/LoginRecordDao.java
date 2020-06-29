@@ -1,7 +1,6 @@
 package com.asuka.common.system.dao;
 
 import org.beetl.sql.core.mapper.BaseMapper;
-import com.asuka.common.core.web.PageParam;
 import com.asuka.common.system.entity.LoginRecord;
 
 
@@ -14,14 +13,6 @@ import java.util.Map;
  */
 public interface LoginRecordDao extends BaseMapper<LoginRecord> {
 
-    /**
-     * 分页查询
-     */
-    List<LoginRecord> listPage(PageParam<LoginRecord> page);
 
-    /**
-     * 查询全部
-     */
-    List<LoginRecord> listAll(Map<String, Object> page);
 
 }

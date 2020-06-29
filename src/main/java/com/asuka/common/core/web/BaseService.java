@@ -2,10 +2,7 @@ package com.asuka.common.core.web;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.asuka.common.system.entity.Dictionary;
 import org.beetl.sql.core.SQLManager;
@@ -15,6 +12,7 @@ import org.beetl.sql.core.mapper.BaseMapper;
 import org.beetl.sql.core.query.LambdaQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service基类
@@ -47,6 +45,24 @@ public class BaseService<T, S extends BaseMapper<T>> {
      */
     public LambdaQuery<T> lambdaQuery() {
         return dao.createLambdaQuery();
+    }
+
+    /**
+     * 获取主键
+     * 如果存在多主键，那么获取第一个主键
+     * 如果没有主键，返回空字符串
+     * @return
+     */
+    public Serializable pk(){
+        String tableName = sqlManager.getNc().getTableName(getCurrentEntityClass());
+        TableDesc desc = sqlManager.getMetaDataManager().getTable(tableName);
+        Set<String> idNames = desc.getIdNames();
+        if (idNames != null && idNames.size() > 0) {
+            for (String idName : idNames) {
+                return idName;
+            }
+        }
+        return "";
     }
 
     /**
@@ -121,11 +137,15 @@ public class BaseService<T, S extends BaseMapper<T>> {
      * @param ids
      * @return
      */
-    public boolean deleteBatchById(List<Serializable> ids) {
+    @Transactional
+    public boolean deleteBatchById(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             throw new IllegalArgumentException("删除数据ID不能为空");
         }
-
+        for (Serializable id : ids) {
+            deleteById(id);
+        }
+        return true;
     }
 
     /**
@@ -154,7 +174,27 @@ public class BaseService<T, S extends BaseMapper<T>> {
     public boolean update(T model) {
         return sqlManager.updateById(model) > 0;
     }
-    
+
+    /**
+     * 批量更新
+     * 更新所有字段
+     * @param list
+     * @return
+     */
+    public boolean updateBatch(List<T> list) {
+        return sqlManager.updateByIdBatch(list).length > 0;
+    }
+
+    /**
+     * 批量更新
+     * 只更新不为空的字段
+     * @param list
+     * @return
+     */
+    public boolean updateTemplateBatch(List<T> list) {
+        return sqlManager.updateBatchTemplateById(getCurrentEntityClass(), list).length > 0;
+    }
+
     /**
      * 获取当前注入泛型T的类型
      * @return 具体类型

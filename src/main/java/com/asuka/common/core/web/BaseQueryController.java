@@ -11,11 +11,12 @@ import java.util.Map;
 
 /**
  * 查询解析器
+ *
  * @author wujiawei0926@yeah.net
  * @see
  * @since 2020/6/29
  */
-public class BaseQueryController<Entity, Service extends BaseService> {
+public class BaseQueryController<Entity, Service extends BaseService> extends BaseConsoleController {
 
     @Autowired
     protected Service service;
@@ -116,15 +117,24 @@ public class BaseQueryController<Entity, Service extends BaseService> {
         newQuery(query, parameterMap);
 
         // 排序
-        String orderByColumn = parameterMap.get(FILED_SORT)[0];
-        String isAsc = parameterMap.get(FILED_ORDER)[0];
+        String orderByColumn = getParam(parameterMap, FILED_SORT, (String) service.pk());
+        String isAsc =  getParam(parameterMap, FILED_ORDER, VALUE_ORDER_DESC);
         String orderBy = "";
-        if (StrUtil.isEmpty(orderByColumn)) {
+        if (StrUtil.isNotEmpty(orderByColumn)) {
             orderBy = StrUtil.toUnderlineCase(orderByColumn) + " " + isAsc;
             query.orderBy(orderBy);
         }
 
         return query;
+    }
+
+    private String getParam(Map<String, String[]> parameterMap, String filedKey, String defaultValue) {
+        String[] v = parameterMap.get(filedKey);
+        if (v != null && v.length > 0) {
+            return v[0];
+        } else {
+            return defaultValue;
+        }
     }
 
     /**
@@ -205,5 +215,6 @@ public class BaseQueryController<Entity, Service extends BaseService> {
         }
         return query;
     }
+
 
 }

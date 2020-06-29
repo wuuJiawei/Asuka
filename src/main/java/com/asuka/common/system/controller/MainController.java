@@ -1,5 +1,6 @@
 package com.asuka.common.system.controller;
 
+import com.asuka.common.core.web.BaseConsoleController;
 import com.asuka.common.core.web.BaseController;
 import com.asuka.common.core.web.JsonResult;
 import com.asuka.common.system.entity.LoginRecord;
@@ -25,7 +26,7 @@ import java.util.List;
  * Created by wangfan on 2018-12-24 16:10
  */
 @Controller
-public class MainController extends BaseController implements ErrorController {
+public class MainController extends BaseConsoleController implements ErrorController {
 
     @Autowired
     private MenuService menuService;

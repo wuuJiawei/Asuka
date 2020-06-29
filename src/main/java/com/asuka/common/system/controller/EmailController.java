@@ -2,7 +2,7 @@ package com.asuka.common.system.controller;
 
 import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.JsonResult;
-import com.asuka.common.system._service.EmailService;
+import com.asuka.common.system.service.EmailService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,15 +1,13 @@
 package com.asuka.common.system.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.asuka.common.core.web.BaseQueryController;
 import com.asuka.common.core.annotation.OperLog;
-import com.asuka.common.core.web.BaseController;
 import com.asuka.common.core.web.JsonResult;
 import com.asuka.common.core.exception.BusinessException;
 import com.asuka.common.system.entity.Menu;
 import com.asuka.common.system.entity.RoleMenu;
-import com.asuka.common.system._service.MenuService;
-import com.asuka.common.system._service.RoleMenuService;
+import com.asuka.common.system.service.MenuService;
+import com.asuka.common.system.service.RoleMenuService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,9 +23,8 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/sys/role/menu")
-public class RoleMenuController extends BaseController {
-    @Autowired
-    private RoleMenuService roleMenuService;
+public class RoleMenuController extends BaseQueryController<RoleMenu, RoleMenuService> {
+
     @Autowired
     private MenuService menuService;
 
@@ -39,8 +36,8 @@ public class RoleMenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(Integer roleId) {
-        List<Menu> menus = menuService.list(new QueryWrapper<Menu>().orderByAsc("sort_number"));
-        List<RoleMenu> roleMenus = roleMenuService.list(new QueryWrapper<RoleMenu>().eq("role_id", roleId));
+        List<Menu> menus = menuService.lambdaQuery().asc(Menu::getSortNumber).select();
+        List<RoleMenu> roleMenus = service.lambdaQuery().andEq(RoleMenu::getRoleId, roleId).select();
         for (Menu menu : menus) {
             menu.setOpen(true);
             menu.setChecked(false);
@@ -65,7 +62,7 @@ public class RoleMenuController extends BaseController {
         RoleMenu roleMenu = new RoleMenu();
         roleMenu.setRoleId(roleId);
         roleMenu.setMenuId(menuId);
-        if (roleMenuService.save(roleMenu)) {
+        if (service.save(roleMenu)) {
             return JsonResult.ok();
         }
         return JsonResult.error();
@@ -79,8 +76,11 @@ public class RoleMenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult removeRoleAuth(Integer roleId, Integer menuId) {
-        if (roleMenuService.remove(new UpdateWrapper<RoleMenu>()
-                .eq("role_id", roleId).eq("menuId", menuId))) {
+        int cnt = service.lambdaQuery()
+                .andEq(RoleMenu::getRoleId, roleId)
+                .andEq(RoleMenu::getMenuId, menuId)
+                .delete();
+        if (cnt > 0) {
             return JsonResult.ok();
         }
         return JsonResult.error();
@@ -95,8 +95,8 @@ public class RoleMenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/update/{id}")
     public JsonResult setRoleAuth(@PathVariable("id") Integer roleId, @RequestBody List<Integer> menuIds) {
-        roleMenuService.remove(new UpdateWrapper<RoleMenu>().eq("role_id", roleId));
-        if (menuIds.size() > 0) {
+        int cnt = service.lambdaQuery().andEq(RoleMenu::getRoleId, roleId).delete();
+        if (cnt > 0 && menuIds.size() > 0) {
             List<RoleMenu> roleMenuList = new ArrayList<>();
             for (Integer menuId : menuIds) {
                 RoleMenu roleMenu = new RoleMenu();
@@ -104,7 +104,7 @@ public class RoleMenuController extends BaseController {
                 roleMenu.setMenuId(menuId);
                 roleMenuList.add(roleMenu);
             }
-            if (roleMenuService.saveBatch(roleMenuList)) {
+            if (service.saveBatch(roleMenuList)) {
                 return JsonResult.ok("保存成功");
             } else {
                 throw new BusinessException("操作失败");
