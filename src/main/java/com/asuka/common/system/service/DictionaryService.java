@@ -1,12 +1,18 @@
 package com.asuka.common.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.asuka.common.core.web.BaseService;
+import com.asuka.common.system.dao.DictionaryDao;
 import com.asuka.common.system.entity.Dictionary;
+import org.springframework.stereotype.Service;
 
 /**
- * 字典服务类
- * Created by wangfan on 2020-03-14 11:29:03
+ * @author wujiawei0926@yeah.net
+ * @see
+ * @since 2020/6/29
  */
-public interface DictionaryService extends IService<Dictionary> {
+@Service
+public class DictionaryService extends BaseService<Dictionary, DictionaryDao> {
+
+
 
 }

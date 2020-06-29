@@ -1,6 +1,7 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import org.beetl.sql.core.TailBean;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,15 +11,14 @@ import java.util.List;
  * 菜单
  * Created by AutoGenerator on 2018-12-24 16:10
  */
-@TableName("sys_menu")
-public class Menu implements Serializable {
+public class Menu extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final int TYPE_MENU = 0;  // 菜单类型
     public static final int TYPE_BTN = 1;  // 按钮类型
     /**
      * 菜单id
      */
-    @TableId(value = "menu_id", type = IdType.AUTO)
+    @AutoID
     private Integer menuId;
     /**
      * 上级id,0是顶级
@@ -71,24 +71,19 @@ public class Menu implements Serializable {
     /**
      * 是否删除,0否,1是
      */
-    @TableLogic
     private Integer deleted;
     /**
      * 上级菜单名称
      */
-    @TableField(exist = false)
     private String parentName;
     /**
      * 子菜单
      */
-    @TableField(exist = false)
     private List<Menu> children;
     /**
      * 回显选中状态,0未选中,1选中
      */
-    @TableField(exist = false)
     private Boolean checked;
-    @TableField(exist = false)
     private Boolean open;
 
     public Integer getMenuId() {

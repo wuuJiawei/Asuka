@@ -1,6 +1,7 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import org.beetl.sql.core.TailBean;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,13 +10,12 @@ import java.util.Date;
  * 角色
  * Created by AutoGenerator on 2018-12-24 16:10
  */
-@TableName("sys_role")
-public class Role implements Serializable {
+public class Role extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 角色id
      */
-    @TableId(value = "role_id", type = IdType.AUTO)
+    @AutoID
     private Integer roleId;
     /**
      * 角色名称
@@ -40,12 +40,10 @@ public class Role implements Serializable {
     /**
      * 是否删除,0否,1是
      */
-    @TableLogic
     private Integer deleted;
     /**
      * 用户id
      */
-    @TableField(exist = false)
     private Integer userId;
 
     public Role() {

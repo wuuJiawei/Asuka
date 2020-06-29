@@ -1,9 +1,6 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -12,13 +9,12 @@ import java.io.Serializable;
  * 字典
  * Created by wangfan on 2020-03-14 11:29:03
  */
-@TableName("sys_dictionary")
 public class Dictionary implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 字典id
      */
-    @TableId(value = "dict_id", type = IdType.AUTO)
+    @AutoID
     private Integer dictId;
     /**
      * 字典标识
@@ -47,7 +43,6 @@ public class Dictionary implements Serializable {
     /**
      * 是否删除,0否,1是
      */
-    @TableLogic
     private Integer deleted;
 
     public Integer getDictId() {

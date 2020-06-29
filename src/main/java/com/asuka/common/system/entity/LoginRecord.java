@@ -1,9 +1,7 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import org.beetl.sql.core.TailBean;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,8 +10,7 @@ import java.util.Date;
  * 登录日志
  * Created by wangfan on 2018-12-24 16:10
  */
-@TableName("sys_login_record")
-public class LoginRecord implements Serializable {
+public class LoginRecord extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final int TYPE_LOGIN = 0;  // 登录
     public static final int TYPE_ERROR = 1;  // 登录失败
@@ -22,7 +19,7 @@ public class LoginRecord implements Serializable {
     /**
      * 主键id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @AutoID
     private Integer id;
     /**
      * 用户id
@@ -63,7 +60,6 @@ public class LoginRecord implements Serializable {
     /**
      * 用户昵称
      */
-    @TableField(exist = false)
     private String nickName;
 
     public Integer getId() {

@@ -1,8 +1,7 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import org.beetl.sql.core.TailBean;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,13 +10,12 @@ import java.util.Date;
  * 角色权限
  * Created by AutoGenerator on 2018-12-24 16:10
  */
-@TableName("sys_role_menu")
-public class RoleMenu implements Serializable {
+public class RoleMenu extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 主键id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @AutoID
     private Integer id;
     /**
      * 角色id

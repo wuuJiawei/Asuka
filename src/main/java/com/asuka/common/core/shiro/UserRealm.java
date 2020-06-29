@@ -2,7 +2,7 @@ package com.asuka.common.core.shiro;
 
 import com.asuka.common.system.entity.Role;
 import com.asuka.common.system.entity.User;
-import com.asuka.common.system.service.UserService;
+import com.asuka.common.system._service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;

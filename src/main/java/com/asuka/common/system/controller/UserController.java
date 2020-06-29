@@ -12,10 +12,10 @@ import com.asuka.common.system.entity.DictionaryData;
 import com.asuka.common.system.entity.Organization;
 import com.asuka.common.system.entity.Role;
 import com.asuka.common.system.entity.User;
-import com.asuka.common.system.service.DictionaryDataService;
-import com.asuka.common.system.service.OrganizationService;
-import com.asuka.common.system.service.RoleService;
-import com.asuka.common.system.service.UserService;
+import com.asuka.common.system._service.DictionaryDataService;
+import com.asuka.common.system._service.OrganizationService;
+import com.asuka.common.system._service.RoleService;
+import com.asuka.common.system._service.UserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -75,6 +75,7 @@ public class UserController extends BaseController {
     public PageResult<User> page(HttpServletRequest request) {
         PageParam<User> pageParam = new PageParam<>(request);
         pageParam.setDefaultOrder(null, new String[]{"create_time"});
+        // 记得调用service.selectUserRoles
         return userService.listPage(pageParam);
     }
 

@@ -1,6 +1,7 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import org.beetl.sql.core.TailBean;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,13 +11,12 @@ import java.util.List;
  * 用户
  * Created by AutoGenerator on 2018-12-24 16:10
  */
-@TableName("sys_user")
-public class User implements Serializable {
+public class User extends TailBean implements Serializable {
     private static final long serialVersionUID = 242146703513492331L;
     /**
      * 用户id
      */
-    @TableId(value = "user_id", type = IdType.AUTO)
+    @AutoID
     private Integer userId;
     /**
      * 账号
@@ -85,32 +85,26 @@ public class User implements Serializable {
     /**
      * 是否删除,0否,1是
      */
-    @TableLogic
     private Integer deleted;
     /**
      * 权限列表
      */
-    @TableField(exist = false)
     private List<String> authorities;
     /**
      * 角色列表
      */
-    @TableField(exist = false)
     private List<Role> roles;
     /**
      * 角色id
      */
-    @TableField(exist = false)
     private List<Integer> roleIds;
     /**
      * 机构名称
      */
-    @TableField(exist = false)
     private String organizationName;
     /**
      * 性别名称
      */
-    @TableField(exist = false)
     private String sexName;
 
     public Integer getUserId() {

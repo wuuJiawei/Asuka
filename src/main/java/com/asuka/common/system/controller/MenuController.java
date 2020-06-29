@@ -3,7 +3,7 @@ package com.asuka.common.system.controller;
 import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
 import com.asuka.common.system.entity.Menu;
-import com.asuka.common.system.service.MenuService;
+import com.asuka.common.system._service.MenuService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

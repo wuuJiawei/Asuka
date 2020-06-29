@@ -1,29 +1,20 @@
 package com.asuka.common.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.asuka.common.core.web.PageParam;
-import com.asuka.common.core.web.PageResult;
+import com.asuka.common.core.utils.UserAgentGetter;
+import com.asuka.common.core.web.BaseService;
+import com.asuka.common.system.dao.LoginRecordDao;
 import com.asuka.common.system.entity.LoginRecord;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 登录日志服务类
  * Created by wangfan on 2018-12-24 16:10
  */
-public interface LoginRecordService extends IService<LoginRecord> {
-
-    /**
-     * 关联分页查询
-     */
-    PageResult<LoginRecord> listPage(PageParam<LoginRecord> page);
-
-    /**
-     * 关联查询所有
-     */
-    List<LoginRecord> listAll(Map<String, Object> page);
+@Service
+public class LoginRecordService extends BaseService<LoginRecord, LoginRecordDao> {
 
     /**
      * 添加登录日志
@@ -33,7 +24,18 @@ public interface LoginRecordService extends IService<LoginRecord> {
      * @param comments 备注
      * @param request  HttpServletRequest
      */
-    void saveAsync(String username, Integer type, String comments, HttpServletRequest request);
+    public void saveAsync(String username, Integer type, String comments, HttpServletRequest request){
+        LoginRecord loginRecord = new LoginRecord();
+        loginRecord.setUsername(username);
+        loginRecord.setOperType(type);
+        loginRecord.setComments(comments);
+        UserAgentGetter agentGetter = new UserAgentGetter(request);
+        loginRecord.setOs(agentGetter.getOS());
+        loginRecord.setDevice(agentGetter.getDevice());
+        loginRecord.setBrowser(agentGetter.getBrowser());
+        loginRecord.setIp(agentGetter.getIp());
+        saveAsync(loginRecord);
+    }
 
     /**
      * 添加登录成功的登录日志
@@ -41,6 +43,13 @@ public interface LoginRecordService extends IService<LoginRecord> {
      * @param username 用户账号
      * @param request  HttpServletRequest
      */
-    void saveAsync(String username, HttpServletRequest request);
+    public void saveAsync(String username, HttpServletRequest request) {
+        saveAsync(username, LoginRecord.TYPE_LOGIN, null, request);
+    }
+
+    @Async
+    public void saveAsync(LoginRecord loginRecord) {
+        dao().insert(loginRecord);
+    }
 
 }

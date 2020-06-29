@@ -1,6 +1,6 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -9,13 +9,12 @@ import java.io.Serializable;
  * 组织机构
  * Created by AutoGenerator on 2020-03-14 11:29:04
  */
-@TableName("sys_organization")
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 机构id
      */
-    @TableId(value = "organization_id", type = IdType.AUTO)
+    @AutoID
     private Integer organizationId;
     /**
      * 上级id,0是顶级
@@ -61,27 +60,22 @@ public class Organization implements Serializable {
     /**
      * 是否删除,0否,1是
      */
-    @TableLogic
     private Integer deleted;
     /**
      * 负责人姓名
      */
-    @TableField(exist = false)
     private String leaderName;
     /**
      * 负责人账号
      */
-    @TableField(exist = false)
     private String leaderAccount;
     /**
      * 上级名称
      */
-    @TableField(exist = false)
     private String parentName;
     /**
      * 机构类型名称
      */
-    @TableField(exist = false)
     private String organizationTypeName;
 
     public Integer getOrganizationId() {

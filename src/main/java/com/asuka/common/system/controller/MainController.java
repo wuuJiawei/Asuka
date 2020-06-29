@@ -26,6 +26,7 @@ import java.util.List;
  */
 @Controller
 public class MainController extends BaseController implements ErrorController {
+
     @Autowired
     private MenuService menuService;
     @Autowired

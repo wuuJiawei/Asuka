@@ -1,12 +1,15 @@
 package com.asuka.common.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.asuka.common.core.web.BaseService;
+import com.asuka.common.system.dao.RoleDao;
 import com.asuka.common.system.entity.Role;
+import org.springframework.stereotype.Service;
 
 /**
- * 角色服务类
+ * 角色服务实现类
  * Created by wangfan on 2018-12-24 16:10
  */
-public interface RoleService extends IService<Role> {
+@Service
+public class RoleService extends BaseService<Role, RoleDao> {
 
 }

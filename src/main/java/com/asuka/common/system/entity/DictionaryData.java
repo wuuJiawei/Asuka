@@ -1,6 +1,7 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import org.beetl.sql.core.TailBean;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -9,13 +10,12 @@ import java.io.Serializable;
  * 字典项
  * Created by wangfan on 2020-03-14 11:29:04
  */
-@TableName("sys_dictionary_data")
-public class DictionaryData implements Serializable {
+public class DictionaryData extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 字典项id
      */
-    @TableId(value = "dict_data_id", type = IdType.AUTO)
+    @AutoID
     private Integer dictDataId;
     /**
      * 字典id
@@ -48,17 +48,14 @@ public class DictionaryData implements Serializable {
     /**
      * 是否删除,0否,1是
      */
-    @TableLogic
     private Integer deleted;
     /**
      * 字典代码
      */
-    @TableField(exist = false)
     private String dictCode;
     /**
      * 字典名称
      */
-    @TableField(exist = false)
     private String dictName;
 
     public Integer getDictDataId() {

@@ -1,9 +1,7 @@
 package com.asuka.common.system.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import org.beetl.sql.core.TailBean;
+import org.beetl.sql.core.annotatoin.AutoID;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,13 +10,12 @@ import java.util.Date;
  * 操作日志
  * Created by wangfan on 2018-12-24 16:10
  */
-@TableName("sys_oper_record")
-public class OperRecord implements Serializable {
+public class OperRecord extends TailBean implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 主键id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @AutoID
     private Integer id;
     /**
      * 用户id
@@ -79,12 +76,10 @@ public class OperRecord implements Serializable {
     /**
      * 用户昵称
      */
-    @TableField(exist = false)
     private String nickName;
     /**
      * 用户账号
      */
-    @TableField(exist = false)
     private String username;
 
     public Integer getId() {

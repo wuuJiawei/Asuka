@@ -1,32 +1,22 @@
 package com.asuka.common.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.asuka.common.core.web.PageParam;
-import com.asuka.common.core.web.PageResult;
+import com.asuka.common.core.web.BaseService;
+import com.asuka.common.system.dao.OperRecordDao;
 import com.asuka.common.system.entity.OperRecord;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
 
 /**
- * 操作日志服务类
+ * 操作日志服务实现类
  * Created by wangfan on 2018-12-24 16:10
  */
-public interface OperRecordService extends IService<OperRecord> {
+@Service
+public class OperRecordService extends BaseService<OperRecord, OperRecordDao> {
 
-    /**
-     * 关联分页查询
-     */
-    PageResult<OperRecord> listPage(PageParam<OperRecord> page);
-
-    /**
-     * 关联查询所有
-     */
-    List<OperRecord> listAll(Map<String, Object> page);
-
-    /**
-     * 异步添加
-     */
-    void saveAsync(OperRecord operRecord);
+    @Async
+    public void saveAsync(OperRecord operRecord) {
+        dao().insert(operRecord);
+    }
 
 }

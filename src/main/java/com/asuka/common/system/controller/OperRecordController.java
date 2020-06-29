@@ -6,7 +6,7 @@ import com.asuka.common.core.web.JsonResult;
 import com.asuka.common.core.web.PageParam;
 import com.asuka.common.core.web.PageResult;
 import com.asuka.common.system.entity.OperRecord;
-import com.asuka.common.system.service.OperRecordService;
+import com.asuka.common.system._service.OperRecordService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,13 +1,12 @@
 package com.asuka.common.system.controller;
 
 import com.asuka.common.core.annotation.OperLog;
-import com.asuka.common.core.web.BaseController;
-import com.asuka.common.core.web.JsonResult;
-import com.asuka.common.core.web.PageParam;
-import com.asuka.common.core.web.PageResult;
+import com.asuka.common.core.web.*;
 import com.asuka.common.system.entity.LoginRecord;
 import com.asuka.common.system.service.LoginRecordService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.beetl.sql.core.engine.PageQuery;
+import org.beetl.sql.core.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/sys/loginRecord")
-public class LoginRecordController extends BaseController {
+public class LoginRecordController extends BaseQueryController<LoginRecord, LoginRecordService> {
     @Autowired
     private LoginRecordService loginRecordService;
 
@@ -40,9 +39,8 @@ public class LoginRecordController extends BaseController {
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<LoginRecord> page(HttpServletRequest request) {
-        PageParam<LoginRecord> pageParam = new PageParam<>(request);
-        pageParam.setDefaultOrder(null, new String[]{"create_time"});
-        return loginRecordService.listPage(pageParam);
+        PageQuery<LoginRecord> pageQuery = createPageQuery(request);
+        return new PageResult<LoginRecord>(pageQuery.getList(), pageQuery.getTotalRow());
     }
 
     /**
@@ -53,9 +51,9 @@ public class LoginRecordController extends BaseController {
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
-        PageParam<LoginRecord> pageParam = new PageParam<>(request);
-        List<LoginRecord> records = loginRecordService.listAll(pageParam.getNoPageParam());
-        return JsonResult.ok().setData(pageParam.sortRecords(records));
+        Query<LoginRecord> query = createQuery(request);
+        List<LoginRecord> records = service.queryAll(query);
+        return JsonResult.ok().setData(records);
     }
 
     /**
@@ -65,11 +63,9 @@ public class LoginRecordController extends BaseController {
     @RequiresPermissions("sys:login_record:view")
     @ResponseBody
     @RequestMapping("/get")
-    public JsonResult get(Integer id) {
-        PageParam<LoginRecord> pageParam = new PageParam<>();
-        pageParam.put("id", id);
-        List<LoginRecord> records = loginRecordService.listAll(pageParam.getNoPageParam());
-        return JsonResult.ok().setData(pageParam.getOne(records));
+    public JsonResult get(Integer id, HttpServletRequest request) {
+        LoginRecord loginRecord = service.queryById(id);
+        return JsonResult.ok().setData(loginRecord);
     }
 
 }

@@ -5,7 +5,7 @@ import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
 import com.asuka.common.core.utils.CoreUtil;
 import com.asuka.common.system.entity.Role;
-import com.asuka.common.system.service.RoleService;
+import com.asuka.common.system._service.RoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

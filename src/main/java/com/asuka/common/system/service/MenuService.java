@@ -1,39 +1,36 @@
 package com.asuka.common.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.asuka.common.core.web.PageParam;
-import com.asuka.common.core.web.PageResult;
+import com.asuka.common.core.web.BaseService;
+import com.asuka.common.system.dao.MenuDao;
 import com.asuka.common.system.entity.Menu;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 菜单服务类
+ * 菜单服务实现类
  * Created by wangfan on 2018-12-24 16:10
  */
-public interface MenuService extends IService<Menu> {
+@Service
+public class MenuService extends BaseService<Menu, MenuDao> {
 
-    /**
-     * 关联分页查询菜单
-     */
-    PageResult<Menu> listPage(PageParam<Menu> pageParam);
+    public List<Menu> getUserMenu(Integer userId, Integer menuType) {
+        return dao().listByUserId(userId, menuType);
+    }
 
-    /**
-     * 根据用户id查询菜单列表
-     *
-     * @param userId   用户id
-     * @param menuType 菜单类型，为null不筛选
-     * @return List<Menu>
-     */
-    List<Menu> getUserMenu(Integer userId, Integer menuType);
+    public List<Menu> toMenuTree(List<Menu> menus, Integer parentId) {
+        List<Menu> list = new ArrayList<>();
+        for (Menu menu : menus) {
+            if (parentId.equals(menu.getParentId())) {
+                menu.setChildren(toMenuTree(menus, menu.getMenuId()));
+                list.add(menu);
+            }
+        }
+        return list;
+    }
 
-    /**
-     * 转化为树形结构
-     *
-     * @param menus    菜单list
-     * @param parentId 最顶级id
-     * @return List<Menu>
-     */
-    List<Menu> toMenuTree(List<Menu> menus, Integer parentId);
-
+    public List<Menu> listByUserId(Integer userId, Integer menuType) {
+        return dao().listByUserId(userId, menuType);
+    }
 }
