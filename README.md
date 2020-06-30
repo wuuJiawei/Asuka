@@ -52,5 +52,5 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 ## 效果图
 
-<img src="https://wujiawei0926.gitee.io/res/asuka_20200630164744" alt="layui" width="360">
+<img src="https://wujiawei0926.gitee.io/res/asuka_20200630164744.jpg" alt="login" width="360">
 
