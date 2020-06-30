@@ -15,10 +15,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
-
-import java.util.Arrays;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * @author wujiawei0926@yeah.net
@@ -30,12 +27,10 @@ import java.util.Arrays;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final LogoutSuccessHandler logoutSuccessHandler;
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(LogoutSuccessHandler logoutSuccessHandler, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        this.logoutSuccessHandler = logoutSuccessHandler;
+    public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -77,16 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 需要鉴权认证
                 .anyRequest().authenticated()
                 .and()
-                // 登录页面
-                .formLogin().loginPage("/login")
-                .successForwardUrl("/index")
-                // 登录接口
-//                .loginProcessingUrl("/login/success")
-                // 自定义用户名和密码属性名
-//                .usernameParameter("username").passwordParameter("password")
-                .and()
                 // 退出登录
-                .logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler)
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")).logoutSuccessUrl("/login")
                 .and()
                 // 登录认证过滤器
                 .addFilterBefore(new LoginProcessingFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
