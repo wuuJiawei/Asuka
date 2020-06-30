@@ -24,21 +24,21 @@
             <form class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">用户账号:</label>
+                        <label class="layui-form-label">用户ID:</label>
                         <div class="layui-input-inline">
-                            <input name="username" class="layui-input" placeholder="输入账号"/>
+                            <input name="search@like@userId" class="layui-input" placeholder="输入ID"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">操作模块:</label>
                         <div class="layui-input-inline">
-                            <input name="model" class="layui-input" placeholder="输入账号"/>
+                            <input name="search@like@model" class="layui-input" placeholder="输入账号"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">操作日期:</label>
                         <div class="layui-input-inline">
-                            <input name="operRecordDateSel" class="layui-input icon-date" placeholder="选择日期范围"
+                            <input name="search@between@createTime" class="layui-input icon-date" placeholder="选择日期范围"
                                    autocomplete="off"/>
                         </div>
                     </div>
@@ -149,7 +149,7 @@
             height: 'full-100',
             cellMinWidth: 120,
             cols: [[
-                {type: 'numbers'},
+                // {type: 'numbers'},
                 {field: 'username', title: '账号', sort: true, width: 100, minWidth: 100},
                 {field: 'nickName', title: '用户名', sort: true, width: 100, minWidth: 100},
                 {field: 'model', title: '操作模块', sort: true, width: 120, minWidth: 120},
@@ -183,7 +183,7 @@
 
         /* 时间范围 */
         laydate.render({
-            elem: 'input[name="operRecordDateSel"]',
+            elem: 'input[name="search@between@createTime"]',
             type: 'date',
             range: true,
             trigger: 'click'

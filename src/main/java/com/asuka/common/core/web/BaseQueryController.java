@@ -8,6 +8,8 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 查询解析器
@@ -39,12 +41,12 @@ public class BaseQueryController<Entity, Service extends BaseService> extends Ba
     public static final String KEY_SEARCH_LIKE_FUZZY = "%";
     public static final String KEY_SEARCH_EQ = "eq";
     public static final String KEY_SEARCH_BETWEEN = "between";
-    public static final String KEY_SEARCH_BETWEEN_SPLIT = "-";
+    public static final String KEY_SEARCH_BETWEEN_SPLIT = " - ";
     public static final String KEY_SEARCH_LT = "lt";
     public static final String KEY_SEARCH_GT = "gt";
 
     /**
-     * 分页参数
+     * 分页与排序参数
      */
     private static final String FILED_PAGE = "page";  // 第几页参数名称
     private static final String FILED_LIMIT = "limit";  // 每页显示数量参数名称
@@ -52,6 +54,7 @@ public class BaseQueryController<Entity, Service extends BaseService> extends Ba
     private static final String FILED_ORDER = "order";  // 排序方式参数名称
     private static final String VALUE_ORDER_ASC = "asc";  // 表示升序的值
     private static final String VALUE_ORDER_DESC = "desc";  // 表示降序的值
+    public static final String VALUE_SORT_DEFAULT = "create_time";  // 默认的排序字段
 
     /**
      * 初始化分页查询
@@ -119,11 +122,13 @@ public class BaseQueryController<Entity, Service extends BaseService> extends Ba
         // 排序
         String orderByColumn = getParam(parameterMap, FILED_SORT, (String) service.pk());
         String isAsc =  getParam(parameterMap, FILED_ORDER, VALUE_ORDER_DESC);
-        String orderBy = "";
+        String orderBy;
         if (StrUtil.isNotEmpty(orderByColumn)) {
             orderBy = StrUtil.toUnderlineCase(orderByColumn) + " " + isAsc;
-            query.orderBy(orderBy);
+        } else {
+            orderBy = VALUE_SORT_DEFAULT + " " + VALUE_ORDER_DESC;
         }
+        query.orderBy(orderBy);
 
         return query;
     }
@@ -193,6 +198,9 @@ public class BaseQueryController<Entity, Service extends BaseService> extends Ba
      * @return
      */
     private Query<Entity> fixSingleQuery(String columnName, String columnValue, String searchType, Query<Entity> query) {
+        // 驼峰转下划线 TODO 从sqlManager中获取namespace
+        columnName = StrUtil.toUnderlineCase(columnName);
+
         switch (searchType) {
             case KEY_SEARCH_EQ:
                 query.andEq(columnName, columnValue);

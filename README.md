@@ -50,7 +50,36 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 演示地址：[上线中...](javascript:;)
 
+## Todo
+
+- [ ] 完善system模块的所有增删改查功能
+
+- [ ] 引入缓存支持：Redis，并为BeetlSQL的Dao提供缓存
+
+- [ ] 完善security权限功能，为函数添加权限支持
+
+- [ ] 添加Beetl自定义标签，将常用组件进行封装
+
+- [ ] ControlAspect，自动解析字典与文件链接
+
+- [ ] 集成Web版代码生成器
+
+- [ ] 开放仓库为public，编写完整开发文档
+
+- [ ] 提供演示站点
+
+- [ ] swagger2 + knife4j
+
+- [ ] quartz
+
+- [ ] 文件统一管理
+
+- [ ] 开发官网，开发订单系统
+
+- [ ] spring-actuator
+
+
 ## 效果图
 
-<img src="https://wujiawei0926.gitee.io/res/asuka_20200630164744.jpg" alt="login" width="360">
+<img src="https://wujiawei0926.gitee.io/res/asuka_20200630164744.png" alt="asuka" width="360">
 
