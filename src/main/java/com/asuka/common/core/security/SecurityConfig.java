@@ -11,9 +11,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+
+import java.util.Arrays;
 
 /**
  * @author wujiawei0926@yeah.net
@@ -59,10 +64,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                // 解除iframe限制
+                .headers().frameOptions().disable()
+                .and()
                 // 过滤请求
                 .authorizeRequests()
                 // 允许匿名访问
-                .antMatchers("/error", "/login", "/login/processing", "/assets/**", "/favicon.ico").anonymous()
+                .antMatchers("/error", "/login", "/login/processing").anonymous()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**").anonymous()
                 // 允许任意访问
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -71,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 登录页面
                 .formLogin().loginPage("/login")
-                .successForwardUrl("/")
+                .successForwardUrl("/index")
                 // 登录接口
 //                .loginProcessingUrl("/login/success")
                 // 自定义用户名和密码属性名
@@ -98,4 +106,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/assets/**", "/favicon.ico");
+    }
 }

@@ -1,5 +1,6 @@
 package com.asuka.common.core.config;
 
+import com.asuka.common.core.security.SecurityExt;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.ext.spring.BeetlGroupUtilConfiguration;
 import org.beetl.ext.spring.BeetlSpringViewResolver;
@@ -16,6 +17,7 @@ import java.util.Properties;
  */
 @Configuration("BeetlConfigOfAsuka")
 public class BeetlConfig {
+
     @Value("${beetl.templatesPath:templates}")
     private String templatesPath;  // 模板根目录
     @Value("${beetl.suffix:html}")
@@ -35,7 +37,7 @@ public class BeetlConfig {
         bguc.setResourceLoader(new ClasspathResourceLoader(loader, templatesPath));
         bguc.init();
         // 增加自定义函数
-//        bguc.getGroupTemplate().registerFunctionPackage("so", new ShiroExt());
+        bguc.getGroupTemplate().registerFunctionPackage("so", new SecurityExt());
         // 增加自定义标签
         bguc.getGroupTemplate().registerTag("include", org.beetl.ext.tag.html.IncludeResourceHtmlTag.class);
         bguc.getGroupTemplate().registerTag("layout", org.beetl.ext.tag.html.LayoutResourceHtmlTag.class);
