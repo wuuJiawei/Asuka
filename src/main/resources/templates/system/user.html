@@ -14,19 +14,19 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">账&emsp;号:</label>
                         <div class="layui-input-inline">
-                            <input name="username" class="layui-input" placeholder="输入账号"/>
+                            <input name="search@like@username" class="layui-input" placeholder="输入账号"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">用户名:</label>
                         <div class="layui-input-inline">
-                            <input name="nickName" class="layui-input" placeholder="输入用户名"/>
+                            <input name="search@like@nickName" class="layui-input" placeholder="输入用户名"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">性&emsp;别:</label>
                         <div class="layui-input-inline">
-                            <select name="sex">
+                            <select name="search@eq@sex">
                                 <option value="">请选择</option>
                                 <:for items="${sexList}" var="item">
                                     <option value="${item.dictDataId}">${item.dictDataName}</option>
@@ -155,7 +155,7 @@
             cellMinWidth: 100,
             cols: [[
                 {type: 'checkbox'},
-                {type: 'numbers'},
+                {field: 'userId', title: 'ID', sort: true},
                 {field: 'username', title: '账号', sort: true},
                 {field: 'nickName', title: '用户名', sort: true},
                 {field: 'sexName', title: '性别', sort: true},
