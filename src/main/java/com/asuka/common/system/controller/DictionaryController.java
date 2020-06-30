@@ -5,7 +5,6 @@ import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
 import com.asuka.common.core.utils.CoreUtil;
 import com.asuka.common.system.entity.Dictionary;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/sys/dict")
 public class DictionaryController extends BaseQueryController<Dictionary, DictionaryService> {
 
-    @RequiresPermissions("sys:dict:view")
     @RequestMapping()
     public String view() {
         return "system/dictionary.html";
@@ -33,7 +31,6 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
      * 分页查询字典
      */
     @OperLog(value = "字典管理", desc = "分页查询")
-    @RequiresPermissions("sys:dict:list")
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<Dictionary> page(HttpServletRequest request) {
@@ -45,7 +42,6 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
      * 查询全部字典
      */
     @OperLog(value = "字典管理", desc = "查询全部")
-    @RequiresPermissions("sys:dict:list")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
@@ -58,7 +54,6 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
      * 根据id查询字典
      */
     @OperLog(value = "字典管理", desc = "根据id查询")
-    @RequiresPermissions("sys:dict:list")
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
@@ -69,7 +64,6 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
      * 添加字典
      */
     @OperLog(value = "字典管理", desc = "添加", param = false, result = true)
-    @RequiresPermissions("sys:dict:save")
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Dictionary dictionary) {
@@ -89,7 +83,6 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
      * 修改字典
      */
     @OperLog(value = "字典管理", desc = "修改", param = false, result = true)
-    @RequiresPermissions("sys:dict:update")
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(Dictionary dictionary) {
@@ -109,7 +102,6 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
      * 删除字典
      */
     @OperLog(value = "字典管理", desc = "删除", result = true)
-    @RequiresPermissions("sys:dict:remove")
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
@@ -123,7 +115,6 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
      * 批量添加字典
      */
     @OperLog(value = "字典管理", desc = "批量添加", param = false, result = true)
-    @RequiresPermissions("sys:dict:save")
     @ResponseBody
     @RequestMapping("/saveBatch")
     public JsonResult saveBatch(@RequestBody List<Dictionary> list) {
@@ -154,7 +145,6 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
      * 批量删除字典
      */
     @OperLog(value = "字典管理", desc = "批量删除", result = true)
-    @RequiresPermissions("sys:dict:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
     public JsonResult removeBatch(@RequestBody List<Long> ids) {

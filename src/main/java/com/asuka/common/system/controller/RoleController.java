@@ -7,7 +7,6 @@ import com.asuka.common.system.entity.Dictionary;
 import com.asuka.common.system.entity.DictionaryData;
 import com.asuka.common.system.entity.Role;
 import com.asuka.common.system.service.RoleService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/sys/role")
 public class RoleController extends BaseQueryController<Role, RoleService> {
 
-    @RequiresPermissions("sys:role:view")
     @RequestMapping()
     public String view() {
         return "system/role.html";
@@ -35,7 +33,6 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 分页查询角色
      */
     @OperLog(value = "角色管理", desc = "分页查询")
-    @RequiresPermissions("sys:role:list")
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<Role> page(HttpServletRequest request) {
@@ -47,7 +44,6 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 查询全部角色
      */
     @OperLog(value = "角色管理", desc = "查询全部")
-    @RequiresPermissions("sys:role:list")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
@@ -60,7 +56,6 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 根据id查询角色
      */
     @OperLog(value = "角色管理", desc = "根据id查询")
-    @RequiresPermissions("sys:role:list")
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
@@ -71,7 +66,6 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 添加角色
      */
     @OperLog(value = "角色管理", desc = "添加", param = false, result = true)
-    @RequiresPermissions("sys:role:save")
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Role role) {
@@ -93,7 +87,6 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 修改角色
      */
     @OperLog(value = "角色管理", desc = "修改", param = false, result = true)
-    @RequiresPermissions("sys:role:update")
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(Role role) {
@@ -121,7 +114,6 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 删除角色
      */
     @OperLog(value = "角色管理", desc = "删除", result = true)
-    @RequiresPermissions("sys:role:remove")
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
@@ -135,7 +127,6 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 批量添加角色
      */
     @OperLog(value = "角色管理", desc = "批量添加", param = false, result = true)
-    @RequiresPermissions("sys:role:save")
     @ResponseBody
     @RequestMapping("/saveBatch")
     public JsonResult saveBatch(@RequestBody List<Role> list) {
@@ -165,7 +156,6 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 批量删除角色
      */
     @OperLog(value = "角色管理", desc = "批量删除", result = true)
-    @RequiresPermissions("sys:role:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
     public JsonResult removeBatch(@RequestBody List<Long> ids) {

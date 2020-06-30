@@ -1,17 +1,20 @@
 package com.asuka.common.system.controller;
 
 import com.asuka.common.core.web.BaseConsoleController;
-import com.asuka.common.core.web.BaseController;
 import com.asuka.common.core.web.JsonResult;
 import com.asuka.common.system.entity.LoginRecord;
 import com.asuka.common.system.entity.Menu;
 import com.asuka.common.system.service.LoginRecordService;
 import com.asuka.common.system.service.MenuService;
 import com.wf.captcha.utils.CaptchaUtil;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,35 +35,41 @@ public class MainController extends BaseConsoleController implements ErrorContro
     private MenuService menuService;
     @Autowired
     private LoginRecordService loginRecordService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     /**
      * 用户登录
      */
     @ResponseBody
-    @PostMapping("/login")
+    @GetMapping("/login/processing")
     public JsonResult login(String username, String password, String code, Boolean remember, HttpServletRequest request) {
         if (username == null || username.trim().isEmpty()) return JsonResult.error("请输入账号");
         if (!CaptchaUtil.ver(code, request)) {
             loginRecordService.saveAsync(username, LoginRecord.TYPE_ERROR, "验证码错误", request);
             return JsonResult.error("验证码不正确");
         }
+        Authentication authentication = null;
         try {
-            if (remember == null) remember = false;
-            SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password, remember));
+            if (remember == null) {
+                remember = false;
+            }
+            // 该方法会调用UserService.loadUserByUsername
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             loginRecordService.saveAsync(username, request);
             return JsonResult.ok("登录成功");
-        } catch (IncorrectCredentialsException ice) {
+        } catch (BadCredentialsException ice) {
             loginRecordService.saveAsync(username, LoginRecord.TYPE_ERROR, "密码错误", request);
             return JsonResult.error("密码错误");
-        } catch (UnknownAccountException uae) {
+        } catch (UsernameNotFoundException uae) {
             loginRecordService.saveAsync(username, LoginRecord.TYPE_ERROR, "账号不存在", request);
             return JsonResult.error("账号不存在");
-        } catch (LockedAccountException e) {
+        } catch (LockedException e) {
             loginRecordService.saveAsync(username, LoginRecord.TYPE_ERROR, "账号被锁定", request);
             return JsonResult.error("账号被锁定");
-        } catch (ExcessiveAttemptsException eae) {
-            loginRecordService.saveAsync(username, LoginRecord.TYPE_ERROR, "操作频繁", request);
-            return JsonResult.error("操作频繁，请稍后再试");
+        } catch (Exception eae) {
+            loginRecordService.saveAsync(username, LoginRecord.TYPE_ERROR, eae.getMessage(), request);
+            return JsonResult.error(eae.getMessage());
         }
     }
 

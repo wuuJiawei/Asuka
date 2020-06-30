@@ -3,7 +3,6 @@ package com.asuka.common.system.controller;
 import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.JsonResult;
 import com.asuka.common.core.utils.FileUploadUtil;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +21,6 @@ import java.util.Map;
 @RequestMapping("/file")
 public class FileController {
 
-    @RequiresPermissions("sys:file:view")
     @RequestMapping("/manage")
     public String view() {
         return "system/file.html";
@@ -76,7 +74,6 @@ public class FileController {
      * 删除文件
      */
     @OperLog(value = "文件管理", desc = "删除文件", result = true)
-    @RequiresPermissions("sys:file:remove")
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(String path) {
@@ -93,7 +90,6 @@ public class FileController {
      * 查询文件列表
      */
     @OperLog(value = "文件管理", desc = "查询全部")
-    @RequiresPermissions("sys:file:list")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(String dir) {

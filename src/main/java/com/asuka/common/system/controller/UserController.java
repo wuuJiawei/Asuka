@@ -12,7 +12,6 @@ import com.asuka.common.system.service.DictionaryDataService;
 import com.asuka.common.system.service.OrganizationService;
 import com.asuka.common.system.service.RoleService;
 import com.asuka.common.system.service.UserService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,6 @@ public class UserController extends BaseQueryController<User, UserService> {
     @Autowired
     private OrganizationService organizationService;
 
-    @RequiresPermissions("sys:user:view")
     @RequestMapping()
     public String view(Model model) {
         model.addAttribute("sexList" , dictionaryDataService.listByDictCode("sex"));
@@ -66,7 +64,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 分页查询用户
      */
     @OperLog(value = "用户管理" , desc = "分页查询")
-    @RequiresPermissions("sys:user:list")
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<User> page(HttpServletRequest request) {
@@ -80,7 +77,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 查询全部用户
      */
     @OperLog(value = "用户管理" , desc = "查询全部")
-    @RequiresPermissions("sys:user:list")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
@@ -93,7 +89,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 根据id查询用户
      */
     @OperLog(value = "用户管理" , desc = "根据id查询")
-    @RequiresPermissions("sys:user:list")
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
@@ -104,7 +99,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 添加用户
      */
     @OperLog(value = "用户管理" , desc = "添加" , param = false, result = true)
-    @RequiresPermissions("sys:user:save")
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(@RequestBody User user) {
@@ -120,7 +114,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 修改用户
      */
     @OperLog(value = "用户管理" , desc = "修改" , param = false, result = true)
-    @RequiresPermissions("sys:user:update")
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(@RequestBody User user) {
@@ -137,7 +130,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 删除用户
      */
     @OperLog(value = "用户管理" , desc = "删除" , result = true)
-    @RequiresPermissions("sys:user:remove")
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
@@ -151,7 +143,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 批量修改用户
      */
     @OperLog(value = "用户管理" , desc = "批量修改" , param = false, result = true)
-    @RequiresPermissions("sys:user:update")
     @ResponseBody
     @RequestMapping("/updateBatch")
     public JsonResult updateBatch(@RequestBody List<User> list) {
@@ -173,7 +164,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 批量删除用户
      */
     @OperLog(value = "用户管理" , desc = "批量删除" , result = true)
-    @RequiresPermissions("sys:user:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
     public JsonResult removeBatch(@RequestBody List<Long> ids) {
@@ -187,7 +177,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 修改用户状态
      */
     @OperLog(value = "用户管理" , desc = "修改状态" , result = true)
-    @RequiresPermissions("sys:user:update")
     @ResponseBody
     @RequestMapping("/state/update")
     public JsonResult updateState(Integer id, Integer state) {
@@ -207,7 +196,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 批量修改用户状态
      */
     @OperLog(value = "用户管理" , desc = "批量修改状态" , result = true)
-    @RequiresPermissions("sys:user:update")
     @ResponseBody
     @RequestMapping("/state/updateBatch")
     public JsonResult updateStateBatch(@RequestBody List<User> list) {
@@ -227,7 +215,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 重置密码
      */
     @OperLog(value = "用户管理" , desc = "重置密码" , param = false, result = true)
-    @RequiresPermissions("sys:user:update")
     @ResponseBody
     @RequestMapping("/psw/reset")
     public JsonResult resetPsw(Integer id, String password) {
@@ -245,7 +232,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      * 批量重置密码
      */
     @OperLog(value = "用户管理" , desc = "批量重置密码" , param = false, result = true)
-    @RequiresPermissions("sys:user:update")
     @ResponseBody
     @RequestMapping("/psw/resetBatch")
     public JsonResult resetPswBatch(@RequestBody List<User> list) {
@@ -311,7 +297,6 @@ public class UserController extends BaseQueryController<User, UserService> {
      */
     @Transactional
     @OperLog(value = "用户管理" , desc = "excel导入" , param = false, result = true)
-    @RequiresPermissions("sys:user:save")
     @ResponseBody
     @RequestMapping("/import")
     public JsonResult importBatch(MultipartFile file) {

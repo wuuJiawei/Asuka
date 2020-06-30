@@ -3,7 +3,6 @@ package com.asuka.common.system.controller;
 import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.JsonResult;
 import com.asuka.common.system.service.EmailService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,6 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    @RequiresPermissions("sys:email:view")
     @RequestMapping()
     public String view() {
         return "system/email.html";
@@ -31,7 +29,6 @@ public class EmailController {
      * 发送邮件
      */
     @OperLog(value = "邮件功能", desc = "发送邮件", result = true, param = false)
-    @RequiresPermissions("sys:email:view")
     @ResponseBody
     @RequestMapping("/send")
     public JsonResult send(String title, String html, String email) {

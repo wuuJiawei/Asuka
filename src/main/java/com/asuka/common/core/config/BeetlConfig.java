@@ -1,6 +1,5 @@
 package com.asuka.common.core.config;
 
-import com.asuka.common.core.shiro.ShiroExt;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.ext.spring.BeetlGroupUtilConfiguration;
 import org.beetl.ext.spring.BeetlSpringViewResolver;
@@ -15,8 +14,8 @@ import java.util.Properties;
  * Beetl配置
  * Created by wangfan on 2018-02-22 11:29
  */
-@Configuration
-public class BeetlConfiguration {
+@Configuration("BeetlConfigOfAsuka")
+public class BeetlConfig {
     @Value("${beetl.templatesPath:templates}")
     private String templatesPath;  // 模板根目录
     @Value("${beetl.suffix:html}")
@@ -32,11 +31,11 @@ public class BeetlConfiguration {
         extProperties.put("HTML_TAG_FLAG", ":");
         bguc.setConfigProperties(extProperties);
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        if (loader == null) loader = BeetlConfiguration.class.getClassLoader();
+        if (loader == null) loader = BeetlConfig.class.getClassLoader();
         bguc.setResourceLoader(new ClasspathResourceLoader(loader, templatesPath));
         bguc.init();
         // 增加自定义函数
-        bguc.getGroupTemplate().registerFunctionPackage("so", new ShiroExt());
+//        bguc.getGroupTemplate().registerFunctionPackage("so", new ShiroExt());
         // 增加自定义标签
         bguc.getGroupTemplate().registerTag("include", org.beetl.ext.tag.html.IncludeResourceHtmlTag.class);
         bguc.getGroupTemplate().registerTag("layout", org.beetl.ext.tag.html.LayoutResourceHtmlTag.class);

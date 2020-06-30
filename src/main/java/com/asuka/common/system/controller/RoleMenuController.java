@@ -8,7 +8,6 @@ import com.asuka.common.system.entity.Menu;
 import com.asuka.common.system.entity.RoleMenu;
 import com.asuka.common.system.service.MenuService;
 import com.asuka.common.system.service.RoleMenuService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +31,6 @@ public class RoleMenuController extends BaseQueryController<RoleMenu, RoleMenuSe
      * 查询角色菜单
      */
     @OperLog(value = "角色管理", desc = "查询角色菜单")
-    @RequiresPermissions("sys:role:list")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(Integer roleId) {
@@ -55,7 +53,6 @@ public class RoleMenuController extends BaseQueryController<RoleMenu, RoleMenuSe
      * 添加角色菜单
      */
     @OperLog(value = "角色管理", desc = "添加角色菜单")
-    @RequiresPermissions("sys:role:update")
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult addRoleAuth(Integer roleId, Integer menuId) {
@@ -72,7 +69,6 @@ public class RoleMenuController extends BaseQueryController<RoleMenu, RoleMenuSe
      * 移除角色菜单
      */
     @OperLog(value = "角色管理", desc = "移除角色菜单")
-    @RequiresPermissions("sys:role:update")
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult removeRoleAuth(Integer roleId, Integer menuId) {
@@ -90,7 +86,6 @@ public class RoleMenuController extends BaseQueryController<RoleMenu, RoleMenuSe
      * 批量修改角色菜单
      */
     @OperLog(value = "角色管理", desc = "修改角色菜单")
-    @RequiresPermissions("sys:role:update")
     @Transactional
     @ResponseBody
     @RequestMapping("/update/{id}")

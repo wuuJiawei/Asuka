@@ -9,7 +9,6 @@ import com.asuka.common.system.entity.Organization;
 import com.asuka.common.system.service.DictionaryDataService;
 import com.asuka.common.system.service.OrganizationService;
 import com.asuka.common.system.service.RoleService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
     @Autowired
     private RoleService roleService;
 
-    @RequiresPermissions("sys:org:view")
     @RequestMapping()
     public String view(Model model) {
         model.addAttribute("sexList", dictionaryDataService.listByDictCode("sex"));
@@ -46,7 +44,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 分页查询组织机构
      */
     @OperLog(value = "机构管理", desc = "分页查询")
-    @RequiresPermissions("sys:org:list")
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<Organization> page(HttpServletRequest request) {
@@ -58,7 +55,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 查询全部组织机构
      */
     @OperLog(value = "机构管理", desc = "查询全部")
-    @RequiresPermissions("sys:org:list")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
@@ -71,7 +67,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 根据id查询组织机构
      */
     @OperLog(value = "机构管理", desc = "根据id查询")
-    @RequiresPermissions("sys:org:list")
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
@@ -82,7 +77,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 添加组织机构
      */
     @OperLog(value = "机构管理", desc = "添加", param = false, result = true)
-    @RequiresPermissions("sys:org:save")
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult add(Organization organization) {
@@ -106,7 +100,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 修改组织机构
      */
     @OperLog(value = "机构管理", desc = "修改", param = false, result = true)
-    @RequiresPermissions("sys:org:update")
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(Organization organization) {
@@ -133,7 +126,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 删除组织机构
      */
     @OperLog(value = "机构管理", desc = "删除", result = true)
-    @RequiresPermissions("sys:org:remove")
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
@@ -147,7 +139,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 批量添加组织机构
      */
     @OperLog(value = "机构管理", desc = "批量添加", param = false, result = true)
-    @RequiresPermissions("sys:org:save")
     @ResponseBody
     @RequestMapping("/saveBatch")
     public JsonResult saveBatch(@RequestBody List<Organization> organizationList) {
@@ -161,7 +152,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 批量修改组织机构
      */
     @OperLog(value = "机构管理", desc = "批量修改", result = true)
-    @RequiresPermissions("sys:org:update")
     @ResponseBody
     @RequestMapping("/updateBatch")
     public JsonResult updateBatch(@RequestBody List<Organization> list) {
@@ -175,7 +165,6 @@ public class OrganizationController extends BaseQueryController<Organization, Or
      * 批量删除组织机构
      */
     @OperLog(value = "机构管理", desc = "批量删除", result = true)
-    @RequiresPermissions("sys:org:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
     public JsonResult removeBatch(@RequestBody List<Long> ids) {

@@ -5,7 +5,6 @@ import com.asuka.common.core.web.*;
 import com.asuka.common.system.entity.Dictionary;
 import com.asuka.common.system.entity.DictionaryData;
 import com.asuka.common.system.entity.OperRecord;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,6 @@ import java.util.List;
 @RequestMapping("/sys/operRecord")
 public class OperRecordController extends BaseQueryController<OperRecord, com.asuka.common.system.service.OperRecordService> {
 
-    @RequiresPermissions("sys:oper_record:view")
     @RequestMapping()
     public String view() {
         return "system/oper-record.html";
@@ -33,7 +31,6 @@ public class OperRecordController extends BaseQueryController<OperRecord, com.as
      * 分页查询操作日志
      */
     @OperLog(value = "操作日志", desc = "分页查询")
-    @RequiresPermissions("sys:oper_record:view")
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<OperRecord> page(HttpServletRequest request) {
@@ -45,7 +42,6 @@ public class OperRecordController extends BaseQueryController<OperRecord, com.as
      * 查询全部操作日志
      */
     @OperLog(value = "操作日志", desc = "查询全部")
-    @RequiresPermissions("sys:oper_record:view")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
@@ -58,7 +54,6 @@ public class OperRecordController extends BaseQueryController<OperRecord, com.as
      * 根据id查询操作日志
      */
     @OperLog(value = "操作日志", desc = "根据id查询")
-    @RequiresPermissions("sys:oper_record:view")
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {

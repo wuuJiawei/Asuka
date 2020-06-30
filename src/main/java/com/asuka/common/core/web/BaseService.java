@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BaseService<T, S extends BaseMapper<T>> {
 
     @Autowired
-    protected SQLManager sqlManager;
+    private SQLManager sqlManager;
     @Autowired
     private S dao;
 

@@ -3,9 +3,9 @@ package com.asuka.common.core.exception;
 import com.alibaba.fastjson.JSON;
 import com.asuka.common.core.Constants;
 import com.asuka.common.core.web.JsonResult;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
         // 对不同错误进行不同处理
         if (ex instanceof IException) {
             return doHandler("error/500.html", ((IException) ex).getCode(), ex.getMessage(), ex.toString(), request, response);
-        } else if (ex instanceof UnauthorizedException) {
+        } else if (ex instanceof AuthenticationException) {
             return doHandler("error/403.html", 403, "没有访问权限", ex.toString(), request, response);
         }
         logger.error(ex.getMessage(), ex);

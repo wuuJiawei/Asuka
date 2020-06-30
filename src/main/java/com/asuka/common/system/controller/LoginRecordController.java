@@ -4,7 +4,6 @@ import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
 import com.asuka.common.system.entity.LoginRecord;
 import com.asuka.common.system.service.LoginRecordService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ public class LoginRecordController extends BaseQueryController<LoginRecord, Logi
     @Autowired
     private LoginRecordService loginRecordService;
 
-    @RequiresPermissions("sys:login_record:view")
     @RequestMapping()
     public String view() {
         return "system/login-record.html";
@@ -35,7 +33,6 @@ public class LoginRecordController extends BaseQueryController<LoginRecord, Logi
      * 分页查询登录日志
      */
     @OperLog(value = "登录日志", desc = "分页查询")
-    @RequiresPermissions("sys:login_record:view")
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<LoginRecord> page(HttpServletRequest request) {
@@ -47,7 +44,6 @@ public class LoginRecordController extends BaseQueryController<LoginRecord, Logi
      * 查询全部登录日志
      */
     @OperLog(value = "登录日志", desc = "查询全部")
-    @RequiresPermissions("sys:login_record:view")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
@@ -60,7 +56,6 @@ public class LoginRecordController extends BaseQueryController<LoginRecord, Logi
      * 根据id查询登录日志
      */
     @OperLog(value = "登录日志", desc = "根据id查询")
-    @RequiresPermissions("sys:login_record:view")
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id, HttpServletRequest request) {

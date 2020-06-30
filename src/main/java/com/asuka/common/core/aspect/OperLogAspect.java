@@ -3,12 +3,12 @@ package com.asuka.common.core.aspect;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.asuka.common.core.annotation.OperLog;
+import com.asuka.common.core.security.SecurityUtils;
 import com.asuka.common.core.utils.UserAgentGetter;
 import com.asuka.common.system.entity.OperRecord;
 import com.asuka.common.system.entity.User;
 import com.asuka.common.system.service.OperRecordService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import com.asuka.common.system.service.UserService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -30,6 +30,8 @@ public class OperLogAspect {
     private ThreadLocal<Long> startTime = new ThreadLocal<>();
     @Autowired
     private OperRecordService operRecordService;
+    @Autowired
+    private UserService userService;
 
     @Pointcut("@annotation(com.asuka.common.core.annotation.OperLog)")
     public void operLog() {
@@ -92,11 +94,9 @@ public class OperLogAspect {
      * 获取当前登录的userId
      */
     private Integer getLoginUserId() {
-        Subject subject = SecurityUtils.getSubject();
-        if (subject == null) return null;
-        Object object = subject.getPrincipal();
-        if (object instanceof User) return ((User) object).getUserId();
-        return null;
+        String username = SecurityUtils.getUsername();
+        User user = userService.getByUsername(username);
+        return user == null ? null : user.getUserId();
     }
 
 }

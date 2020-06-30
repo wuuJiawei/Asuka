@@ -4,7 +4,6 @@ import com.asuka.common.core.annotation.OperLog;
 import com.asuka.common.core.web.*;
 import com.asuka.common.system.entity.DictionaryData;
 import com.asuka.common.system.entity.Menu;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequestMapping("/sys/menu")
 public class MenuController extends BaseQueryController<Menu, com.asuka.common.system.service.MenuService> {
 
-    @RequiresPermissions("sys:menu:view")
     @RequestMapping()
     public String view() {
         return "system/menu.html";
@@ -31,7 +29,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 分页查询菜单
      */
     @OperLog(value = "菜单管理", desc = "分页查询")
-    @RequiresPermissions("sys:menu:list")
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<Menu> page(HttpServletRequest request) {
@@ -43,7 +40,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 查询全部菜单
      */
     @OperLog(value = "菜单管理", desc = "查询全部")
-    @RequiresPermissions("sys:menu:list")
     @ResponseBody
     @RequestMapping("/list")
     public JsonResult list(HttpServletRequest request) {
@@ -56,7 +52,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 根据id查询菜单
      */
     @OperLog(value = "菜单管理", desc = "根据id查询")
-    @RequiresPermissions("sys:menu:list")
     @ResponseBody
     @RequestMapping("/get")
     public JsonResult get(Integer id) {
@@ -67,7 +62,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 添加菜单
      */
     @OperLog(value = "菜单管理", desc = "添加", param = false, result = true)
-    @RequiresPermissions("sys:menu:save")
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Menu menu) {
@@ -81,7 +75,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 修改菜单
      */
     @OperLog(value = "菜单管理", desc = "修改", param = false, result = true)
-    @RequiresPermissions("sys:menu:update")
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(Menu menu) {
@@ -95,7 +88,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 删除菜单
      */
     @OperLog(value = "菜单管理", desc = "删除", result = true)
-    @RequiresPermissions("sys:menu:remove")
     @ResponseBody
     @RequestMapping("/remove")
     public JsonResult remove(Integer id) {
@@ -109,7 +101,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 批量添加菜单
      */
     @OperLog(value = "菜单管理", desc = "批量添加", param = false, result = true)
-    @RequiresPermissions("sys:menu:save")
     @ResponseBody
     @RequestMapping("/saveBatch")
     public JsonResult saveBatch(@RequestBody List<Menu> menuList) {
@@ -123,7 +114,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 批量修改菜单
      */
     @OperLog(value = "菜单管理", desc = "批量修改", result = true)
-    @RequiresPermissions("sys:menu:update")
     @ResponseBody
     @RequestMapping("/updateBatch")
     public JsonResult updateBatch(@RequestBody List<Menu> list) {
@@ -137,7 +127,6 @@ public class MenuController extends BaseQueryController<Menu, com.asuka.common.s
      * 批量删除菜单
      */
     @OperLog(value = "菜单管理", desc = "批量删除", result = true)
-    @RequiresPermissions("sys:menu:remove")
     @ResponseBody
     @RequestMapping("/removeBatch")
     public JsonResult removeBatch(@RequestBody List<Long> ids) {
