@@ -72,6 +72,19 @@ public class BaseQueryController<Entity, Service extends BaseService> extends Ba
 
     /**
      * 初始化分页查询
+     * 从请求中获取分页参数，并解析查询参数，按约定格式进行查询
+     *
+     * @param parameterMap
+     * @return
+     */
+    public PageQuery<Entity> createPageQuery(Map<String, String[]> parameterMap) {
+        int pageNo = parameterMap.get(FILED_PAGE) == null ? 1: Integer.parseInt(parameterMap.get(FILED_PAGE)[0]);
+        int pageSize = parameterMap.get(FILED_LIMIT) == null ? 20: Integer.parseInt(parameterMap.get(FILED_LIMIT)[0]);
+        return createPageQuery(pageNo, pageSize, parameterMap);
+    }
+
+    /**
+     * 初始化分页查询
      * 从请求中直接解析参数，按格式进行查询
      *
      * @param pageNo

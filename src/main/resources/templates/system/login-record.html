@@ -14,13 +14,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">用户账号:</label>
                         <div class="layui-input-inline">
-                            <input name="username" class="layui-input" placeholder="输入账号"/>
+                            <input name="search@eq@username" class="layui-input" placeholder="输入账号"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">登录日期:</label>
                         <div class="layui-input-inline">
-                            <input name="loginRecordDateSel" class="layui-input icon-date" placeholder="选择日期范围"
+                            <input name="search@between@createTime" class="layui-input icon-date" placeholder="选择日期范围"
                                    autocomplete="off"/>
                         </div>
                     </div>
@@ -60,7 +60,6 @@
             cols: [[
                 {type: 'numbers'},
                 {field: 'username', title: '账号', sort: true},
-                {field: 'nickName', title: '用户名', sort: true},
                 {field: 'ip', title: 'IP地址', sort: true},
                 {field: 'device', title: '设备型号', sort: true},
                 {field: 'os', title: '操作系统', sort: true},
@@ -88,7 +87,7 @@
 
         /* 时间范围 */
         laydate.render({
-            elem: 'input[name="loginRecordDateSel"]',
+            elem: 'input[name="search@between@createTime"]',
             type: 'date',
             range: true,
             trigger: 'click'

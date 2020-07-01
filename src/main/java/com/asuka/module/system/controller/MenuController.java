@@ -1,5 +1,6 @@
 package com.asuka.module.system.controller;
 
+import com.asuka.common.Constants;
 import com.asuka.common.annotation.OperLog;
 import com.asuka.common.web.*;
 import com.asuka.module.system.entity.Menu;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,6 +67,11 @@ public class MenuController extends BaseQueryController<Menu, MenuService> {
     @ResponseBody
     @RequestMapping("/save")
     public JsonResult save(Menu menu) {
+        menu.setCreateTime(new Date());
+        menu.setDeleted(Constants.NO);
+        if (menu.getParentId() == null) {
+            menu.setParentId(0);
+        }
         if (service.save(menu)) {
             return JsonResult.ok("添加成功");
         }
@@ -78,7 +85,10 @@ public class MenuController extends BaseQueryController<Menu, MenuService> {
     @ResponseBody
     @RequestMapping("/update")
     public JsonResult update(Menu menu) {
-        if (service.update(menu)) {
+        if (menu.getParentId() == null) {
+            menu.setParentId(0);
+        }
+        if (service.updateTemplate(menu)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");

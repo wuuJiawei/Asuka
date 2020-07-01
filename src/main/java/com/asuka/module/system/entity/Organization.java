@@ -2,6 +2,7 @@ package com.asuka.module.system.entity;
 
 import org.beetl.sql.core.annotatoin.AutoID;
 import org.beetl.sql.core.annotatoin.Table;
+import org.beetl.sql.core.annotatoin.UpdateTime;
 
 import java.util.Date;
 import java.io.Serializable;
@@ -58,6 +59,7 @@ public class Organization implements Serializable {
     /**
      * 修改时间
      */
+    @UpdateTime
     private Date updateTime;
     /**
      * 是否删除,0否,1是

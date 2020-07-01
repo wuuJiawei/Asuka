@@ -64,7 +64,7 @@
             <div class="layui-col-md6">
                 <div class="layui-form-item">
                     <label class="layui-form-label">操作人:</label>
-                    <div class="layui-input-block layui-word-aux">{{d.nickName}}({{d.username}})</div>
+                    <div class="layui-input-block layui-word-aux">{{d.nickName}}({{d.username}})({{d.userId}})</div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">操作模块:</label>
@@ -149,8 +149,15 @@
             height: 'full-100',
             cellMinWidth: 120,
             cols: [[
-                // {type: 'numbers'},
-                {field: 'username', title: '账号', sort: true, width: 100, minWidth: 100},
+                {
+                    field: 'createTime', title: '操作时间', templet: function (d) {
+                        return util.toDateString(d.createTime);
+                    }, sort: true
+                },
+                {field: 'username', title: '账号(ID)', sort: true, width: 100, minWidth: 100, templet: function (d) {
+                        return d.username + '(' + d.userId + ')';
+                    },
+                },
                 {field: 'nickName', title: '用户名', sort: true, width: 100, minWidth: 100},
                 {field: 'model', title: '操作模块', sort: true, width: 120, minWidth: 120},
                 {field: 'description', title: '操作功能', sort: true},
@@ -168,11 +175,6 @@
                 {
                     field: 'spendTime', title: '耗时', sort: true, width: 80, minWidth: 80,
                     templet: '<p>{{d.spendTime/1000}}s</p>'
-                },
-                {
-                    field: 'createTime', title: '操作时间', templet: function (d) {
-                        return util.toDateString(d.createTime);
-                    }, sort: true
                 },
                 {
                     title: '操作', align: 'center', width: 70, minWidth: 70,

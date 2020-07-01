@@ -14,13 +14,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">角色名:</label>
                         <div class="layui-input-inline">
-                            <input name="roleName" class="layui-input" placeholder="输入角色名"/>
+                            <input name="search@like@roleName" class="layui-input" placeholder="输入角色名"/>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">角色标识:</label>
                         <div class="layui-input-inline">
-                            <input name="roleCode" class="layui-input" placeholder="输入角色标识"/>
+                            <input name="search@like@roleCode" class="layui-input" placeholder="输入角色标识"/>
                         </div>
                     </div>
                     <div class="layui-inline">&emsp;
@@ -109,7 +109,7 @@
             cellMinWidth: 100,
             cols: [[
                 {type: 'checkbox'},
-                {type: 'numbers'},
+                {field: 'roleId', title: 'ID', sort: true, width: 80},
                 {field: 'roleName', title: '角色名', sort: true},
                 {field: 'roleCode', title: '角色标识', sort: true},
                 {field: 'comments', title: '备注', sort: true},

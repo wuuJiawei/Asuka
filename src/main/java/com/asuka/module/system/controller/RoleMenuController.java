@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,13 +91,14 @@ public class RoleMenuController extends BaseQueryController<RoleMenu, RoleMenuSe
     @ResponseBody
     @RequestMapping("/update/{id}")
     public JsonResult setRoleAuth(@PathVariable("id") Integer roleId, @RequestBody List<Integer> menuIds) {
-        int cnt = service.lambdaQuery().andEq(RoleMenu::getRoleId, roleId).delete();
-        if (cnt > 0 && menuIds.size() > 0) {
+        service.lambdaQuery().andEq(RoleMenu::getRoleId, roleId).delete();
+        if (menuIds.size() > 0) {
             List<RoleMenu> roleMenuList = new ArrayList<>();
             for (Integer menuId : menuIds) {
                 RoleMenu roleMenu = new RoleMenu();
                 roleMenu.setRoleId(roleId);
                 roleMenu.setMenuId(menuId);
+                roleMenu.setCreateTime(new Date());
                 roleMenuList.add(roleMenu);
             }
             if (service.saveBatch(roleMenuList)) {

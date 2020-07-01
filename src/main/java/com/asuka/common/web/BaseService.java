@@ -80,7 +80,7 @@ public class BaseService<T, S extends BaseMapper<T>> {
      * @return
      */
     public T queryById(Class<T> tClass, Object id) {
-        T t = sqlManager.unique(tClass, id);
+        T t = sqlManager.single(tClass, id);
         return t;
     }
 

@@ -26,7 +26,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">权限标识:</label>
                         <div class="layui-input-inline">
-                            <input name="authority" class="layui-input" placeholder="输入权限标识"/>
+                            <input name="sauthority" class="layui-input" placeholder="输入权限标识"/>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -158,7 +158,7 @@
                 ' <button lay-event="add" class="layui-btn layui-btn-sm icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>',
                 '</p>'].join(''),
             cols: [[
-                {type: 'numbers'},
+                {field: 'menuId', title: 'ID', sort: true, width: 80},
                 {field: 'menuName', title: '菜单名称', minWidth: 110},
                 {
                     title: '图标', templet: '<p><i class="{{d.menuIcon}}"></i></p>',

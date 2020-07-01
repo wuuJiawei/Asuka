@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSON;
+import com.asuka.common.Constants;
 import com.asuka.common.annotation.OperLog;
 import com.asuka.common.web.*;
 import com.asuka.common.utils.CoreUtil;
@@ -26,9 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 用户管理
@@ -70,7 +69,10 @@ public class UserController extends BaseQueryController<User, UserService> {
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<User> page(HttpServletRequest request) {
-        PageQuery<User> query = createPageQuery(request);
+        Map<String, String[]> parameterMap = new HashMap<>();
+        parameterMap.putAll(request.getParameterMap());
+//        parameterMap.put("search@eq@deleted", new String[]{Constants.NO+""});
+        PageQuery<User> query = createPageQuery(parameterMap);
         List<User> list = query.getList();
         service.selectUserRoles(list);
         return new PageResult<User>(list, query.getTotalRow());
@@ -85,6 +87,7 @@ public class UserController extends BaseQueryController<User, UserService> {
     public JsonResult list(HttpServletRequest request) {
         Query<User> query = createQuery(request);
         List<User> records = service.queryAll(query);
+        service.selectUserRoles(records);
         return JsonResult.ok().setData(records);
     }
 
@@ -107,6 +110,8 @@ public class UserController extends BaseQueryController<User, UserService> {
     public JsonResult save(@RequestBody User user) {
         user.setState(0);
         user.setPassword(service.encodePsw(user.getPassword()));
+        user.setEmailVerified(Constants.NO);
+        user.setDeleted(Constants.NO);
         if (service.saveUser(user)) {
             return JsonResult.ok("添加成功");
         }

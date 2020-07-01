@@ -281,7 +281,7 @@
                         $('#organizationTree').find('.ew-tree-click').removeClass('ew-tree-click');
                         $(obj.elem).children('.layui-tree-entry').addClass('ew-tree-click');
                         insTb.reload({
-                            where: {organizationId: obj.data.organizationId},
+                            where: {'search@eq@organizationId': obj.data.organizationId},
                             url: 'user/list'
                         });
                     }
@@ -389,7 +389,7 @@
                 '</p>'].join(''),
             cellMinWidth: 100,
             cols: [[
-                {type: 'numbers', fixed: 'left'},
+                {field: 'userId', title: 'ID', sort: true},
                 {field: 'username', title: '账号', sort: true},
                 {
                     field: 'nickName', title: '用户名', templet: function (d) {

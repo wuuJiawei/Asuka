@@ -37,7 +37,7 @@
                     <!-- 表格工具栏1 -->
                     <form class="layui-form toolbar">
                         <div class="layui-form-item" style="margin-bottom: 10px;">
-                            <input name="dictName" class="layui-input" placeholder="输入字典名称"
+                            <input name="search@like@dictName" class="layui-input" placeholder="输入字典名称"
                                    style="max-width: 140px;display: inline-block;"/>&emsp;
                             <button class="layui-btn icon-btn" lay-filter="dictTbSearch" lay-submit>
                                 <i class="layui-icon">&#xe615;</i>搜索
@@ -58,13 +58,13 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">字典项名称:</label>
                                 <div class="layui-input-inline">
-                                    <input name="dictDataName" class="layui-input" placeholder="输入字典名称"/>
+                                    <input name="search@like@dictDataName" class="layui-input" placeholder="输入字典名称"/>
                                 </div>
                             </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label">字典项标识:</label>
                                 <div class="layui-input-inline">
-                                    <input name="dictDataCode" class="layui-input" placeholder="输入字典标识"/>
+                                    <input name="search@like@dictDataCode" class="layui-input" placeholder="输入字典标识"/>
                                 </div>
                             </div>
                             <div class="layui-inline">&emsp;
@@ -199,8 +199,9 @@
                 '</p>'].join(''),
             defaultToolbar: [],
             cols: [[
-                {type: 'numbers'},
-                {field: 'dictName', title: '字典名称'}
+                {field: 'dictId', title: 'ID', width: 60},
+                {field: 'dictName', title: '字典名称'},
+                {field: 'dictCode', title: '标识'}
             ]],
             done: function (res, curr, count) {
                 $('#dictTable+.layui-table-view .layui-table-body tbody>tr:first').trigger('click');
@@ -229,7 +230,9 @@
             selObj = obj;
             obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
             insTb2.reload({
-                where: {dictId: obj.data.dictId},
+                where: {
+                    'search@eq@dictId': obj.data.dictId
+                },
                 page: {curr: 1},
                 url: 'dictdata/page'
             });
@@ -298,7 +301,7 @@
             cellMinWidth: 100,
             cols: [[
                 {type: 'checkbox'},
-                {type: 'numbers'},
+                {field: 'dictDataId', title: 'ID', width: 60},
                 {field: 'dictDataName', title: '字典项名称', sort: true},
                 {field: 'dictDataCode', title: '字典项标识', sort: true},
                 {field: 'sortNumber', title: '排序号', sort: true, align: 'center', width: 90, minWidth: 90},

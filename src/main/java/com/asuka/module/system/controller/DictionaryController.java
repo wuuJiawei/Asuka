@@ -1,5 +1,6 @@
 package com.asuka.module.system.controller;
 
+import com.asuka.common.Constants;
 import com.asuka.module.system.service.DictionaryService;
 import com.asuka.common.annotation.OperLog;
 import com.asuka.common.web.*;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,6 +75,8 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
         if (service.lambdaQuery().andEq(Dictionary::getDictName, dictionary.getDictName()).count() > 0) {
             return JsonResult.error("字典名称已存在");
         }
+        dictionary.setDeleted(Constants.NO);
+        dictionary.setCreateTime(new Date());
         if (service.save(dictionary)) {
             return JsonResult.ok("添加成功");
         }
@@ -92,7 +96,7 @@ public class DictionaryController extends BaseQueryController<Dictionary, Dictio
         if (service.lambdaQuery().andEq(Dictionary::getDictName, dictionary.getDictName()).count() > 0) {
             return JsonResult.error("字典名称已存在");
         }
-        if (service.update(dictionary)) {
+        if (service.updateTemplate(dictionary)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");

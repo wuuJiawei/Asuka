@@ -1,5 +1,6 @@
 package com.asuka.module.system.service;
 
+import com.asuka.common.Constants;
 import com.asuka.common.exception.BusinessException;
 import com.asuka.common.web.BaseService;
 import com.asuka.module.system.dao.UserDao;
@@ -11,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,7 +64,8 @@ public class UserService extends BaseService<User, UserDao> {
         if (user.getEmail() != null && lambdaQuery().andEq(User::getEmail, user.getEmail()).count() > 0) {
             throw new BusinessException("邮箱已存在");
         }
-        dao().insert(user);
+        user.setCreateTime(new Date());
+        dao().insert(user, true);
         if (user.getRoleIds() != null) {
             addUserRoles(user.getUserId(), user.getRoleIds(), false);
         }
@@ -70,16 +74,16 @@ public class UserService extends BaseService<User, UserDao> {
 
     @Transactional
     public boolean updateUser(User user) {
-        if (user.getUsername() != null && lambdaQuery().andEq(User::getUsername, user.getUsername()).count() > 0) {
+        if (!StringUtils.isEmpty(user.getUsername()) && lambdaQuery().andEq(User::getUsername, user.getUsername()).count() > 0) {
             throw new BusinessException("账号已存在");
         }
-        if (user.getPhone() != null && lambdaQuery().andEq(User::getPhone, user.getPhone()).count() > 0) {
+        if (!StringUtils.isEmpty(user.getPhone()) && lambdaQuery().andEq(User::getPhone, user.getPhone()).count() > 0) {
             throw new BusinessException("手机号已存在");
         }
-        if (user.getEmail() != null && lambdaQuery().andEq(User::getEmail, user.getEmail()).count() > 0) {
+        if (!StringUtils.isEmpty(user.getEmail()) && lambdaQuery().andEq(User::getEmail, user.getEmail()).count() > 0) {
             throw new BusinessException("邮箱已存在");
         }
-        dao().updateById(user);
+        updateTemplate(user);
         if (user.getRoleIds() != null) {
             addUserRoles(user.getUserId(), user.getRoleIds(), true);
         }
@@ -127,7 +131,7 @@ public class UserService extends BaseService<User, UserDao> {
             userRoleService.lambdaQuery().andEq(UserRole::getUserId, userId).delete();
         }
         if (roleIds.size() > 0) {
-            if (userRoleService.insertBatch(userId, roleIds)) {
+            if (!userRoleService.insertBatch(userId, roleIds)) {
                 throw new BusinessException("操作失败");
             }
         }

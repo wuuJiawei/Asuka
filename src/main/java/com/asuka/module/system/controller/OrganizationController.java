@@ -1,6 +1,7 @@
 package com.asuka.module.system.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.asuka.common.Constants;
 import com.asuka.common.annotation.OperLog;
 import com.asuka.common.web.*;
 import com.asuka.module.system.entity.Organization;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -88,6 +90,8 @@ public class OrganizationController extends BaseQueryController<Organization, Or
         if (nameCnt > 0) {
             return JsonResult.error("机构名称已存在");
         }
+        organization.setCreateTime(new Date());
+        organization.setDeleted(Constants.NO);
         if (service.save(organization)) {
             return JsonResult.ok("添加成功");
         }
@@ -114,7 +118,7 @@ public class OrganizationController extends BaseQueryController<Organization, Or
                 return JsonResult.error("机构名称已存在");
             }
         }
-        if (service.update(organization)) {
+        if (service.updateTemplate(organization)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");

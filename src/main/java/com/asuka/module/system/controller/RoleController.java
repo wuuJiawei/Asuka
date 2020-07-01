@@ -1,5 +1,6 @@
 package com.asuka.module.system.controller;
 
+import com.asuka.common.Constants;
 import com.asuka.common.annotation.OperLog;
 import com.asuka.common.web.*;
 import com.asuka.common.utils.CoreUtil;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,6 +77,8 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
         if (nameCnt > 0) {
             return JsonResult.error("角色名称已存在");
         }
+        role.setCreateTime(new Date());
+        role.setDeleted(Constants.NO);
         if (service.save(role)) {
             return JsonResult.ok("添加成功");
         }
@@ -102,7 +106,7 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
         if (nameCnt > 0) {
             return JsonResult.error("角色名称已存在");
         }
-        if (service.update(role)) {
+        if (service.updateTemplate(role)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");

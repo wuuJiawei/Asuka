@@ -2,7 +2,9 @@ package com.asuka.module.system.entity;
 
 import org.beetl.sql.core.TailBean;
 import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.LogicDelete;
 import org.beetl.sql.core.annotatoin.Table;
+import org.beetl.sql.core.annotatoin.UpdateTime;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -83,6 +85,7 @@ public class User extends TailBean implements Serializable {
     /**
      * 修改时间
      */
+    @UpdateTime
     private Date updateTime;
     /**
      * 是否删除,0否,1是
@@ -109,6 +112,7 @@ public class User extends TailBean implements Serializable {
      */
     private String sexName;
 
+    @AutoID
     public Integer getUserId() {
         return userId;
     }

@@ -3,6 +3,7 @@ package com.asuka.module.system.controller;
 import com.asuka.common.annotation.OperLog;
 import com.asuka.common.web.*;
 import com.asuka.module.system.entity.OperRecord;
+import com.asuka.module.system.entity.User;
 import com.asuka.module.system.service.OperRecordService;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
@@ -34,6 +35,11 @@ public class OperRecordController extends BaseQueryController<OperRecord, OperRe
     @RequestMapping("/page")
     public PageResult<OperRecord> page(HttpServletRequest request) {
         PageQuery<OperRecord> query = createPageQuery(request);
+        query.getList().forEach(x->{
+            User user = getSysUserById(x.getUserId());
+            x.setUsername(user.getUsername());
+            x.setNickName(user.getNickName());
+        });
         return new PageResult<>(query.getList(), query.getTotalRow());
     }
 
