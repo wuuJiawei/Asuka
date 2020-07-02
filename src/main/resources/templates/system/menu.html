@@ -61,7 +61,7 @@
     </div>
 </script>
 <!-- 表单弹窗 -->
-<script type="text/html" id="menuEditDialog">
+<div type="text/html" id="menuEditDialog" style="display: none;">
     <form id="menuEditForm" lay-filter="menuEditForm" class="layui-form model-form">
         <input name="menuId" type="hidden"/>
         <div class="layui-row">
@@ -82,7 +82,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">菜单图标:</label>
                     <div class="layui-input-block">
-                        <input name="menuIcon" placeholder="请输入菜单图标" class="layui-input" maxlength="100"
+                        <input type="text" name="menuIcon" id="menuIcon" lay-filter="menuIcon" placeholder="请输入菜单图标1" class="layui-input" maxlength="100"
                                lay-verType="tips" lay-verify="h5"/>
                     </div>
                 </div>
@@ -130,10 +130,11 @@
             <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
-</script>
+</div>
+
 <:include file="../common/js.html"/>
 <script>
-    layui.use(['layer', 'form', 'formX', 'treeTable', 'util', 'admin', 'xmSelect', 'dropdown'], function () {
+    layui.use(['layer', 'form', 'formX', 'treeTable', 'util', 'admin', 'xmSelect', 'dropdown','iconPicker'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -141,6 +142,7 @@
         var util = layui.util;
         var admin = layui.admin;
         var xmSelect = layui.xmSelect;
+        var iconPicker = layui.iconPicker;
         var tbDataList = [];  // 表格全部数据
 
         /* 渲染表格 */
@@ -212,6 +214,30 @@
             }
         });
 
+        /*图标选择器*/
+        iconPicker.render({
+            // 选择器，推荐使用input
+            elem: '#menuIcon',
+            // 数据类型：fontClass/unicode，推荐使用fontClass
+            type: 'fontClass',
+            // 是否开启搜索：true/false
+            search: true,
+            // 是否开启分页
+            page: true,
+            // 每页显示数量，默认12
+            limit: 12,
+            // 每个图标格子的宽度
+            cellWidth: 'calc(25% - 10px)',
+            // 点击回调
+            click: function (data) {
+                $('#menuIcon').val('layui-icon ' + data.icon).attr('value', 'layui-icon ' + data.icon);
+            },
+            // 渲染成功后的回调
+            success: function(d) {
+
+            }
+        });
+
         /* 表格搜索 */
         form.on('submit(menuTbSearch)', function (data) {
             doTbSearch(data.field);
@@ -229,8 +255,22 @@
                 type: 1,
                 area: '580px',
                 title: (mData ? '修改' : '添加') + '菜单',
-                content: $('#menuEditDialog').html(),
+                content: $('#menuEditDialog'),
                 success: function (layero, dIndex) {
+                    //重置表单
+                    $('#menuEditForm')[0].reset();
+
+                    if (mData) {
+                        if (mData.menuType == '0'){
+                            $('input[name="menuType"][value="1"]').prop("checked", true);
+                        }
+                        if (mData.menuIcon != null && mData.menuIcon != '') {
+                            iconPicker.checkIcon('menuIcon', mData.menuIcon.split(' ')[1]);
+                        } else {
+                            iconPicker.checkIcon('menuIcon', 'layui-icon-circle-dot');
+                        }
+                    }
+
                     // 回显表单数据
                     form.val('menuEditForm', mData);
                     // 表单提交事件
