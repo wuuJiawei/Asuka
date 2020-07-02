@@ -74,15 +74,27 @@ public class UserService extends BaseService<User, UserDao> {
 
     @Transactional
     public boolean updateUser(User user) {
-        if (!StringUtils.isEmpty(user.getUsername()) && lambdaQuery().andEq(User::getUsername, user.getUsername()).count() > 0) {
-            throw new BusinessException("账号已存在");
+        if (!StringUtils.isEmpty(user.getUsername())) {
+            long usernameCnt = lambdaQuery().andEq(User::getUsername, user.getUsername()).andNotEq(User::getUserId, user.getUserId()).count();
+            if (usernameCnt > 0) {
+                throw new BusinessException("账号已存在");
+            }
         }
-        if (!StringUtils.isEmpty(user.getPhone()) && lambdaQuery().andEq(User::getPhone, user.getPhone()).count() > 0) {
-            throw new BusinessException("手机号已存在");
+
+        if (!StringUtils.isEmpty(user.getPhone())) {
+            long phoneCnt = lambdaQuery().andEq(User::getPhone, user.getPhone()).andNotEq(User::getUserId, user.getUserId()).count();
+            if (phoneCnt > 0) {
+                throw new BusinessException("手机号已存在");
+            }
         }
-        if (!StringUtils.isEmpty(user.getEmail()) && lambdaQuery().andEq(User::getEmail, user.getEmail()).count() > 0) {
-            throw new BusinessException("邮箱已存在");
+
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            long emailCnt = lambdaQuery().andEq(User::getEmail, user.getEmail()).andNotEq(User::getUserId, user.getUserId()).count();
+            if (emailCnt > 0) {
+                throw new BusinessException("邮箱已存在");
+            }
         }
+
         updateTemplate(user);
         if (user.getRoleIds() != null) {
             addUserRoles(user.getUserId(), user.getRoleIds(), true);
@@ -97,7 +109,8 @@ public class UserService extends BaseService<User, UserDao> {
     public String encodePsw(String psw) {
         if (psw == null) {
             return null;
-        };
+        }
+        ;
         return DigestUtils.md5DigestAsHex(psw.getBytes());
     }
 

@@ -136,6 +136,13 @@
             <version>3.0.16.RELEASE</version>
         </dependency>
 
+        <!-- 解析sql -->
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>3.2</version>
+        </dependency>
+
         <!-- 图形验证码 -->
         <dependency>
             <groupId>com.github.whvcse</groupId>
