@@ -52,7 +52,7 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 ## Todo
 
-- [ ] 完善system模块的所有增删改查功能
+- [x] 完善system模块的所有增删改查功能
 
 - [ ] 引入缓存支持：Redis，并为BeetlSQL的Dao提供缓存
 
@@ -60,7 +60,7 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 - [ ] 添加Beetl自定义标签，将常用组件进行封装
 
-- [ ] ControlAspect，自动解析字典与文件链接
+- [x] ControlAspect，自动解析字典与文件链接
 
 - [ ] 集成Web版代码生成器
 

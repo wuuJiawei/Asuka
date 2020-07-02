@@ -22,6 +22,8 @@ public class Constants {
     public static final int YES = 1;
     public static final int NO = 0;
 
-    // 字典翻译值的后缀
+    // 字典翻译值KEY的后缀
     public static final String DICT_VALUE_SUFFIX = "Text";
+    // 文件翻译值KEY的后缀
+    public static final String FILE_VALUE_SUFFIX = "Text";
 }

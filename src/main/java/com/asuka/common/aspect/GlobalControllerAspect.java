@@ -3,6 +3,7 @@ package com.asuka.common.aspect;
 import cn.hutool.core.util.ReflectUtil;
 import com.asuka.common.Constants;
 import com.asuka.common.annotation.Dict;
+import com.asuka.common.annotation.File;
 import com.asuka.common.web.JsonResult;
 import com.asuka.common.web.PageResult;
 import com.asuka.module.system.entity.DictionaryData;
@@ -197,6 +198,15 @@ public class GlobalControllerAspect {
                 log.debug(" __翻译字典字段__ " + field.getName() + Constants.DICT_VALUE_SUFFIX + "： " + textValue);
                 objectNode.put(field.getName() + Constants.DICT_VALUE_SUFFIX, textValue);
             }
+
+            // 文件链接
+            if (field.getAnnotation(File.class) != null) {
+                String fileValue = objectNode.get(field.getName()).asText();
+                String textValue = translateFileValue(fileValue);
+                log.debug(" __翻译文件字段__ " + field.getName() + Constants.FILE_VALUE_SUFFIX + "： " + textValue);
+                objectNode.put(field.getName() + Constants.FILE_VALUE_SUFFIX, textValue);
+            }
+
         }
 
         return objectNode;
@@ -215,5 +225,21 @@ public class GlobalControllerAspect {
         StringBuilder builder = new StringBuilder();
         DictionaryData dictionaryData = dictionaryDataService.listByDictCodeAndDataCode(dictCode, dictDataCode);
         return StringUtils.isEmpty(dictionaryData.getDictDataName()) ? "" : dictionaryData.getDictDataName();
+    }
+
+    /**
+     * 翻译文件数据
+     * @param value
+     * @return
+     */
+    private String translateFileValue(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return "";
+        }
+        if (value.startsWith("http")) {
+            return value;
+        }
+        //TODO 完善文件链接拼接，从配置中获取链接
+        return "http://" + value;
     }
 }
