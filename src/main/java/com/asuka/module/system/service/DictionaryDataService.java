@@ -7,6 +7,7 @@ import com.asuka.module.system.entity.DictionaryData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +25,9 @@ public class DictionaryDataService extends BaseService<DictionaryData, Dictionar
      */
     public List<DictionaryData> listByDictCode(String dictCode) {
         Dictionary dictionary = dictionaryService.lambdaQuery().andEq(Dictionary::getDictCode, dictCode).singleSimple();
+        if (dictionary == null) {
+            return new ArrayList<>();
+        }
         return lambdaQuery().andEq(DictionaryData::getDictId, dictionary.getDictId()).asc(DictionaryData::getSortNumber).select();
     }
 
@@ -32,7 +36,24 @@ public class DictionaryDataService extends BaseService<DictionaryData, Dictionar
      */
     public DictionaryData listByDictCodeAndName(String dictCode, String name) {
         Dictionary dictionary = dictionaryService.lambdaQuery().andEq(Dictionary::getDictCode, dictCode).singleSimple();
+        if (dictionary == null) {
+            return new DictionaryData();
+        }
         return lambdaQuery().andEq(DictionaryData::getDictId, dictionary.getDictId()).andEq(DictionaryData::getDictDataName, name).single();
+    }
+
+    /**
+     * 根据字典标识和字典项标识查询字典项
+     * @param dictCode
+     * @param dictDataCode
+     * @return
+     */
+    public DictionaryData listByDictCodeAndDataCode(String dictCode, String dictDataCode) {
+        Dictionary dictionary = dictionaryService.lambdaQuery().andEq(Dictionary::getDictCode, dictCode).singleSimple();
+        if (dictionary == null) {
+            return new DictionaryData();
+        }
+        return lambdaQuery().andEq(DictionaryData::getDictId, dictionary.getDictId()).andEq(DictionaryData::getDictDataCode, dictDataCode).single();
     }
 
 }

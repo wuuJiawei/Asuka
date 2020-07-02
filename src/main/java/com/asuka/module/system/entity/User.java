@@ -1,5 +1,6 @@
 package com.asuka.module.system.entity;
 
+import com.asuka.common.annotation.Dict;
 import org.beetl.sql.core.TailBean;
 import org.beetl.sql.core.annotatoin.AutoID;
 import org.beetl.sql.core.annotatoin.LogicDelete;
@@ -90,6 +91,7 @@ public class User extends TailBean implements Serializable {
     /**
      * 是否删除,0否,1是
      */
+    @Dict("deleted")
     private Integer deleted;
     /**
      * 权限列表
