@@ -54,7 +54,9 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 - [x] 完善system模块的所有增删改查功能
 
-- [x] 引入缓存支持：Redis，并为BeetlSQL的Dao提供缓存
+- [x] 为BeetlSQL的Dao提供缓存
+
+- [ ] 引入缓存支持：Redis、Memcache
 
 - [ ] 完善security权限功能，为函数添加权限支持
 
