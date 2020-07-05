@@ -127,6 +127,7 @@ public class WebGenerator {
     @RequestMapping("preview/{type}")
     @ResponseBody
     public JsonResult previewCode(String tableName, @PathVariable String type) {
+
         return JsonResult.error("开发中...");
     }
 
