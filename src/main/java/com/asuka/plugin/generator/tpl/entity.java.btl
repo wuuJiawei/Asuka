@@ -1,0 +1,69 @@
+package ${package.Entity};
+
+<% for(pkg in table.importPackages){ %>
+import ${pkg};
+<% } %>
+
+/**
+ * ${table.comment!}
+ * Created by ${author} on ${cfg.genDateTime}
+ */
+@TableName("${table.name}")
+public class ${entity} implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+<% for(field in table.fields){ /*生成字段*/ %>
+    /**
+     * ${field.comment!}
+     */
+    <% if(field.keyFlag){ /*主键*/ %>
+		<% if(field.keyIdentityFlag){ %>
+    @TableId(value = "${field.name}", type = IdType.AUTO)
+        <% }else if(isNotEmpty(idType)){ %>
+    @TableId(value = "${field.name}", type = IdType.${idType})
+        <% }else if(field.convert){ %>
+    @TableId("${field.name}")
+         <% } %>
+    <% }else if(isNotEmpty(field.fill)){ /*普通字段*/ %>
+        <% if(field.convert){ %>
+    @TableField(value = "${field.name}", fill = FieldFill.${field.fill})
+        <% }else{ %>
+    @TableField(fill = FieldFill.${field.fill})
+        <% } %>
+    <% }else if(field.convert){ %>
+    @TableField("${field.name}")
+    <% } %>
+    <% if(versionFieldName!'' == field.name){ /*乐观锁*/ %>
+    @Version
+    <% } %>
+    <% if(logicDeleteFieldName!'' == field.name){ /*逻辑删除*/ %>
+    @TableLogic
+    <% } %>
+    private ${field.propertyType} ${field.propertyName};
+
+<% } %>
+<% for(field in table.fields){ /*生成方法*/ %>
+    <% var getprefix = field.propertyType == 'boolean' ? 'is' : 'get'; %>
+    public ${field.propertyType} ${getprefix}${field.capitalName}() {
+        return ${field.propertyName};
+    }
+
+    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
+        this.${field.propertyName} = ${field.propertyName};
+    }
+
+<% } %>
+    @Override
+    public String toString() {
+        return "${entity}{" +
+        <% for(field in table.fields){ %>
+			<% if(fieldLP.index==0){ %>
+        "${field.propertyName}=" + ${field.propertyName} +
+			<% }else{ %>
+        ", ${field.propertyName}=" + ${field.propertyName} +
+			<% } %>
+        <% } %>
+        "}";
+    }
+
+}

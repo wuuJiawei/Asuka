@@ -37,3 +37,8 @@ spring:
     encoding: UTF-8
     servlet:
       content-type: text/html
+
+application:
+  version: @project.version@
+  artifactId: @project.artifactId@
+  groupId: @project.groupId@

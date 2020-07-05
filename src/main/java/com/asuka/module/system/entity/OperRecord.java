@@ -3,6 +3,7 @@ package com.asuka.module.system.entity;
 import org.beetl.sql.core.TailBean;
 import org.beetl.sql.core.annotatoin.AutoID;
 import org.beetl.sql.core.annotatoin.Table;
+import org.beetl.sql.core.annotatoin.UpdateTime;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -71,10 +72,12 @@ public class OperRecord extends TailBean implements Serializable {
     /**
      * 操作时间
      */
+    @UpdateTime
     private Date createTime;
     /**
      * 修改时间
      */
+    @UpdateTime
     private Date updateTime;
     /**
      * 用户昵称

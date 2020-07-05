@@ -1,0 +1,27 @@
+package ${package.Mapper};
+
+import ${superMapperClassPackage};
+import ${cfg.genConfig.groupId}.common.core.web.PageParam;
+import ${package.Entity}.${entity};
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * ${table.comment!}Mapper接口
+ * Created by ${author} on ${cfg.genDateTime}
+ */
+public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+
+    /**
+     * 分页查询
+     */
+    List<${entity}> listPage(@Param("page") PageParam<${entity}> page);
+
+    /**
+     * 查询全部
+     */
+    List<${entity}> listAll(@Param("page") Map<String, Object> page);
+
+}

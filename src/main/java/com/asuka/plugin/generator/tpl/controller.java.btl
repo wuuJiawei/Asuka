@@ -1,0 +1,203 @@
+package ${package.Controller};
+
+import ${cfg.genConfig.groupId}.common.core.web.*;
+<% if(cfg.genConfig.needLog){ %>
+import ${cfg.genConfig.groupId}.common.core.annotation.OperLog;
+<% } %>
+import ${package.Entity}.${entity};
+import ${package.Service}.${table.serviceName};
+<% if(cfg.genConfig.needPerm){ %>
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+<% } %>
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+/**
+ * ${table.comment!}管理
+ * Created by ${author} on ${cfg.genDateTime}
+ */
+@Controller
+@RequestMapping("/${cfg.genModel.modelName}/${table.entityPath}")
+public class ${table.controllerName} extends BaseController {
+    <% var authPre = cfg.genModel.modelName + ':' + table.entityPath; %>
+    <% var serviceIns = strutil.toLowerCase(strutil.subStringTo(table.serviceName,0,1)) + strutil.subString(table.serviceName,1); %>
+	<% var idFieldName,idPropertyName; for(field in table.fields){ if(field.keyFlag){ idFieldName = field.name; idPropertyName=field.propertyName; } } %>
+    @Autowired
+    private ${table.serviceName} ${serviceIns};
+
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:view")
+    <% } %>
+    @RequestMapping()
+    public String view() {
+        return "${cfg.genModel.modelName}/${table.entityPath}.html";
+    }
+
+    /**
+     * 分页查询${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:list")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "分页查询")
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/page")
+    public PageResult<${entity}> page(HttpServletRequest request) {
+        PageParam<${entity}> pageParam = new PageParam<>(request);
+        return new PageResult<>(${serviceIns}.page(pageParam, pageParam.getWrapper()).getRecords(), pageParam.getTotal());
+        //return ${serviceIns}.listPage(pageParam);  // 使用关联查询
+    }
+
+    /**
+     * 查询全部${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:list")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "查询全部")
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/list")
+    public JsonResult list(HttpServletRequest request) {
+        PageParam<${entity}> pageParam = new PageParam<>(request);
+        return JsonResult.ok().setData(${serviceIns}.list(pageParam.getOrderWrapper()));
+        //List<${entity}> records = ${serviceIns}.listAll(pageParam.getNoPageParam());  // 使用关联查询
+        //return JsonResult.ok().setData(pageParam.sortRecords(records));
+    }
+
+    /**
+     * 根据id查询${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:list")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "根据id查询")
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/get")
+    public JsonResult get(Integer id) {
+        return JsonResult.ok().setData(${serviceIns}.getById(id));
+		// 使用关联查询
+        //PageParam<${entity}> pageParam = new PageParam<>();
+		//pageParam.put("${idPropertyName!}", id);
+        //List<${entity}> records = ${serviceIns}.listAll(pageParam.getNoPageParam());
+        //return JsonResult.ok().setData(pageParam.getOne(records));
+    }
+
+    /**
+     * 添加${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:save")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "添加", param = false, result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/save")
+    public JsonResult save(${entity} ${table.entityPath}) {
+        if (${serviceIns}.save(${table.entityPath})) {
+            return JsonResult.ok("添加成功");
+        }
+        return JsonResult.error("添加失败");
+    }
+
+    /**
+     * 修改${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:update")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "修改", param = false, result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/update")
+    public JsonResult update(${entity} ${table.entityPath}) {
+        if (${serviceIns}.updateById(${table.entityPath})) {
+            return JsonResult.ok("修改成功");
+        }
+        return JsonResult.error("修改失败");
+    }
+
+    /**
+     * 删除${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:remove")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "删除", result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/remove")
+    public JsonResult remove(Integer id) {
+        if (${serviceIns}.removeById(id)) {
+            return JsonResult.ok("删除成功");
+        }
+        return JsonResult.error("删除失败");
+    }
+
+    /**
+     * 批量添加${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:save")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "批量添加", param = false, result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/saveBatch")
+    public JsonResult saveBatch(@RequestBody List<${entity}> list) {
+        if (${serviceIns}.saveBatch(list)) {
+            return JsonResult.ok("添加成功");
+        }
+        return JsonResult.error("添加失败");
+    }
+
+    /**
+     * 批量修改${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:update")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "批量修改", result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/updateBatch")
+    public JsonResult updateBatch(@RequestBody BatchParam<${entity}> batchParam) {
+        if (batchParam.update(${serviceIns}, "${idFieldName!}")) {
+            return JsonResult.ok("修改成功");
+        }
+        return JsonResult.error("修改失败");
+    }
+
+    /**
+     * 批量删除${table.comment!}
+     */
+    <% if(cfg.genConfig.needPerm){ %>
+    @RequiresPermissions("${authPre}:remove")
+    <% } %>
+    <% if(cfg.genConfig.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "批量删除", result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/removeBatch")
+    public JsonResult removeBatch(@RequestBody List<Integer> ids) {
+        if (${serviceIns}.removeByIds(ids)) {
+            return JsonResult.ok("删除成功");
+        }
+        return JsonResult.error("删除失败");
+    }
+
+}
