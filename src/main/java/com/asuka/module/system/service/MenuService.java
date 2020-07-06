@@ -1,12 +1,20 @@
 package com.asuka.module.system.service;
 
+import com.asuka.common.Constants;
 import com.asuka.common.web.BaseService;
 import com.asuka.module.system.dao.MenuDao;
 import com.asuka.module.system.entity.Menu;
+import com.asuka.module.system.entity.Role;
+import com.asuka.module.system.entity.RoleMenu;
+import com.asuka.module.system.entity.UserRole;
+import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 菜单服务实现类
@@ -15,8 +23,64 @@ import java.util.List;
 @Service
 public class MenuService extends BaseService<Menu, MenuDao> {
 
+    private final RoleMenuService roleMenuService;
+    private final RoleService roleService;
+    private final UserRoleService userRoleService;
+
+    public MenuService(RoleMenuService roleMenuService, RoleService roleService, UserRoleService userRoleService) {
+        this.roleMenuService = roleMenuService;
+        this.roleService = roleService;
+        this.userRoleService = userRoleService;
+    }
+
     public List<Menu> getUserMenu(Integer userId, Integer menuType) {
-        return dao().listByUserId(userId, menuType);
+
+        /*
+        * SELECT DISTINCT b.*
+    FROM sys_role_menu a
+    LEFT JOIN sys_menu b ON a.menu_id = b.menu_id
+    LEFT JOIN sys_role c ON a.role_id = c.role_id
+    WHERE a.role_id IN ( SELECT role_id FROM sys_user_role WHERE user_id=#userId# )
+    AND b.deleted = 0 AND c.deleted=0
+    @if(!isEmpty(menuType)){
+    AND b.menu_type=#menuType#
+    @}
+    ORDER BY b.sort_number
+        *
+        * */
+
+        List<Menu> menuList = new ArrayList<>();
+
+        List<UserRole> roleIdList = userRoleService.lambdaQuery().andEq(UserRole::getUserId, userId).select(UserRole::getRoleId);
+        if (CollectionUtils.isEmpty(roleIdList)) {
+            return menuList;
+        }
+
+        List<Role> roleIdList2 = roleService
+                .lambdaQuery()
+                .andIn(Role::getRoleId, roleIdList.stream().map(UserRole::getRoleId).collect(Collectors.toList()))
+                .andEq(Role::getDeleted, Constants.NO)
+                .select(Role::getRoleId);
+        if (CollectionUtils.isEmpty(roleIdList2)) {
+            return menuList;
+        }
+
+        List<RoleMenu> menuIdList = roleMenuService
+                .lambdaQuery()
+                .andIn(RoleMenu::getRoleId, roleIdList2.stream().map(Role::getRoleId).collect(Collectors.toList()))
+                .select(RoleMenu::getMenuId);
+        if (CollectionUtils.isEmpty(menuIdList)) {
+            return menuList;
+        }
+
+        menuList = lambdaQuery()
+                .andIn(Menu::getMenuId, menuIdList.stream().map(RoleMenu::getMenuId).collect(Collectors.toList()))
+                .andEq(Menu::getDeleted, Constants.NO)
+                .andEq(Menu::getMenuType, Query.filterEmpty(menuType))
+                .asc(Menu::getSortNumber)
+                .select();
+
+        return menuList;
     }
 
     public List<Menu> toMenuTree(List<Menu> menus, Integer parentId) {
@@ -31,6 +95,6 @@ public class MenuService extends BaseService<Menu, MenuDao> {
     }
 
     public List<Menu> listByUserId(Integer userId, Integer menuType) {
-        return dao().listByUserId(userId, menuType);
+        return getUserMenu(userId, menuType);
     }
 }
