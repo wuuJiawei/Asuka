@@ -58,7 +58,7 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 - [ ] 引入缓存支持：Redis、Memcache
 
-- [ ] 完善security权限功能，为函数添加权限支持
+- [x] 完善security权限功能，为函数添加权限支持
 
 - [ ] 添加Beetl自定义标签，将常用组件进行封装
 
@@ -70,7 +70,7 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 - [ ] 提供演示站点
 
-- [ ] swagger2 + knife4j
+- [x] swagger2 + knife4j
 
 - [ ] quartz
 

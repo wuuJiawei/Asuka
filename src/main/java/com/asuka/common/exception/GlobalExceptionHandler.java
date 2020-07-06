@@ -5,6 +5,7 @@ import com.asuka.common.Constants;
 import com.asuka.common.web.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,11 +29,19 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ResponseBody
     @ExceptionHandler(BusinessException.class)
-    public JsonResult businessExceptionHandler(BusinessException e){
-        logger.error(e.getMessage(), e.fillInStackTrace());
-        return JsonResult.error(e.getMessage());
+    public String businessExceptionHandler(BusinessException e, HttpServletRequest request, HttpServletResponse response){
+        return doHandler("error/500.html", 500, e.getMessage(), e.toString(), request, response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public String AccessDeniedException(AccessDeniedException ex, HttpServletRequest request, HttpServletResponse response) {
+        return doHandler("error/403.html", 403, ex.getMessage(), ex.toString(), request, response);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public String AuthenticationException(AuthenticationException ex, HttpServletRequest request, HttpServletResponse response) {
+        return doHandler("error/403.html", 403, ex.getMessage(), ex.toString(), request, response);
     }
 
     @ExceptionHandler(Exception.class)
@@ -40,8 +49,6 @@ public class GlobalExceptionHandler {
         // 对不同错误进行不同处理
         if (ex instanceof IException) {
             return doHandler("error/500.html", ((IException) ex).getCode(), ex.getMessage(), ex.toString(), request, response);
-        } else if (ex instanceof AuthenticationException) {
-            return doHandler("error/403.html", 403, "没有访问权限", ex.toString(), request, response);
         }
         logger.error(ex.getMessage(), ex);
         return doHandler("error/500.html", Constants.RESULT_ERROR_CODE, "系统错误", ex.toString(), request, response);

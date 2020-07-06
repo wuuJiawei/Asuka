@@ -8,6 +8,7 @@ import com.asuka.module.system.entity.Role;
 import com.asuka.module.system.service.RoleService;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/sys/role")
 public class RoleController extends BaseQueryController<Role, RoleService> {
 
+    @PreAuthorize("@$.hp('sys:role:view')")
     @RequestMapping()
     public String view() {
         return "system/role.html";
@@ -33,6 +35,7 @@ public class RoleController extends BaseQueryController<Role, RoleService> {
      * 分页查询角色
      */
     @OperLog(value = "角色管理", desc = "分页查询")
+    @PreAuthorize("@$.hp('sys:role:view')")
     @ResponseBody
     @RequestMapping("/page")
     public PageResult<Role> page(HttpServletRequest request) {
