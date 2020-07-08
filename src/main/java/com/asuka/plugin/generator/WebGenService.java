@@ -1,19 +1,11 @@
 package com.asuka.plugin.generator;
 
-import com.asuka.plugin.generator.dto.Attribute;
 import com.asuka.plugin.generator.dto.Entity;
-import org.beetl.sql.core.JavaType;
-import org.beetl.sql.core.NameConversion;
 import org.beetl.sql.core.SQLManager;
-import org.beetl.sql.core.db.ClassDesc;
-import org.beetl.sql.core.db.ColDesc;
 import org.beetl.sql.core.db.MetadataManager;
-import org.beetl.sql.core.db.TableDesc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,9 +20,7 @@ public class WebGenService {
      * @return
      */
     public List<Entity> getAllTable(){
-        MetadataManager metadataManager = sqlManager.getMetaDataManager();
-        Set<String> tableSet = metadataManager.allTable();
-        return tableSet.stream().map(x-> getEntitySimpleInfo(x)).collect(Collectors.toList());
+        return GenDataUtils.getAllTable(sqlManager);
     }
 
     /**
@@ -40,17 +30,7 @@ public class WebGenService {
      * @return
      */
     public Entity getEntitySimpleInfo(String tableName) {
-        MetadataManager metadataManager = sqlManager.getMetaDataManager();
-        NameConversion nameConversion =sqlManager.getNc();
-        TableDesc tableDesc = metadataManager.getTable(tableName);
-        if (tableDesc == null) {
-            return null;
-        }
-        Entity entity = new Entity();
-        entity.setComment(tableDesc.getRemark());
-        entity.setTableName(tableName);
-        entity.setClassName(nameConversion.getClassName(tableName));
-        return entity;
+        return GenDataUtils.getEntitySimpleInfo(sqlManager, tableName);
     }
 
     /**
@@ -59,65 +39,9 @@ public class WebGenService {
      * @return
      */
     public Entity getEntityInfo(String tableName) {
-        MetadataManager metadataManager = sqlManager.getMetaDataManager();
-        NameConversion nameConversion = sqlManager.getNc();
-        TableDesc tableDesc = metadataManager.getTable(tableName);
-        if (tableDesc == null) {
-            return null;
-        }
-
-        // 表基础信息
-        Entity entity = new Entity();
-        entity.setComment(tableDesc.getRemark());
-        entity.setTableName(tableName);
-        entity.setClassName(nameConversion.getClassName(tableName));
-
-        // 字段信息
-        Set<String> cols = tableDesc.getCols();
-        List<Attribute> attributeList = cols.stream().map(x->{
-            ColDesc colDesc = tableDesc.getColDesc(x);
-            Attribute attribute = new Attribute();
-            attribute.setClassName(nameConversion.getPropertyName(x));
-            attribute.setComment(colDesc.remark);
-            attribute.setColName(x);
-            if(tableDesc.getIdNames().contains(x)) {
-                attribute.setId(true);
-                //TODO 目前仅支持单一主键生成
-                entity.setIdAttribute(attribute);
-            }
-            String type = JavaType.getType(colDesc.sqlType, colDesc.size, colDesc.digit);
-            if(type.equals("Double")){
-                type = "BigDecimal";
-            }
-            if(type.equals("Timestamp")){
-                type ="Date";
-            }
-            attribute.setJavaType(type);
-            setGetDisplayName(attribute);
-            return attribute;
-        }).collect(Collectors.toList());
-        entity.setColList(attributeList);
-        return entity;
+        return GenDataUtils.getEntityInfo(sqlManager, tableName);
     }
 
-    /**
-     * 根据数据库注释来判断显示名称
-     * @param attr
-     */
-    private void setGetDisplayName(Attribute attr) {
-        String comment = attr.getComment();
-        if(StringUtils.isEmpty(comment)) {
-            attr.setDisplayName(attr.getClassName());
-            return ;
-        }
-        String displayName = null;
-        int index = comment.indexOf(",");
-        if(index!=-1) {
-            displayName =  comment.substring(0,index);
-            attr.setDisplayName(displayName);
-        }else {
-            attr.setDisplayName(comment);
-        }
-    }
+
 
 }

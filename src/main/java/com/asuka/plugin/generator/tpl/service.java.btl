@@ -1,27 +1,17 @@
-package ${package.Service};
+package ${package.parent}.${package.service};
 
-import ${superServiceClassPackage};
-import ${cfg.genConfig.groupId}.common.core.web.PageParam;
-import ${cfg.genConfig.groupId}.common.core.web.PageResult;
-import ${package.Entity}.${entity};
-
-import java.util.List;
-import java.util.Map;
+import ${cfg.groupId}.common.web.BaseService;
+import ${package.parent}.${package.dao}.${table.firstUpperClassName}Dao;
+import ${package.parent}.${package.entity}.${table.firstUpperClassName};
+import org.springframework.stereotype.Service;
 
 /**
- * ${table.comment!}服务类
- * Created by ${author} on ${cfg.genDateTime}
- */
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
-
-    /**
-     * 分页查询
-     */
-    PageResult<${entity}> listPage(PageParam<${entity}> page);
-
-    /**
-     * 查询所有
-     */
-    List<${entity}> listAll(Map<String, Object> page);
+* ${table.comment!}服务类
+* @author ${cfg.author!}
+* @see
+* @since ${thisDateTime}
+*/
+@Service
+public class ${table.firstUpperClassName}Service extends BaseService<${table.firstUpperClassName}, ${table.firstUpperClassName}Dao> {
 
 }

@@ -12,36 +12,50 @@
             <!-- 表格工具栏 -->
             <form class="layui-form toolbar">
                 <div class="layui-form-item">
-                    <% for(field in table.fields){ %>
-                    <% if(field.keyFlag){ idFieldName = field.propertyName;  %>
-                    <% }else if(field.name=='create_time'||field.name=='update_time'||field.name=='deleted'){}else{ %>
+                    <% for(field in table.colList){ %>
+                    <% if(field.isId){ idFieldName = field.className;  %>
+                    <% }else if(strutil.endWith(field.sqlName, "time")){%>
                     <div class="layui-inline">
                         <label class="layui-form-label">${field.comment!}:</label>
                         <div class="layui-input-inline">
-                            <input name="${field.propertyName}" class="layui-input" placeholder="输入${field.comment!}"/>
+                            <input name="search@between@${field.className}" class="layui-input" placeholder="输入${field.comment!}"/>
+                        </div>
+                    </div>
+                    <% }else if(field.sqlName=='deleted'){ %>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">${field.comment!}:</label>
+                        <div class="layui-input-inline">
+                            <input name="search@eq@${field.className}" class="layui-input" placeholder="输入${field.comment!}"/>
+                        </div>
+                    </div>
+                    <% }else{ %>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">${field.comment!}:</label>
+                        <div class="layui-input-inline">
+                            <input name="search@like@${field.className}" class="layui-input" placeholder="输入${field.comment!}"/>
                         </div>
                     </div>
                     <% } %>
                     <% } %>
                     <div class="layui-inline">&emsp;
-                        <button class="layui-btn icon-btn" lay-filter="${table.entityPath}TbSearch" lay-submit>
+                        <button class="layui-btn icon-btn" lay-filter="${table.className}TbSearch" lay-submit>
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
                     </div>
                 </div>
             </form>
             <!-- 数据表格 -->
-            <table id="${table.entityPath}Table" lay-filter="${table.entityPath}Table"></table>
+            <table id="${table.className}Table" lay-filter="${table.className}Table"></table>
         </div>
     </div>
 </div>
 <!-- 表格操作列 -->
-<script type="text/html" id="${table.entityPath}TbBar">
+<script type="text/html" id="${table.className}TbBar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs"
-       data-dropdown="#${table.entityPath}TbDelDrop{{d.LAY_INDEX}}" no-shade="true">删除</a>
+       data-dropdown="#${table.className}TbDelDrop{{d.LAY_INDEX}}" no-shade="true">删除</a>
     <div class="dropdown-menu-nav dropdown-popconfirm dropdown-top-right layui-hide"
-         id="${table.entityPath}TbDelDrop{{d.LAY_INDEX}}"
+         id="${table.className}TbDelDrop{{d.LAY_INDEX}}"
          style="max-width: 200px;white-space: normal;min-width: auto;margin-left: 10px;">
         <div class="dropdown-anchor"></div>
         <div class="dropdown-popconfirm-title">
@@ -55,41 +69,54 @@
     </div>
 </script>
 <!-- 表单弹窗 -->
-<script type="text/html" id="${table.entityPath}EditDialog">
-    <form id="${table.entityPath}EditForm" lay-filter="${table.entityPath}EditForm" class="layui-form model-form">
+<script type="text/html" id="${table.className}EditDialog">
+    <form id="${table.className}EditForm" lay-filter="${table.className}EditForm" class="layui-form model-form">
         <input name="${idFieldName!}" type="hidden"/>
-        <% for(field in table.fields){ %>
-        <% if(field.keyFlag||field.name=='create_time'||field.name=='update_time'||field.name=='deleted'){}else{ %>
+        <% for(field in table.colList){ %>
+        <% if(field.isId||field.sqlName=='create_time'||field.sqlName=='update_time'||field.sqlName=='deleted'){}else{ %>
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">${field.comment!}:</label>
             <div class="layui-input-block">
-                <input name="${field.propertyName}" placeholder="请输入${field.comment!}" class="layui-input"
+                <input name="${field.className}" placeholder="请输入${field.comment!}" class="layui-input"
                        lay-verify="required" required/>
             </div>
         </div>
         <% } %>
         <% } %>
         <div class="layui-form-item text-right">
-            <button class="layui-btn" lay-filter="${table.entityPath}EditSubmit" lay-submit>保存</button>
+            <button class="layui-btn" lay-filter="${table.className}EditSubmit" lay-submit>保存</button>
             <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
 </script>
 <:include file="../common/js.html"/>
 <script>
-    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown'], function () {
+    layui.use(['layer', 'laydate', 'form', 'table', 'tableX', 'util', 'admin', 'dropdown'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
+        var laydate = layui.laydate;
         var form = layui.form;
         var table = layui.table;
         var tableX = layui.tableX;
         var util = layui.util;
         var admin = layui.admin;
 
+        /* 时间控件 */
+        <% for(field in table.colList) { %>
+            <% if (strutil.endWith(field.sqlName, "time")) {%>
+        laydate.render({
+            elem: 'input[name="search@between@${field.className}"]',
+            type: 'date',
+            range: true,
+            trigger: 'click'
+        });
+            <% } %>
+        <% } %>
+
         /* 渲染表格 */
         var insTb = tableX.render({
-            elem: '#${table.entityPath}Table',
-            url: '${table.entityPath}/page',
+            elem: '#${table.className}Table',
+            url: '\${ctxPath}/system/${table.className}/page',
             page: true,
             toolbar: ['<p>',
                 '<button lay-event="add" class="layui-btn layui-btn-sm icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>&nbsp;',
@@ -98,31 +125,32 @@
             cellMinWidth: 100,
             cols: [[
                 {type: 'checkbox'},
-                {type: 'numbers'},
-                <% for(field in table.fields){ %>
-                <% if(field.keyFlag||'deleted'==field.name||'update_time'==field.name){ %>
-                <% }else if(field.propertyName=='createTime'){ %>
-                {
-                    field: 'createTime', title: '${field.comment!}', templet: function (d) {
+                <% for(field in table.colList){ %>
+                <% if(field.isId){ %>
+                {field: '${field.className}', title: '${field.comment!}', sort: true, width: 80},
+                <% }else if ('deleted'==field.sqlName||'update_time'==field.sqlName){ %>
+                <% }else if(field.className=='createTime'){ %>
+                {field: 'createTime', title: '${field.comment!}', sort: true,
+                    templet: function (d) {
                         return util.toDateString(d.createTime);
-                    }, sort: true
+                    }
                 },
                 <% }else{ %>
-                {field: '${field.propertyName}', title: '${field.comment!}', sort: true},
+                {field: '${field.className}', title: '${field.comment!}', sort: true},
                 <% } %>
                 <% } %>
-                {title: '操作', toolbar: '#${table.entityPath}TbBar', align: 'center', width: 200, minWidth: 200}
+                {title: '操作', toolbar: '#${table.className}TbBar', align: 'center', width: 200, minWidth: 200}
             ]]
         });
 
         /* 表格搜索 */
-        form.on('submit(${table.entityPath}TbSearch)', function (data) {
+        form.on('submit(${table.className}TbSearch)', function (data) {
             insTb.reload({where: data.field, page: {curr: 1}});
             return false;
         });
 
         /* 表格工具条点击事件 */
-        table.on('tool(${table.entityPath}Table)', function (obj) {
+        table.on('tool(${table.className}Table)', function (obj) {
             if ('edit' === obj.event) { // 修改
                 showEditModel(obj.data);
             } else if ('del' === obj.event) { // 删除
@@ -131,11 +159,11 @@
         });
 
         /* 表格头工具栏点击事件 */
-        table.on('toolbar(${table.entityPath}Table)', function (obj) {
+        table.on('toolbar(${table.className}Table)', function (obj) {
             if ('add' === obj.event) { // 添加
                 showEditModel();
             } else if ('del' === obj.event) { // 删除
-                var checkRows = table.checkStatus('${table.entityPath}Table');
+                var checkRows = table.checkStatus('${table.className}Table');
                 if (0 === checkRows.data.length) {
                     return layer.msg('请选择要删除的数据', {icon: 2, anim: 6});
                 }
@@ -151,14 +179,14 @@
             admin.open({
                 type: 1,
                 title: (mData ? '修改' : '添加') + '${table.comment!}',
-                content: $('#${table.entityPath}EditDialog').html(),
+                content: $('#${table.className}EditDialog').html(),
                 success: function (layero, dIndex) {
                     // 回显表单数据
-                    form.val('${table.entityPath}EditForm', mData);
+                    form.val('${table.className}EditForm', mData);
                     // 表单提交事件
-                    form.on('submit(${table.entityPath}EditSubmit)', function (data) {
+                    form.on('submit(${table.className}EditSubmit)', function (data) {
                         var loadIndex = layer.load(2);
-                        $.post(mData ? '${table.entityPath}/update' : '${table.entityPath}/save', data.field, function (res) {
+                        $.post(mData ? '\${ctxPath}/system/${table.className}/update' : '\${ctxPath}/system/${table.className}/save', data.field, function (res) {
                             layer.close(loadIndex);
                             if (0 === res.code) {
                                 layer.close(dIndex);
@@ -180,7 +208,7 @@
                 admin.confirm('确定要删除选中数据吗？', function (i) {
                     layer.close(i);
                     var loadIndex = layer.load(2);
-                    admin.req('${table.entityPath}/removeBatch', JSON.stringify(obj.ids), function (res) {
+                    admin.req('\${ctxPath}/system/${table.className}/removeBatch', JSON.stringify(obj.ids), function (res) {
                         layer.close(loadIndex);
                         if (0 === res.code) {
                             layer.msg(res.msg, {icon: 1});
@@ -192,7 +220,7 @@
                 });
             } else {  // 单个删除
                 var loadIndex = layer.load(2);
-                $.get('${table.entityPath}/remove', {id: obj.data.${idFieldName!}}, function (res) {
+                $.get('\${ctxPath}/system/${table.className}/remove', {id: obj.data.${idFieldName!}}, function (res) {
                     layer.close(loadIndex);
                     if (0 === res.code) {
                         layer.msg(res.msg, {icon: 1});

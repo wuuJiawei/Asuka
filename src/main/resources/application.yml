@@ -38,7 +38,3 @@ spring:
     servlet:
       content-type: text/html
 
-application:
-  version: @project.version@
-  artifactId: @project.artifactId@
-  groupId: @project.groupId@

@@ -15,6 +15,11 @@ public class Entity implements Serializable {
     private String className;
 
     /**
+     * 首字母大写的类名
+     */
+    private String firstUpperClassName;
+
+    /**
      * 表名
      */
     private String tableName;
@@ -99,5 +104,13 @@ public class Entity implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getFirstUpperClassName() {
+        return firstUpperClassName;
+    }
+
+    public void setFirstUpperClassName(String firstUpperClassName) {
+        this.firstUpperClassName = firstUpperClassName;
     }
 }

@@ -1,69 +1,44 @@
-package ${package.Entity};
+package ${package.parent}.${package.entity};
 
-<% for(pkg in table.importPackages){ %>
-import ${pkg};
-<% } %>
+import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Table;
+import org.beetl.sql.core.annotatoin.Tail;
+import org.beetl.sql.core.annotatoin.UpdateTime;
+
+import java.util.Date;
+import java.io.Serializable;
 
 /**
- * ${table.comment!}
- * Created by ${author} on ${cfg.genDateTime}
- */
-@TableName("${table.name}")
-public class ${entity} implements Serializable {
+* ${table.comment!}
+* @author ${cfg.author!}
+* @see
+* @since ${thisDateTime}
+*/
+@Tail
+@Table("${table.tableName}")
+public class ${table.className} implements Serializable {
     private static final long serialVersionUID = 1L;
 
-<% for(field in table.fields){ /*生成字段*/ %>
+<% for(field in table.colList){ /*生成字段*/ %>
     /**
      * ${field.comment!}
      */
-    <% if(field.keyFlag){ /*主键*/ %>
-		<% if(field.keyIdentityFlag){ %>
-    @TableId(value = "${field.name}", type = IdType.AUTO)
-        <% }else if(isNotEmpty(idType)){ %>
-    @TableId(value = "${field.name}", type = IdType.${idType})
-        <% }else if(field.convert){ %>
-    @TableId("${field.name}")
-         <% } %>
-    <% }else if(isNotEmpty(field.fill)){ /*普通字段*/ %>
-        <% if(field.convert){ %>
-    @TableField(value = "${field.name}", fill = FieldFill.${field.fill})
-        <% }else{ %>
-    @TableField(fill = FieldFill.${field.fill})
-        <% } %>
-    <% }else if(field.convert){ %>
-    @TableField("${field.name}")
+    <% if(field.isId){ /*主键*/ %>
+    @AutoID
     <% } %>
-    <% if(versionFieldName!'' == field.name){ /*乐观锁*/ %>
-    @Version
-    <% } %>
-    <% if(logicDeleteFieldName!'' == field.name){ /*逻辑删除*/ %>
-    @TableLogic
-    <% } %>
-    private ${field.propertyType} ${field.propertyName};
+    private ${field.javaType} ${field.className};
 
 <% } %>
-<% for(field in table.fields){ /*生成方法*/ %>
-    <% var getprefix = field.propertyType == 'boolean' ? 'is' : 'get'; %>
-    public ${field.propertyType} ${getprefix}${field.capitalName}() {
-        return ${field.propertyName};
+<% for(field in table.colList){ /*生成方法*/ %>
+    <% var getPrefix = field.javaType == 'boolean' ? 'is' : 'get'; %>
+    public ${field.javaType} ${getPrefix}${field.firstUpperClassName}() {
+        return ${field.className};
     }
 
-    public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-        this.${field.propertyName} = ${field.propertyName};
+    public void set${field.firstUpperClassName}(${field.javaType} ${field.className}) {
+        this.${field.className} = ${field.className};
     }
 
 <% } %>
-    @Override
-    public String toString() {
-        return "${entity}{" +
-        <% for(field in table.fields){ %>
-			<% if(fieldLP.index==0){ %>
-        "${field.propertyName}=" + ${field.propertyName} +
-			<% }else{ %>
-        ", ${field.propertyName}=" + ${field.propertyName} +
-			<% } %>
-        <% } %>
-        "}";
-    }
 
 }

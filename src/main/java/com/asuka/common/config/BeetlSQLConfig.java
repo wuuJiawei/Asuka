@@ -1,5 +1,6 @@
 package com.asuka.common.config;
 
+import com.ibeetl.starter.BeetlSqlCustomize;
 import com.ibeetl.starter.BeetlSqlProperties;
 import com.zaxxer.hikari.HikariDataSource;
 import org.beetl.core.fun.ObjectUtil;
@@ -11,8 +12,10 @@ import org.beetl.sql.ext.DebugInterceptor;
 import org.beetl.sql.ext.SimpleCacheInterceptor;
 import org.beetl.sql.ext.spring4.BeetlSqlDataSource;
 import org.beetl.sql.ext.spring4.SqlManagerFactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;

@@ -4,12 +4,13 @@ import cn.hutool.core.io.FileUtil;
 import com.asuka.common.web.JsonResult;
 import com.asuka.common.web.PageResult;
 import com.asuka.plugin.generator.dto.Entity;
+import com.asuka.plugin.generator.dto.SuperConfig;
 import com.asuka.plugin.generator.dto.Template;
+import com.asuka.plugin.generator.dto.enums.TemplateTypeEnum;
 import org.beetl.sql.core.SQLManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -38,17 +39,6 @@ public class WebGenerator {
 
     @GetMapping
     public String index(HttpServletRequest request){
-        String url = env.getProperty("spring.datasource.master.url");
-        String user = env.getProperty("spring.datasource.master.username");
-        String password = env.getProperty("spring.datasource.master.password");
-        String driver = env.getProperty("spring.datasource.master.driver-class-name");
-        Map<String, String> dataSource = new HashMap<>(4);
-        dataSource.put("url", url);
-        dataSource.put("user", user);
-        dataSource.put("password", password);
-        dataSource.put("driver", driver);
-        request.setAttribute("dataSource", dataSource);
-
         // 读取pom.xml，解析出artifactId和groupId
         String artifactId = env.getProperty("application.artifactId");
         request.setAttribute("artifactId", StringUtils.isEmpty(artifactId) ? "Asuka" : artifactId);
@@ -119,16 +109,67 @@ public class WebGenerator {
     }
 
     /**
-     * 预览代码
+     * 预览单个文件代码
      * @param tableName
      * @param type
      * @return
      */
     @RequestMapping("preview/{type}")
     @ResponseBody
-    public JsonResult previewCode(String tableName, @PathVariable String type) {
+    public JsonResult previewCode(String tableName, SuperConfig config, @PathVariable String type) {
+        Assert.notNull(type, "type must be given");
+        String content = "";
 
-        return JsonResult.error("开发中...");
+        SuperGenHandler superGenHandler = new SuperGenHandler(sqlManager).config(config).selectTable(tableName).justForPreview();
+
+        switch (TemplateTypeEnum.getValue(type)) {
+            case ENTITY:
+                content = superGenHandler.makeEntity();
+                break;
+            case DAO:
+                content = superGenHandler.makeDao();
+                break;
+            case DAOMD:
+                content = superGenHandler.makeDaoMd();
+                break;
+            case SERVICE:
+                content = superGenHandler.makeService();
+                break;
+            case CONTROLLER:
+                content = superGenHandler.makeController();
+                break;
+            case HTML:
+                content = superGenHandler.makeHtml();
+                break;
+            case SQL:
+                content = superGenHandler.makeSQL();
+                break;
+            default:
+                break;
+        }
+
+        return JsonResult.ok().setData(content);
+    }
+
+    @ResponseBody
+    @RequestMapping("preview")
+    public JsonResult previewAllCode(String tableName, SuperConfig config) {
+        SuperGenHandler superGenHandler = new SuperGenHandler(sqlManager).config(config).selectTable(tableName).justForPreview();
+
+        // 代码内容
+        Map<String, Object> contentMap = new HashMap<>();
+        contentMap.put("entity", superGenHandler.makeEntity());
+        contentMap.put("dao", superGenHandler.makeDao());
+        contentMap.put("daoMd", superGenHandler.makeDaoMd());
+        contentMap.put("service", superGenHandler.makeService());
+        contentMap.put("controller", superGenHandler.makeController());
+        contentMap.put("html", superGenHandler.makeHtml());
+        contentMap.put("sql", superGenHandler.makeSQL());
+
+        return JsonResult.ok()
+                .put("path", superGenHandler.getOutputFileConfig().getPath())
+                .put("name", superGenHandler.getOutputFileConfig().getName())
+                .put("content", contentMap);
     }
 
 
