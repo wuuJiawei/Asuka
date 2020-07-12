@@ -14,8 +14,10 @@ spring:
 
   # 设置上传文件大小
   servlet:
-    multipart.max-file-size: 100MB
-    multipart.max-request-size: 100MB
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 
   # 邮件服务器配置
   mail:

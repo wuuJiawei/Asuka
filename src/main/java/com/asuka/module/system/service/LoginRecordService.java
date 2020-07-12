@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginRecordService extends BaseService<LoginRecord, LoginRecordDao> {
 
     @Autowired
-    private RedisTemplate<String, LoginRecord> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     public static final String REDIS_CACHE = "LoginRecord";
 
