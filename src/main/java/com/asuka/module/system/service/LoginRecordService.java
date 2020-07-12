@@ -4,6 +4,8 @@ import com.asuka.common.utils.UserAgentGetter;
 import com.asuka.common.web.BaseService;
 import com.asuka.module.system.dao.LoginRecordDao;
 import com.asuka.module.system.entity.LoginRecord;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Service
 public class LoginRecordService extends BaseService<LoginRecord, LoginRecordDao> {
+
+    @Autowired
+    private RedisTemplate<String, LoginRecord> redisTemplate;
+
+    public static final String REDIS_CACHE = "LoginRecord";
 
     /**
      * 添加登录日志
@@ -50,6 +57,7 @@ public class LoginRecordService extends BaseService<LoginRecord, LoginRecordDao>
     @Async
     public void saveAsync(LoginRecord loginRecord) {
         dao().insert(loginRecord);
+        redisTemplate.opsForList().leftPush(REDIS_CACHE, loginRecord);
     }
 
 }

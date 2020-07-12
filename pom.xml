@@ -63,6 +63,11 @@
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>2.0.4</version>
         </dependency>
+        <!--  redis  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
         <!-- mysql -->
         <dependency>

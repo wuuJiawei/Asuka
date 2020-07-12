@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -31,6 +33,9 @@ import java.util.Properties;
  */
 @Configuration
 public class BeetlSQLConfig {
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 数据源
@@ -91,6 +96,7 @@ public class BeetlSQLConfig {
         }
 //        interceptorList.add(simpleCacheInterceptor());
         interceptorList.add(new CacheInterceptor());
+//        interceptorList.add(new RedisCacheInterceptor(redisTemplate));
         factory.setInterceptors(interceptorList.toArray(new Interceptor[interceptorList.size()]));
 
         // 数据源
