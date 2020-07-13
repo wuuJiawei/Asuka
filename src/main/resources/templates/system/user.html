@@ -2,6 +2,7 @@
 <html>
 <head>
     <:include file="../common/css.html" title="用户管理"/>
+    <:include file="../common/js.html"/>
 </head>
 <body>
 <!-- 正文开始 -->
@@ -96,20 +97,7 @@
                        lay-verType="tips" lay-verify="phoneX" required/>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">头像地址</label>
-            <div class="layui-input-block">
-                <input name="avatar" placeholder="头像图片地址" type="text" class="layui-input"
-                       lay-verType="tips" lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label"></label>
-            <div class="layui-input-block">
-                <img class="layui-upload-img" id="img-avatar" src="" style="max-width:100px;max-height:100px;">
-                <button type="button" class="layui-btn" id="upload-avatar">上传图片</button>
-            </div>
-        </div>
+        <:upload name="avatar" label="头像"/>
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">角色:</label>
             <div class="layui-input-block">
@@ -129,9 +117,9 @@
         </div>
     </form>
 </div>
-<:include file="../common/js.html"/>
+
 <script>
-    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'xmSelect', 'formX', 'dropdown', 'upload'], function () {
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'xmSelect', 'formX', 'dropdown'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -140,34 +128,8 @@
         var util = layui.util;
         var admin = layui.admin;
         var xmSelect = layui.xmSelect;
-        var upload = layui.upload;
         var roleList = JSON.parse('${rolesJson!}').map(function (d) {
             return {name: d.roleName, value: d.roleId}
-        });
-
-        /* 文件上传 */
-        upload.render({
-            elem: '#upload-avatar' //绑定元素
-            ,url: '${ctxPath}/sys/upload' //上传接口
-            ,accept: 'images'
-            ,before: function(obj){
-                obj.preview(function(index, file, result){
-                    $('#img-avatar').attr('src', result);
-                });
-            }
-            ,done: function(res){
-                console.log(res)
-                if(res.code !== 0){
-                    return layer.msg('上传失败');
-                }
-
-                // SUCCESS
-                $('input[name=avatar]').val(res.data.key);
-            }
-            ,error: function(){
-                $('#img-avatar').attr('src', '');
-                layer.msg('上传失败，请重新上传')
-            }
         });
 
         /* 渲染表格 */

@@ -33,10 +33,3 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
             port: 465
 
-  thymeleaf:
-    cache: false
-    mode: HTML
-    encoding: UTF-8
-    servlet:
-      content-type: text/html
-
