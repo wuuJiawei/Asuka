@@ -1,15 +1,12 @@
-package com.asuka.plugin.upload.controller;
+package com.asuka.plugin.file.controller;
 
 import com.asuka.common.web.JsonResult;
-import com.asuka.plugin.upload.FileUploadResult;
-import com.asuka.plugin.upload.handler.LocalFileHandler;
-import com.asuka.plugin.upload.service.FileService;
+import com.asuka.plugin.file.FileUploadResult;
+import com.asuka.plugin.file.service.FileService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;

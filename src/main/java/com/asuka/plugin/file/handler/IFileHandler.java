@@ -1,11 +1,10 @@
-package com.asuka.plugin.upload.handler;
+package com.asuka.plugin.file.handler;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.crypto.SecureUtil;
-import com.asuka.plugin.upload.FileTargetTypeEnum;
-import com.asuka.plugin.upload.FileUploadResult;
+import com.asuka.plugin.file.FileTargetTypeEnum;
+import com.asuka.plugin.file.FileUploadResult;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,9 +36,9 @@ public interface IFileHandler {
     /**
      * 渲染文件到输出流
      * @param key 文件KEY
-     * @param outputStream
+     * @param response
      */
-    void render(String key, OutputStream outputStream);
+    void render(String key, HttpServletResponse response) throws IOException;
 
     /**
      * 删除

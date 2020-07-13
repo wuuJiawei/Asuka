@@ -1,12 +1,13 @@
-package com.asuka.plugin.upload.handler;
+package com.asuka.plugin.file.handler;
 
-import com.asuka.plugin.upload.FileTargetTypeEnum;
-import com.asuka.plugin.upload.FileUploadResult;
+import com.asuka.plugin.file.FileTargetTypeEnum;
+import com.asuka.plugin.file.FileUploadResult;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
@@ -22,7 +23,7 @@ public class FileHandlerDispatcher {
     private final Collection<IFileHandler> fileHandlers = new LinkedList<>();
 
     public FileHandlerDispatcher(ApplicationContext applicationContext){
-        if (!CollectionUtils.isEmpty(fileHandlers)) {
+        if (CollectionUtils.isEmpty(fileHandlers)) {
             fileHandlers.addAll(applicationContext.getBeansOfType(IFileHandler.class).values());
         }
     }
@@ -39,19 +40,19 @@ public class FileHandlerDispatcher {
                 return handler.upload(file);
             }
         }
-        throw new NoSuchElementException("No such " + targetTypeEnum.toString() + ", check your parameter");
+        throw new NoSuchElementException("No such file target type as " + targetTypeEnum.toString() + ", check your parameter");
     }
 
     /**
      * 输出文件
      * @param key
-     * @param outputStream
+     * @param response
      * @param targetTypeEnum
      */
-    public void render(String key, OutputStream outputStream, FileTargetTypeEnum targetTypeEnum) {
+    public void render(String key, HttpServletResponse response, FileTargetTypeEnum targetTypeEnum) throws IOException {
         for (IFileHandler handler : fileHandlers) {
             if (handler.support(targetTypeEnum)) {
-                handler.render(key, outputStream);
+                handler.render(key, response);
                 return;
             }
         }

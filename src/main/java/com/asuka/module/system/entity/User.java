@@ -1,6 +1,7 @@
 package com.asuka.module.system.entity;
 
 import com.asuka.common.annotation.Dict;
+import com.asuka.common.annotation.File;
 import org.beetl.sql.core.TailBean;
 import org.beetl.sql.core.annotatoin.AutoID;
 import org.beetl.sql.core.annotatoin.LogicDelete;
@@ -38,6 +39,7 @@ public class User extends TailBean implements Serializable {
     /**
      * 头像
      */
+    @File
     private String avatar;
     /**
      * 性别

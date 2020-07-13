@@ -1,26 +1,25 @@
-package com.asuka.plugin.upload.handler;
+package com.asuka.plugin.file.handler;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.system.SystemUtil;
-import com.asuka.plugin.upload.FileTargetTypeEnum;
-import com.asuka.plugin.upload.FileUploadResult;
+import com.asuka.plugin.file.FileTargetTypeEnum;
+import com.asuka.plugin.file.FileUploadResult;
+import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.Date;
 
-import static com.asuka.plugin.upload.handler.IFileHandler.encryptFile;
+import static com.asuka.plugin.file.handler.IFileHandler.encryptFile;
 
 /**
  * 本地文件上传
@@ -77,8 +76,9 @@ public class LocalFileHandler implements IFileHandler {
         }
 
         // 文件上传路径
-        String filePath = (SystemUtil.getOsInfo().isLinux() ? LINUX_PATH : WINDOWS_PATH) + File.separator + UPLOAD_PATH + suffix;
-        String filePathConcatName = filePath + File.separator + fileName + "." + suffix;
+        String filePath = ((SystemUtil.getOsInfo().isLinux() || SystemUtil.getOsInfo().isMac()) ? LINUX_PATH : WINDOWS_PATH) + File.separator + UPLOAD_PATH + File.separator + suffix;
+        String fileFinalName = fileName + "." + FileTargetTypeEnum.LOCAL.toString() + "." + suffix;
+        String filePathConcatName = filePath + File.separator + fileFinalName;
         File targetFile = new File(filePathConcatName);
         if (!targetFile.getParentFile().exists()) {
             targetFile.getParentFile().mkdirs();
@@ -91,9 +91,9 @@ public class LocalFileHandler implements IFileHandler {
         }
 
         FileUploadResult result = new FileUploadResult();
-        result.setFileName(fileName + "." + suffix);
+        result.setFileName(fileFinalName);
         result.setFilePath(targetFile.getAbsolutePath());
-        result.setKey(fileName + "." + suffix);
+        result.setKey(fileFinalName);
         result.setSuffix(suffix);
         result.setSize(file.getSize());
         return result;
@@ -106,13 +106,21 @@ public class LocalFileHandler implements IFileHandler {
      * @param outputStream
      */
     @Override
-    public void render(String fileName, OutputStream outputStream) {
+    public void render(String fileName, HttpServletResponse response) throws IOException {
         String suffix = FileUtil.extName(fileName);
-        String filePath = (SystemUtil.getOsInfo().isLinux() ? LINUX_PATH : WINDOWS_PATH) + File.separator + UPLOAD_PATH + suffix;
+        String filePath = ((SystemUtil.getOsInfo().isLinux() || SystemUtil.getOsInfo().isMac()) ? LINUX_PATH : WINDOWS_PATH) + File.separator + UPLOAD_PATH + File.separator + suffix;
         String filePathConcatName = filePath + File.separator + fileName;
         File file = new File(filePathConcatName);
-        byte[] bytes = FileUtil.readBytes(file);
-        IoUtil.write(outputStream, true, bytes);
+
+        // 设置ContentType
+        String contentType = getFileType(file);  // 获取文件类型
+        if (contentType != null) {
+            response.setContentType(contentType);
+        } else {
+            setDownloadHeader(response, file.getName());
+        }
+
+        output(file, response.getOutputStream());
     }
 
     /**
@@ -133,5 +141,66 @@ public class LocalFileHandler implements IFileHandler {
     @Override
     public boolean isEncrypt() {
         return false;
+    }
+
+    /**
+     * 获取文件类型
+     */
+    private static String getFileType(File file) {
+        String contentType = null;
+        try {
+            contentType = new Tika().detect(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return contentType;
+    }
+
+    /**
+     * 输出
+     * @param file
+     * @param os
+     */
+    private static void output(File file, OutputStream os) {
+        BufferedInputStream is = null;
+        try {
+            is = new BufferedInputStream(new FileInputStream(file));
+            byte[] bytes = new byte[1024 * 256];
+            int len;
+            while ((len = is.read(bytes)) != -1) {
+                os.write(bytes, 0, len);
+            }
+            os.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置下载文件的header
+     */
+    public static void setDownloadHeader(HttpServletResponse response, String fileName) {
+        response.setContentType("application/force-download");
+        try {
+            fileName = URLEncoder.encode(fileName, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
     }
 }

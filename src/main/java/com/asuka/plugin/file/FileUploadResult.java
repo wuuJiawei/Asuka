@@ -1,4 +1,4 @@
-package com.asuka.plugin.upload;
+package com.asuka.plugin.file;
 
 import java.io.Serializable;
 

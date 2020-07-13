@@ -72,7 +72,7 @@
            lay-text="正常|锁定" {{d.state==0?'checked':''}}/>
 </script>
 <!-- 表单弹窗 -->
-<script type="text/html" id="userEditDialog">
+<div type="text/html" id="userEditDialog" style="display: none;">
     <form id="userEditForm" lay-filter="userEditForm" class="layui-form model-form">
         <input name="userId" type="hidden"/>
         <div class="layui-form-item">
@@ -97,6 +97,20 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">头像地址</label>
+            <div class="layui-input-block">
+                <input name="avatar" placeholder="头像图片地址" type="text" class="layui-input"
+                       lay-verType="tips" lay-verify="required" required/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img class="layui-upload-img" id="img-avatar" src="" style="max-width:100px;max-height:100px;">
+                <button type="button" class="layui-btn" id="upload-avatar">上传图片</button>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">角色:</label>
             <div class="layui-input-block">
                 <div id="userEditRoleSel"></div>
@@ -114,7 +128,7 @@
             <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
-</script>
+</div>
 <:include file="../common/js.html"/>
 <script>
     layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'xmSelect', 'formX', 'dropdown', 'upload'], function () {
@@ -126,8 +140,34 @@
         var util = layui.util;
         var admin = layui.admin;
         var xmSelect = layui.xmSelect;
+        var upload = layui.upload;
         var roleList = JSON.parse('${rolesJson!}').map(function (d) {
             return {name: d.roleName, value: d.roleId}
+        });
+
+        /* 文件上传 */
+        upload.render({
+            elem: '#upload-avatar' //绑定元素
+            ,url: '${ctxPath}/sys/upload' //上传接口
+            ,accept: 'images'
+            ,before: function(obj){
+                obj.preview(function(index, file, result){
+                    $('#img-avatar').attr('src', result);
+                });
+            }
+            ,done: function(res){
+                console.log(res)
+                if(res.code !== 0){
+                    return layer.msg('上传失败');
+                }
+
+                // SUCCESS
+                $('input[name=avatar]').val(res.data.key);
+            }
+            ,error: function(){
+                $('#img-avatar').attr('src', '');
+                layer.msg('上传失败，请重新上传')
+            }
         });
 
         /* 渲染表格 */
@@ -216,11 +256,15 @@
             admin.open({
                 type: 1,
                 title: (mData ? '修改' : '添加') + '用户',
-                content: $('#userEditDialog').html(),
+                content: $('#userEditDialog'),
                 success: function (layero, dIndex) {
-                    if (mData) $(layero).find('[name="password"]').parent().parent().remove();
+                    if (mData) {
+                        $(layero).find('[name="password"]').parent().parent().remove();
+                        $('#img-avatar').attr('src', mData.avatarText);
+                    }
                     // 回显表单数据
                     form.val('userEditForm', mData);
+                    form.render();
                     // 表单提交事件
                     form.on('submit(userEditSubmit)', function (data) {
                         data.field.roleIds = insRoleSel.getValue('value');
@@ -253,6 +297,11 @@
                     }
                     // 禁止弹窗出现滚动条
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                },
+                end: function () {
+                    $('#userEditForm')[0].reset();
+                    $('#img-avatar').attr('src', '');
+                    form.render();
                 }
             });
         }
