@@ -1,5 +1,6 @@
 package com.asuka.plugin.file.service;
 
+import com.asuka.module.system.service.OptionService;
 import com.asuka.plugin.file.FileTargetTypeEnum;
 import com.asuka.plugin.file.FileUploadResult;
 import com.asuka.plugin.file.handler.FileHandlerDispatcher;
@@ -22,9 +23,11 @@ import java.util.List;
 public class FileService {
 
     private final FileHandlerDispatcher fileHandlerDispatcher;
+    private final OptionService optionService;
 
-    public FileService(FileHandlerDispatcher fileHandlerDispatcher) {
+    public FileService(FileHandlerDispatcher fileHandlerDispatcher, OptionService optionService) {
         this.fileHandlerDispatcher = fileHandlerDispatcher;
+        this.optionService = optionService;
     }
 
     /**
@@ -34,7 +37,8 @@ public class FileService {
      */
     public FileUploadResult upload(MultipartFile file) throws IOException {
         Assert.notNull(file, "Multipart file must be given");
-        return fileHandlerDispatcher.upload(file, FileTargetTypeEnum.LOCAL);
+        FileTargetTypeEnum targetTypeEnum = FileTargetTypeEnum.get(optionService.getByKeyAsString("oss_type"));
+        return fileHandlerDispatcher.upload(file, targetTypeEnum);
     }
 
     public void render(String key, HttpServletResponse response) {

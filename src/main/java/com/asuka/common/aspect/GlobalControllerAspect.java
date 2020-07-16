@@ -4,11 +4,11 @@ import cn.hutool.core.util.ReflectUtil;
 import com.asuka.common.Constants;
 import com.asuka.common.annotation.Dict;
 import com.asuka.common.annotation.File;
-import com.asuka.common.utils.ServletUtils;
 import com.asuka.common.web.JsonResult;
 import com.asuka.common.web.PageResult;
 import com.asuka.module.system.entity.DictionaryData;
 import com.asuka.module.system.service.DictionaryDataService;
+import com.asuka.plugin.file.handler.FileHandlerDispatcher;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -44,11 +44,11 @@ public class GlobalControllerAspect {
     private static final Logger log = LoggerFactory.getLogger(GlobalControllerAspect.class);
     private final static ObjectMapper objectMapper = new ObjectMapper();
     private final DictionaryDataService dictionaryDataService;
-    private final HttpServletRequest request;
+    private final FileHandlerDispatcher fileHandlerDispatcher;
 
-    public GlobalControllerAspect(DictionaryDataService dictionaryDataService, HttpServletRequest request) {
+    public GlobalControllerAspect(DictionaryDataService dictionaryDataService, FileHandlerDispatcher fileHandlerDispatcher) {
         this.dictionaryDataService = dictionaryDataService;
-        this.request = request;
+        this.fileHandlerDispatcher = fileHandlerDispatcher;
     }
 
     static {
@@ -239,12 +239,6 @@ public class GlobalControllerAspect {
      * @return
      */
     private String translateFileValue(String value) {
-        if (StringUtils.isEmpty(value)) {
-            return "";
-        }
-        if (value.startsWith("http")) {
-            return value;
-        }
-        return ServletUtils.getBasePath(request) + "sys/upload/render/" + value;
+        return fileHandlerDispatcher.translateUrl(value);
     }
 }
