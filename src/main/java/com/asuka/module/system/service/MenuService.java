@@ -1,6 +1,7 @@
 package com.asuka.module.system.service;
 
 import com.asuka.common.Constants;
+import com.asuka.common.security.SecurityUtils;
 import com.asuka.common.web.BaseService;
 import com.asuka.module.system.dao.MenuDao;
 import com.asuka.module.system.entity.Menu;
@@ -14,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -34,21 +36,6 @@ public class MenuService extends BaseService<Menu, MenuDao> {
     }
 
     public List<Menu> getUserMenu(Integer userId, Integer menuType) {
-
-        /*
-        * SELECT DISTINCT b.*
-    FROM sys_role_menu a
-    LEFT JOIN sys_menu b ON a.menu_id = b.menu_id
-    LEFT JOIN sys_role c ON a.role_id = c.role_id
-    WHERE a.role_id IN ( SELECT role_id FROM sys_user_role WHERE user_id=#userId# )
-    AND b.deleted = 0 AND c.deleted=0
-    @if(!isEmpty(menuType)){
-    AND b.menu_type=#menuType#
-    @}
-    ORDER BY b.sort_number
-        *
-        * */
-
         List<Menu> menuList = new ArrayList<>();
 
         List<UserRole> roleIdList = userRoleService.lambdaQuery().andEq(UserRole::getUserId, userId).select(UserRole::getRoleId);
@@ -96,5 +83,15 @@ public class MenuService extends BaseService<Menu, MenuDao> {
 
     public List<Menu> listByUserId(Integer userId, Integer menuType) {
         return getUserMenu(userId, menuType);
+    }
+
+    /**
+     * 更新Security中的权限列表
+     * @param menu
+     */
+    public void updateMenuPermissionOfSecurity(Menu menu) {
+        Set<String> permissions = SecurityUtils.getPermissions();
+        permissions.add(menu.getAuthority());
+        SecurityUtils.reloadPermissionOfLoginUser(permissions);
     }
 }
