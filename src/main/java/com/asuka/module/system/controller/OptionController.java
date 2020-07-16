@@ -100,7 +100,7 @@ public class OptionController extends BaseQueryController<Option, OptionService>
         if (codeCnt > 0) {
             return JsonResult.error("Key已存在");
         }
-        if (service.updateTemplate(record)) {
+        if (service.update(record)) {
             return JsonResult.ok("修改成功");
         }
         return JsonResult.error("修改失败");

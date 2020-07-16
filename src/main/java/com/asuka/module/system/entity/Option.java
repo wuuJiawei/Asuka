@@ -1,6 +1,7 @@
 package com.asuka.module.system.entity;
 
 import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Table;
 import org.beetl.sql.core.annotatoin.UpdateTime;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.Date;
  * @see
  * @since 2020/7/16 1:29 下午
  */
+@Table(name = "sys_option")
 public class Option implements Serializable {
 
     @AutoID
