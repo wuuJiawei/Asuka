@@ -169,4 +169,11 @@ public class SuperConfig implements Serializable {
         this.menuStartId = menuStartId;
     }
 
+    public String getAbsoluteFilePath() {
+        return absoluteFilePath;
+    }
+
+    public void setAbsoluteFilePath(String absoluteFilePath) {
+        this.absoluteFilePath = absoluteFilePath;
+    }
 }

@@ -19,7 +19,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,6 +46,8 @@ public class WebGenerator {
         request.setAttribute("artifactId", StringUtils.isEmpty(artifactId) ? "Asuka" : artifactId);
         String groupId = env.getProperty("application.groupId");
         request.setAttribute("groupId", StringUtils.isEmpty(groupId)?"com.asuka":groupId);
+        String usrDir = System.getProperty("user.dir") + "/src/main/java/";
+        request.setAttribute("absoluteFilePath", usrDir);
 
         return "generator.html";
     }
@@ -170,6 +174,27 @@ public class WebGenerator {
                 .put("path", superGenHandler.getOutputFileConfig().getPath())
                 .put("name", superGenHandler.getOutputFileConfig().getName())
                 .put("content", contentMap);
+    }
+
+    @ResponseBody
+    @RequestMapping("generate")
+    public JsonResult generateAllCode(String tableNames, SuperConfig config, HttpServletResponse response){
+        Assert.notNull(tableNames, "tableNames must be given");
+        String[] tableNameArr = tableNames.split(",");
+        SuperGenHandler superGenHandler = new SuperGenHandler(sqlManager).config(config);
+        for (String tableName : tableNameArr) {
+            superGenHandler.selectTable(tableName);
+            // 代码内容
+            Map<String, Object> contentMap = new HashMap<>();
+            contentMap.put("entity", superGenHandler.makeEntity());
+            contentMap.put("dao", superGenHandler.makeDao());
+            contentMap.put("daoMd", superGenHandler.makeDaoMd());
+            contentMap.put("service", superGenHandler.makeService());
+            contentMap.put("controller", superGenHandler.makeController());
+            contentMap.put("html", superGenHandler.makeHtml());
+            contentMap.put("sql", superGenHandler.makeSQL());
+        }
+        return JsonResult.ok();
     }
 
 

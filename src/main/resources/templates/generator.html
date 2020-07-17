@@ -38,17 +38,12 @@
                             <li class="layui-this">
                                 <i class="layui-icon layui-icon-ok">1</i>
                                 <span class="layui-steps-title">第一步</span>
-                                <span class="layui-steps-content">选择表</span>
+                                <span class="layui-steps-content">配置信息</span>
                             </li>
                             <li>
                                 <i class="layui-icon layui-icon-ok">2</i>
                                 <span class="layui-steps-title">第二步</span>
-                                <span class="layui-steps-content">配置代码信息</span>
-                            </li>
-                            <li>
-                                <i class="layui-icon layui-icon-ok">3</i>
-                                <span class="layui-steps-title">第三步</span>
-                                <span class="layui-steps-content">预编辑</span>
+                                <span class="layui-steps-content">生成</span>
                             </li>
                         </ul>
                         <div class="layui-tab-content">
@@ -69,6 +64,13 @@
                                             <input name="packageName" class="layui-input" placeholder="例如: com.egao"
                                                    value="${groupId}" lay-verify="required" required/>
                                             <div class="layui-form-mid layui-word-aux">建议统一为公司域名</div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label layui-form-required">生成路径:</label>
+                                        <div class="layui-input-block">
+                                            <input name="absoluteFilePath" class="layui-input" placeholder=""
+                                                   value="${absoluteFilePath}" lay-verify="required" required/>
                                         </div>
                                     </div>
                                     <div class="gen-form-header"><span>其它配置</span></div>
@@ -130,40 +132,6 @@
                                 <div class="layui-form-item">
                                     <button data-steps="prev" class="layui-btn layui-btn-primary">上一步</button>&emsp;
                                     <button class="layui-btn" lay-filter="generatorSubmit2" lay-submit>立即生成</button>
-                                </div>
-                            </div>
-                            <!-- 第三步 -->
-                            <div class="layui-tab-item layui-form" lay-filter="generatorFrom3">
-                                <div class="gen-from-body">
-                                    <div class="layui-tab layui-tab-vertical">
-                                        <ul class="layui-tab-title">
-                                            <li class="layui-this"><i class="layui-icon layui-icon-set"></i>Entity</li>
-                                            <li><i class="layui-icon layui-icon-username"></i>用户管理</li>
-                                            <li><i class="layui-icon layui-icon-auz"></i>权限分配</li>
-                                            <li><i class="layui-icon layui-icon-fire"></i>商品管理</li>
-                                            <li><i class="layui-icon layui-icon-rmb"></i>订单管理</li>
-                                        </ul>
-                                        <div class="layui-tab-content">
-                                            <div class="layui-tab-item layui-show">内容1</div>
-                                            <div class="layui-tab-item">内容2</div>
-                                            <div class="layui-tab-item">内容3</div>
-                                            <div class="layui-tab-item">内容4</div>
-                                            <div class="layui-tab-item">
-                                                <div class="layui-row" style="float: left;width: 100%;">
-                                                    <div class="layui-col-md6">
-                                                        内容5
-                                                    </div>
-                                                    <div class="layui-col-md6">
-                                                        内容使用栅格
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <button data-steps="prev" class="layui-btn layui-btn-primary">上一步</button>&emsp;
-                                    <button class="layui-btn" lay-filter="generatorSubmit3" lay-submit>立即生成</button>
                                 </div>
                             </div>
                         </div>
@@ -289,7 +257,7 @@
                     {type: 'checkbox'},
                     {field: 'tableName', title: '表名', sort: true},
                     {field: 'comment', title: '注释'},
-                    {title: '操作', toolbar: '#tableTbBar', align: 'center', minWidth: 200, fixed: 'right'}
+                    // {title: '操作', toolbar: '#tableTbBar', align: 'center', minWidth: 200, fixed: 'right'}
                 ]]
             });
             form.on('submit(tableTbSearch)', function (data) {
@@ -368,10 +336,17 @@
         form.on('submit(generatorSubmit2)', function (data) {
             formData2 = table.checkStatus('tableTable').data;
 
-            if (formData2.length == 0) {
+            if (formData2.length === 0) {
                 layer.msg('请选择表');
             } else {
-                layer.msg('开发中...')
+                let tableNameList = [];
+                for (const x of formData2) {
+                    tableNameList.push(x.tableName);
+                }
+                formData1.tableNames = tableNameList.join(',');
+                admin.req('${ctxPath}/sys/generator/generate', formData1, function (res) {
+                    layer.alert(res.msg);
+                }, 'post');
             }
             return false;
         });

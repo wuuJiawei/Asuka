@@ -1,11 +1,13 @@
 package com.asuka.plugin.generator;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.asuka.plugin.generator.dto.Entity;
 import com.asuka.plugin.generator.dto.OutputFileConfig;
 import com.asuka.plugin.generator.dto.SuperConfig;
 import com.asuka.plugin.generator.dto.PackageConfig;
+import netscape.security.UserDialogHelper;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
@@ -16,9 +18,9 @@ import org.beetl.sql.core.SQLScript;
 import org.beetl.sql.core.SQLSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -54,7 +56,7 @@ public class SuperGenHandler {
     /**
      * 初始化GroupTemplate
      */
-    private void initGroupTemplate(){
+    private void initGroupTemplate() {
         if (groupTemplate != null) {
             return;
         }
@@ -77,6 +79,7 @@ public class SuperGenHandler {
 
     /**
      * 设置SqlManager
+     *
      * @param sqlManager
      * @return
      */
@@ -87,6 +90,7 @@ public class SuperGenHandler {
 
     /**
      * 配置生成信息
+     *
      * @param config
      * @return
      */
@@ -101,6 +105,7 @@ public class SuperGenHandler {
 
     /**
      * 自定义生成文件包名
+     *
      * @param packageConfig
      * @return
      */
@@ -125,26 +130,30 @@ public class SuperGenHandler {
      * 初始化输出路径
      * 该路径为绝对路径
      */
-    private void initOutputPath(){
-        OutputFileConfig.FileType name = new OutputFileConfig.FileType();
+    private void initOutputPath() {
+        OutputFileConfig.FileType fileType = new OutputFileConfig.FileType();
         String usrDir = System.getProperty("user.dir");
+        if (!StringUtils.isEmpty(superConfig.getAbsoluteFilePath())) {
+            usrDir = superConfig.getAbsoluteFilePath();
+        }
         String javaPath = usrDir + "/src/main/java/" + StrUtil.replace(superConfig.getPackageName(), ".", "/") + "/";
         String resourcePath = usrDir + "/src/main/resources/";
-        name.setHtml(resourcePath + "templates/system");
-        name.setController(javaPath + "controller");
-        name.setService(javaPath + "service");
-        name.setDao(javaPath + "dao");
-        name.setEntity(javaPath + "entity");
-        name.setDaoMd(resourcePath + "sql");
-        name.setSql(resourcePath + "sql/_auth");
-        outputFileConfig.setPath(name);
-        attributeMap.put("outputName", name);
+
+        fileType.setHtml(resourcePath + "templates/system");
+        fileType.setController(javaPath + "controller");
+        fileType.setService(javaPath + "service");
+        fileType.setDao(javaPath + "dao");
+        fileType.setEntity(javaPath + "entity");
+        fileType.setDaoMd(resourcePath + "sql");
+        fileType.setSql(resourcePath + "sql/_auth");
+        outputFileConfig.setPath(fileType);
+        attributeMap.put("outputName", fileType);
     }
 
     /**
      * 初始化输出文件名称
      */
-    private void initOutputName(){
+    private void initOutputName() {
         OutputFileConfig.FileType name = new OutputFileConfig.FileType();
         name.setHtml(tableEntity.getFirstUpperClassName() + ".html");
         name.setController(tableEntity.getFirstUpperClassName() + "Controller.java");
@@ -159,15 +168,17 @@ public class SuperGenHandler {
 
     /**
      * 获取输出文件配置信息
+     *
      * @return
      */
-    public OutputFileConfig getOutputFileConfig(){
+    public OutputFileConfig getOutputFileConfig() {
         return outputFileConfig;
     }
 
     /**
      * 选择需要生成的表
      * 并做一些初始化操作
+     *
      * @param table
      * @return
      */
@@ -182,20 +193,8 @@ public class SuperGenHandler {
     }
 
     /**
-     * 设置输出流
-     * @param outputStream
-     * @return
-     */
-    public SuperGenHandler setOut(OutputStream outputStream) {
-        if (this.justPreview) {
-            throw new RuntimeException("预览模式已开启，无法配置输出流");
-        }
-        this.outputStream = outputStream;
-        return this;
-    }
-
-    /**
      * 设置额外的属性
+     *
      * @param key
      * @param value
      * @return
@@ -208,9 +207,10 @@ public class SuperGenHandler {
     /**
      * 设置为预览模板
      * 如果开启预览，则
+     *
      * @return
      */
-    public SuperGenHandler justForPreview(){
+    public SuperGenHandler justForPreview() {
         this.justPreview = true;
         return this;
     }
@@ -220,14 +220,26 @@ public class SuperGenHandler {
      *
      * @return
      */
-    public String makeEntity(){
+    public String makeEntity() {
         Template template = groupTemplate.getTemplate("/entity.java.btl");
         template.binding(attributeMap);
         if (justPreview) {
             String content = template.render();
             return content;
         }
-        template.renderTo(outputStream);
+
+        try {
+            File targetFile = new File(outputFileConfig.getPath().getEntity()  + "/" + outputFileConfig.getName().getEntity());
+            if (!targetFile.exists()) {
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+            }
+            template.renderTo(new FileOutputStream(targetFile));
+            logMakeInfo("entity");
+        } catch (IOException e) {
+            log.error("== Code Generator == make entity == Error ==",e);
+        }
+
         return "";
     }
 
@@ -238,7 +250,20 @@ public class SuperGenHandler {
             String content = template.render();
             return content;
         }
-        template.renderTo(outputStream);
+
+
+        try {
+            File targetFile = new File(outputFileConfig.getPath().getDaoMd()  + "/" + outputFileConfig.getName().getDaoMd());
+            if (!targetFile.exists()) {
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+            }
+            template.renderTo(new FileOutputStream(targetFile));
+            logMakeInfo("dao.md");
+        } catch (IOException e) {
+            log.error("== Code Generator == make dao.md == Error ==",e);
+        }
+
         return "";
     }
 
@@ -249,7 +274,19 @@ public class SuperGenHandler {
             String content = template.render();
             return content;
         }
-        template.renderTo(outputStream);
+
+        try {
+            File targetFile = new File(outputFileConfig.getPath().getDao()  + "/" + outputFileConfig.getName().getDao());
+            if (!targetFile.exists()) {
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+            }
+            template.renderTo(new FileOutputStream(targetFile));
+            logMakeInfo("dao");
+        } catch (IOException e) {
+            log.error("== Code Generator == make dao == Error ==",e);
+        }
+
         return "";
     }
 
@@ -260,7 +297,19 @@ public class SuperGenHandler {
             String content = template.render();
             return content;
         }
-        template.renderTo(outputStream);
+
+        try {
+            File targetFile = new File(outputFileConfig.getPath().getService()  + "/" + outputFileConfig.getName().getService());
+            if (!targetFile.exists()) {
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+            }
+            template.renderTo(new FileOutputStream(targetFile));
+            logMakeInfo("service");
+        } catch (IOException e) {
+            log.error("== Code Generator == make service == Error ==",e);
+        }
+
         return "";
     }
 
@@ -271,7 +320,19 @@ public class SuperGenHandler {
             String content = template.render();
             return content;
         }
-        template.renderTo(outputStream);
+
+        try {
+            File targetFile = new File(outputFileConfig.getPath().getController()  + "/" + outputFileConfig.getName().getController());
+            if (!targetFile.exists()) {
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+            }
+            template.renderTo(new FileOutputStream(targetFile));
+            logMakeInfo("controller");
+        } catch (IOException e) {
+            log.error("== Code Generator == make controller == Error ==",e);
+        }
+
         return "";
     }
 
@@ -282,12 +343,25 @@ public class SuperGenHandler {
             String content = template.render();
             return content;
         }
-        template.renderTo(outputStream);
+
+        try {
+            File targetFile = new File(outputFileConfig.getPath().getHtml()  + "/" + outputFileConfig.getName().getHtml());
+            if (!targetFile.exists()) {
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+            }
+            template.renderTo(new FileOutputStream(targetFile));
+            logMakeInfo("html");
+        } catch (IOException e) {
+            log.error("== Code Generator == make html == Error ==",e);
+        }
+
         return "";
     }
 
     /**
      * 生成SQL，如果superConfig.autoLoadSql=true，将会自动执行SQL
+     *
      * @return
      */
     public String makeSQL() {
@@ -304,7 +378,25 @@ public class SuperGenHandler {
             SQLSource source = new SQLSource();
             SQLScript script = new SQLScript(source, sqlManager);
             script.sqlReadyExecuteUpdate(sqlReady);
+        } else {
+
+            try {
+                File targetFile = new File(outputFileConfig.getPath().getSql()  + "/" + outputFileConfig.getName().getSql());
+                if (!targetFile.exists()) {
+                    targetFile.getParentFile().mkdirs();
+                    targetFile.createNewFile();
+                }
+                template.renderTo(new FileOutputStream(targetFile));
+                logMakeInfo("sql");
+            } catch (IOException e) {
+                log.error("== Code Generator == make sql == Error ==",e);
+            }
+
         }
         return content;
+    }
+
+    private void logMakeInfo(String typeName) {
+        log.info("== Code Generator == make " + typeName + " ==");
     }
 }
