@@ -1,6 +1,8 @@
 # 端口
 server:
   port: 8031
+  servlet:
+    context-path:
 
 # 多环境配置
 spring:

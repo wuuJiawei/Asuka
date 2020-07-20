@@ -9,6 +9,7 @@ import com.asuka.common.web.PageResult;
 import com.asuka.module.system.entity.DictionaryData;
 import com.asuka.module.system.service.DictionaryDataService;
 import com.asuka.plugin.file.handler.FileHandlerDispatcher;
+import com.asuka.plugin.file.service.FileService;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -44,11 +45,11 @@ public class GlobalControllerAspect {
     private static final Logger log = LoggerFactory.getLogger(GlobalControllerAspect.class);
     private final static ObjectMapper objectMapper = new ObjectMapper();
     private final DictionaryDataService dictionaryDataService;
-    private final FileHandlerDispatcher fileHandlerDispatcher;
+    private final FileService fileService;
 
-    public GlobalControllerAspect(DictionaryDataService dictionaryDataService, FileHandlerDispatcher fileHandlerDispatcher) {
+    public GlobalControllerAspect(DictionaryDataService dictionaryDataService, FileService fileService) {
         this.dictionaryDataService = dictionaryDataService;
-        this.fileHandlerDispatcher = fileHandlerDispatcher;
+        this.fileService = fileService;
     }
 
     static {
@@ -239,6 +240,6 @@ public class GlobalControllerAspect {
      * @return
      */
     private String translateFileValue(String value) {
-        return fileHandlerDispatcher.translateUrl(value);
+        return fileService.translateUrl(value);
     }
 }

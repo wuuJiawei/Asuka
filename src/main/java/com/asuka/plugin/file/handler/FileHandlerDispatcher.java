@@ -99,7 +99,7 @@ public class FileHandlerDispatcher {
                 String cdnHost = optionService.getByKeyAsString("oss_local_cdn_host");
                 return StringUtils.isEmpty(cdnHost) ? ServletUtils.getBasePath(request) : (cdnHost + "/") + "sys/upload/render/" + key;
             case QINIUOSS:
-                return optionService.getByKeyAsString("oss_qiniu_domain_protocol") + "/" + optionService.getByKeyAsString("oss_qiniu_domain") + "/" + key;
+                return optionService.getByKeyAsString("oss_qiniu_domain_protocol") + optionService.getByKeyAsString("oss_qiniu_domain") + "/" + key;
             default:
                 return "";
         }

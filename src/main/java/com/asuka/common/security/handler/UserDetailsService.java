@@ -4,6 +4,7 @@ import com.asuka.common.security.SecurityUser;
 import com.asuka.module.system.entity.Role;
 import com.asuka.module.system.entity.User;
 import com.asuka.module.system.service.UserService;
+import com.asuka.plugin.file.service.FileService;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,9 +23,10 @@ import java.util.Set;
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UserService userService;
-
-    public UserDetailsService(UserService userService) {
+    private final FileService fileService;
+    public UserDetailsService(UserService userService, FileService fileService) {
         this.userService = userService;
+        this.fileService = fileService;
     }
 
     @Override
@@ -41,6 +43,9 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     public UserDetails createLoginUser(User user) {
         userService.selectRoleAndAuth(user);
+
+        // 头像
+        user.setAvatar(fileService.translateUrl(user.getAvatar()));
 
         // 角色
         Set<String> roles = new HashSet<>();
