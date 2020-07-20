@@ -1,13 +1,10 @@
 package com.asuka.plugin.generator;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.asuka.plugin.generator.dto.Entity;
 import com.asuka.plugin.generator.dto.OutputFileConfig;
 import com.asuka.plugin.generator.dto.SuperConfig;
-import com.asuka.plugin.generator.dto.PackageConfig;
-import netscape.security.UserDialogHelper;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;

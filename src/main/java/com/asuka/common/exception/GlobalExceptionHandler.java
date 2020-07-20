@@ -18,20 +18,15 @@ import java.io.PrintWriter;
 
 /**
  * 全局异常处理器
- * Created by wangfan on 2018-02-22 11:29
  */
-@ControllerAdvice
+@ControllerAdvice(basePackages = "com.asuka")
 public class GlobalExceptionHandler {
-    private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class.getName());
+    private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    /**
-     * 业务异常
-     * @param e
-     * @return
-     */
     @ExceptionHandler(BusinessException.class)
-    public String businessExceptionHandler(BusinessException e, HttpServletRequest request, HttpServletResponse response){
-        return doHandler("error/500.html", 500, e.getMessage(), e.toString(), request, response);
+    public String businessExceptionHandler(BusinessException ex, HttpServletRequest request, HttpServletResponse response){
+        logger.error(ex.getMessage(), ex);
+        return doHandler("error/500.html", 500, ex.getMessage(), ex.toString(), request, response);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -44,13 +39,23 @@ public class GlobalExceptionHandler {
         return doHandler("error/403.html", 403, ex.getMessage(), ex.toString(), request, response);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String IllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request, HttpServletResponse response) {
+        return doHandler("error/500.html", Constants.RESULT_ERROR_CODE, ex.getMessage(), ex.toString(), request, response);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public String NullPointerException(NullPointerException ex, HttpServletRequest request, HttpServletResponse response) {
+        logger.error(ex.getMessage(), ex);
+        return doHandler("error/500.html", Constants.RESULT_ERROR_CODE, ex.getMessage(), ex.toString(), request, response);
+    }
+
     @ExceptionHandler(Exception.class)
     public String errorHandler(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        // 对不同错误进行不同处理
+        logger.error(ex.getMessage(), ex);
         if (ex instanceof IException) {
             return doHandler("error/500.html", ((IException) ex).getCode(), ex.getMessage(), ex.toString(), request, response);
         }
-        logger.error(ex.getMessage(), ex);
         return doHandler("error/500.html", Constants.RESULT_ERROR_CODE, "系统错误", ex.toString(), request, response);
     }
 
