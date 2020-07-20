@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
         if (ex instanceof IException) {
             return doHandler("error/500.html", ((IException) ex).getCode(), ex.getMessage(), ex.toString(), request, response);
         }
-        return doHandler("error/500.html", Constants.RESULT_ERROR_CODE, "系统错误", ex.toString(), request, response);
+        return doHandler("error/500.html", Constants.RESULT_ERROR_CODE, ex.getMessage(), ex.toString(), request, response);
     }
 
     /**

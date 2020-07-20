@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../../common/css.html" title="富文本"/>
+    <:include file="../../common/js.html"/>
+    <script type="text/javascript" src="${ctxPath}/assets/libs/tinymce/tinymce.min.js"></script>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="emailForm">
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">邮件标题:</label>
+                    <div class="layui-input-block">
+                        <input name="title" class="layui-input" placeholder="输入邮件标题"
+                               lay-verify="required" required/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">收件人:</label>
+                    <div class="layui-input-block">
+                        <input name="email" class="layui-input" placeholder="输入收件人"
+                               lay-verify="email" required/>
+                    </div>
+                </div>
+                <:richText inForm="true" required="true" id="emailEditor" label="邮件正文" accept="media" />
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-filter="emailFormSubmit" lay-submit>&emsp;发&emsp;送&emsp;</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'form', 'admin'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var admin = layui.admin;
+
+        /* 表单提交 */
+        form.on('submit(emailFormSubmit)', function (data) {
+            data.field.richText = tinymce.get('emailEditor').getContent();
+            if (admin.util.fullTextIsEmpty(data.field.html)) {
+                return layer.msg('请输入邮件正文', {icon: 2, anim: 6});
+            }
+
+            console.log(data.field);
+            layer.alert(JSON.stringify(data.field))
+
+            // tinymce.get('emailEditor').setContent('');
+
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>
