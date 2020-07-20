@@ -33,11 +33,24 @@ public class OptionService extends BaseService<Option, OptionDao> {
      * @return
      */
     public String getByKeyAsString(String key) {
-        Option option = lambdaQuery().andEq(Option::getOptionKey, key).singleSimple();
+        Option option = getByKey(key);
         if (option == null) {
             return "";
         }
         return option.getOptionValue();
+    }
+
+    /**
+     * 根据Key获取Value，转换为Boolean类型
+     * @param key
+     * @return
+     */
+    public boolean getByKeyAsBoolean(String key) {
+        Option option = getByKey(key);
+        if (option == null) {
+            return false;
+        }
+        return Boolean.parseBoolean(option.getOptionValue());
     }
 
     /**
