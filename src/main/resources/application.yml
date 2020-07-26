@@ -1,6 +1,8 @@
 # 端口
 server:
   port: 8031
+  servlet:
+    context-path:
 
 # 多环境配置
 spring:
@@ -14,8 +16,10 @@ spring:
 
   # 设置上传文件大小
   servlet:
-    multipart.max-file-size: 100MB
-    multipart.max-request-size: 100MB
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 
   # 邮件服务器配置
   mail:
@@ -31,6 +35,7 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
             port: 465
 
+<<<<<<< HEAD
   thymeleaf:
     cache: false
     mode: HTML
@@ -51,3 +56,5 @@ xxl:
       address:
     admin:
       addresses: http://localhost:8080/xxl-job-admin
+=======
+>>>>>>> b09d1fac8d048da5753145fd10decdce65c2143b

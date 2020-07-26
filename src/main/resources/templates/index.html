@@ -33,7 +33,7 @@
             <li class="layui-nav-item" lay-unselect>
                 <a>
                     <:if test="${so.principal('avatar')!=null}">
-                        <img src="${ctxPath}/file/${so.principal('avatar')}" class="layui-nav-img"/>
+                        <img src="${so.principal('avatar')}" class="layui-nav-img"/>
                     </:if>
                     <:if test="${so.principal('avatar')==null}">
                         <img src="${ctxPath}/assets/images/head.jpg" class="layui-nav-img"/>

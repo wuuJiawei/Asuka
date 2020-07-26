@@ -7,6 +7,7 @@ import com.asuka.module.system.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 
 /**
  * @author wujiawei0926@yeah.net
@@ -83,15 +84,22 @@ public class SecurityUser implements UserDetails {
         this.permissions = permissions;
     }
 
-    @JsonIgnore
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return user == null ? "" : user.getPassword();
+    }
+
+    public void setPassword(String password) {
+        user.setPassword(password);
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user == null ? "" : user.getUsername();
+    }
+
+    public void setUsername(String username) {
+        user.setUsername(username);
     }
 
     /**

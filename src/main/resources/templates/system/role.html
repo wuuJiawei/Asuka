@@ -113,9 +113,8 @@
                 {field: 'roleName', title: '角色名', sort: true},
                 {field: 'roleCode', title: '角色标识', sort: true},
                 {field: 'comments', title: '备注', sort: true},
-                {
-                    field: 'createTime', title: '创建时间', templet: function (d) {
-                        return util.toDateString(d.createTime);
+                {field: 'createTime', title: '创建时间', templet: function (d) {
+                    return util.toDateString(d.createTime);
                     }, sort: true
                 },
                 {title: '操作', toolbar: '#roleTbBar', align: 'center', width: 200, minWidth: 200}

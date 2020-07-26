@@ -1,4 +1,4 @@
-package com.asuka.module.system.controller;
+package com.asuka.plugin.file.controller;
 
 import com.asuka.common.annotation.OperLog;
 import com.asuka.common.web.JsonResult;
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/file")
-public class FileController {
+public class $FileController {
 
     @RequestMapping("/manage")
     public String view() {

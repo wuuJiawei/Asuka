@@ -1,0 +1,16 @@
+package ${package.parent}.${package.dao};
+
+import ${package.parent}.${package.entity}.${table.firstUpperClassName};
+import org.beetl.sql.core.mapper.BaseMapper;
+import org.beetl.sql.core.annotatoin.SqlResource;
+
+/**
+* ${table.comment!}Dao接口
+* @author ${cfg.author!}
+* @see
+* @since ${thisDateTime}
+*/
+@SqlResource("system.${table.className}")
+public interface ${table.firstUpperClassName}Dao extends BaseMapper<${table.firstUpperClassName}> {
+
+}

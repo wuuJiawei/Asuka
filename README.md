@@ -9,6 +9,8 @@
 
 ---
 
+![](https://img.shields.io/badge/license-Apache-blue) ![](https://img.shields.io/badge/Asuka-v0.9.1-green)
+
 Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，构建属于自己的生态。
 
 何谓SBB，其实很简单，就是SpringBoot、BeetlSQL、Beetl，三款优秀的框架糅合后形成了1+1+1>3的功效。
@@ -56,11 +58,11 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 - [x] 为BeetlSQL的Dao提供缓存
 
-- [ ] 引入缓存支持：Redis、Memcache
+- [x] 引入缓存支持：Redis、Memcache
 
-- [ ] 完善security权限功能，为函数添加权限支持
+- [x] 完善security权限功能，为函数添加权限支持
 
-- [ ] 添加Beetl自定义标签，将常用组件进行封装
+- [x] 添加Beetl自定义标签，将常用组件进行封装
 
 - [x] ControlAspect，自动解析字典与文件链接
 
@@ -70,7 +72,9 @@ Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，
 
 - [ ] 提供演示站点
 
-- [ ] swagger2 + knife4j
+- [x] swagger2 + knife4j
+
+- [ ] 系统参数配置
 
 - [ ] quartz
 

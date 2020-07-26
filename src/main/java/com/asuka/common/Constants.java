@@ -18,6 +18,7 @@ public class Constants {
     /* 返回结果统一 */
     public static final int RESULT_OK_CODE = 0;  // 默认成功码
     public static final int RESULT_ERROR_CODE = 1;  // 默认失败码
+    public static final int RESULT_PROGRAMING = 1024; // 开发中
 
     public static final int YES = 1;
     public static final int NO = 0;

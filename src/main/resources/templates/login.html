@@ -192,7 +192,7 @@
         /* 表单提交 */
         form.on('submit(loginSubmit)', function (data) {
             var loadIndex = layer.msg('登录中...', {icon: 16, shade: 0.01, time: false});
-            $.get('login/processing', data.field, function (res) {
+            $.get('${ctxPath}/login/processing', data.field, function (res) {
                 layer.close(loadIndex);
                 if (0 === res.code) {
                     layer.msg('登录成功', {icon: 1, time: 1000}, function () {

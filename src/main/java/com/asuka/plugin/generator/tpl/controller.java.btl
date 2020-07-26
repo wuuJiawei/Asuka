@@ -1,0 +1,175 @@
+package ${package.parent}.${package.controller};
+
+import ${cfg.groupId}.common.Constants;
+import ${cfg.groupId}.common.annotation.OperLog;
+import ${cfg.groupId}.common.web.*;
+import ${package.parent}.${package.entity}.${table.firstUpperClassName};
+import ${package.parent}.${package.service}.${table.firstUpperClassName}Service;
+import org.beetl.sql.core.engine.PageQuery;
+import org.beetl.sql.core.query.Query;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+* ${table.comment!}管理控制器
+* @author ${cfg.author!}
+* @see
+* @since ${thisDateTime}
+*/
+@Controller
+@RequestMapping("/system/${table.className}")
+public class ${table.firstUpperClassName}Controller extends BaseQueryController<${table.firstUpperClassName}, ${table.firstUpperClassName}Service> {
+    <% var authPre = 'system:' + table.className; %>
+
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:view")
+    <% } %>
+    @GetMapping
+    public String index() {
+        return "system/${table.className}.html";
+    }
+
+    /**
+     * 分页查询${table.comment!}
+     */
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:list")
+    <% } %>
+    <% if(cfg.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "分页查询")
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/page")
+    public PageResult<${table.firstUpperClassName}> page(HttpServletRequest request) {
+        PageQuery<${table.firstUpperClassName}> query = createPageQuery(request);
+        return new PageResult<${table.firstUpperClassName}>(query.getList(), query.getTotalRow());
+    }
+
+    /**
+     * 查询全部${table.comment!}
+     */
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:list")
+    <% } %>
+    <% if(cfg.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "查询全部")
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/list")
+    public JsonResult list(HttpServletRequest request) {
+        Query<${table.firstUpperClassName}> query = createQuery(request);
+        List<${table.firstUpperClassName}> records = service.queryAll(query);
+        return JsonResult.ok().setData(records);
+    }
+
+    /**
+     * 根据id查询${table.comment!}
+     */
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:list")
+    <% } %>
+    <% if(cfg.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "根据id查询")
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/get")
+    public JsonResult get(Integer id) {
+        return JsonResult.ok().setData(service.queryById(id));
+    }
+
+    /**
+     * 添加${table.comment!}
+     */
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:save")
+    <% } %>
+    <% if(cfg.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "添加", param = false, result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/save")
+    public JsonResult save(${table.firstUpperClassName} record) {
+        if (service.save(record)) {
+            return JsonResult.ok("添加成功");
+        }
+        return JsonResult.error("添加失败");
+    }
+    /**
+     * 修改${table.comment!}
+     */
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:update")
+    <% } %>
+    <% if(cfg.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "修改", param = false, result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/update")
+    public JsonResult update(${table.firstUpperClassName} record) {
+        if (service.updateTemplate(record)) {
+            return JsonResult.ok("修改成功");
+        }
+        return JsonResult.error("修改失败");
+    }
+
+    /**
+     * 删除${table.comment!}
+     */
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:remove")
+    <% } %>
+    <% if(cfg.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "删除", result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/remove")
+    public JsonResult remove(Integer id) {
+        if (service.deleteById(id)) {
+            return JsonResult.ok("删除成功");
+        }
+        return JsonResult.error("删除失败");
+    }
+
+    /**
+     * 批量添加${table.comment!}
+     */
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:save")
+    <% } %>
+    <% if(cfg.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "批量添加", param = false, result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/saveBatch")
+    public JsonResult saveBatch(@RequestBody List<${table.firstUpperClassName}> list) {
+        if (service.saveBatch(list)) {
+            return JsonResult.ok("添加成功");
+        }
+        return JsonResult.error("添加失败");
+    }
+
+    /**
+     * 批量删除${table.comment!}
+     */
+    <% if(cfg.needPerm){ %>
+    @PreAuthorize("${authPre}:remove")
+    <% } %>
+    <% if(cfg.needLog){ %>
+    @OperLog(value = "${table.comment!}管理", desc = "批量删除", result = true)
+    <% } %>
+    @ResponseBody
+    @RequestMapping("/removeBatch")
+    public JsonResult removeBatch(@RequestBody List<Long> ids) {
+        if (service.deleteBatchById(ids)) {
+            return JsonResult.ok("删除成功");
+        }
+        return JsonResult.error("删除失败");
+    }
+
+}

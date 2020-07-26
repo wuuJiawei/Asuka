@@ -8,7 +8,8 @@ import com.asuka.common.web.JsonResult;
 import com.asuka.common.web.PageResult;
 import com.asuka.module.system.entity.DictionaryData;
 import com.asuka.module.system.service.DictionaryDataService;
-import com.asuka.module.system.service.DictionaryService;
+import com.asuka.plugin.file.handler.FileHandlerDispatcher;
+import com.asuka.plugin.file.service.FileService;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +42,14 @@ import java.util.List;
 @Aspect
 public class GlobalControllerAspect {
 
-    private static Logger log = LoggerFactory.getLogger(GlobalControllerAspect.class);
-
+    private static final Logger log = LoggerFactory.getLogger(GlobalControllerAspect.class);
     private final static ObjectMapper objectMapper = new ObjectMapper();
-
     private final DictionaryDataService dictionaryDataService;
+    private final FileService fileService;
 
-    public GlobalControllerAspect(DictionaryDataService dictionaryDataService) {
+    public GlobalControllerAspect(DictionaryDataService dictionaryDataService, FileService fileService) {
         this.dictionaryDataService = dictionaryDataService;
+        this.fileService = fileService;
     }
 
     static {
@@ -91,6 +93,7 @@ public class GlobalControllerAspect {
 
     /**
      * 解析返回结果
+     *
      * @param result
      */
     private void parseResult(Object result) {
@@ -137,6 +140,7 @@ public class GlobalControllerAspect {
 
     /**
      * 转换为JSON并解析数据
+     *
      * @param record
      * @return
      */
@@ -158,6 +162,7 @@ public class GlobalControllerAspect {
 
     /**
      * 翻译单个节点
+     *
      * @param jsonNode
      * @param record
      * @return
@@ -214,7 +219,8 @@ public class GlobalControllerAspect {
 
     /**
      * 翻译字典数据
-     * @param dictCode 字典标识
+     *
+     * @param dictCode     字典标识
      * @param dictDataCode 字典项标识
      * @return
      */
@@ -229,17 +235,11 @@ public class GlobalControllerAspect {
 
     /**
      * 翻译文件数据
+     *
      * @param value
      * @return
      */
     private String translateFileValue(String value) {
-        if (StringUtils.isEmpty(value)) {
-            return "";
-        }
-        if (value.startsWith("http")) {
-            return value;
-        }
-        //TODO 完善文件链接拼接，从配置中获取链接
-        return "http://" + value;
+        return fileService.translateUrl(value);
     }
 }

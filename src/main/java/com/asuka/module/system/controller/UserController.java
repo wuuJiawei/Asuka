@@ -112,6 +112,7 @@ public class UserController extends BaseQueryController<User, UserService> {
         user.setPassword(service.encodePsw(user.getPassword()));
         user.setEmailVerified(Constants.NO);
         user.setDeleted(Constants.NO);
+        user.setCreateTime(new Date());
         if (service.saveUser(user)) {
             return JsonResult.ok("添加成功");
         }
@@ -128,6 +129,7 @@ public class UserController extends BaseQueryController<User, UserService> {
         user.setState(null);  // 状态不能修改
         user.setPassword(null);  // 密码不能修改
         user.setUsername(null);  // 账号不能修改
+        user.setUpdateTime(new Date());
         if (service.updateUser(user)) {
             return JsonResult.ok("修改成功");
         }

@@ -28,7 +28,7 @@ public class DateConverterConfig implements Converter<String, Date> {
 
     @Override
     public Date convert(String s) {
-        if (s == null || s.trim().isEmpty()) {
+        if (s.trim().isEmpty()) {
             return null;
         } else if (s.matches("^\\d{4}-\\d{1,2}-\\d{1,2}$")) {
             return parseDate(s, formats.get(0));
@@ -36,6 +36,8 @@ public class DateConverterConfig implements Converter<String, Date> {
             return parseDate(s, formats.get(1));
         } else if (s.matches("^\\d{4}-\\d{1,2}-\\d{1,2} {1}\\d{1,2}:\\d{1,2}:\\d{1,2}$")) {
             return parseDate(s, formats.get(2));
+        } else if (s.matches("^\\d+$")) {
+            return new Date(Long.parseLong(s));
         } else {
             throw new IllegalArgumentException("DateConverterConfig: Invalid date value '" + s + "'");
         }

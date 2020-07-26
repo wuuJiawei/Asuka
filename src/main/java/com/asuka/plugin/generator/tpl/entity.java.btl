@@ -1,0 +1,44 @@
+package ${package.parent}.${package.entity};
+
+import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Table;
+import org.beetl.sql.core.annotatoin.Tail;
+import org.beetl.sql.core.annotatoin.UpdateTime;
+
+import java.util.Date;
+import java.io.Serializable;
+
+/**
+* ${table.comment!}
+* @author ${cfg.author!}
+* @see
+* @since ${thisDateTime}
+*/
+@Tail
+@Table("${table.tableName}")
+public class ${table.className} implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+<% for(field in table.colList){ /*生成字段*/ %>
+    /**
+     * ${field.comment!}
+     */
+    <% if(field.isId){ /*主键*/ %>
+    @AutoID
+    <% } %>
+    private ${field.javaType} ${field.className};
+
+<% } %>
+<% for(field in table.colList){ /*生成方法*/ %>
+    <% var getPrefix = field.javaType == 'boolean' ? 'is' : 'get'; %>
+    public ${field.javaType} ${getPrefix}${field.firstUpperClassName}() {
+        return ${field.className};
+    }
+
+    public void set${field.firstUpperClassName}(${field.javaType} ${field.className}) {
+        this.${field.className} = ${field.className};
+    }
+
+<% } %>
+
+}

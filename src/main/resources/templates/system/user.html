@@ -2,6 +2,7 @@
 <html>
 <head>
     <:include file="../common/css.html" title="用户管理"/>
+    <:include file="../common/js.html"/>
 </head>
 <body>
 <!-- 正文开始 -->
@@ -72,7 +73,7 @@
            lay-text="正常|锁定" {{d.state==0?'checked':''}}/>
 </script>
 <!-- 表单弹窗 -->
-<script type="text/html" id="userEditDialog">
+<div type="text/html" id="userEditDialog" style="display: none;">
     <form id="userEditForm" lay-filter="userEditForm" class="layui-form model-form">
         <input name="userId" type="hidden"/>
         <div class="layui-form-item">
@@ -96,6 +97,7 @@
                        lay-verType="tips" lay-verify="phoneX" required/>
             </div>
         </div>
+        <:upload name="avatar" label="头像"/>
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">角色:</label>
             <div class="layui-input-block">
@@ -114,10 +116,10 @@
             <button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">取消</button>
         </div>
     </form>
-</script>
-<:include file="../common/js.html"/>
+</div>
+
 <script>
-    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'xmSelect', 'formX', 'dropdown', 'upload'], function () {
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'admin', 'xmSelect', 'formX', 'dropdown'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -216,11 +218,15 @@
             admin.open({
                 type: 1,
                 title: (mData ? '修改' : '添加') + '用户',
-                content: $('#userEditDialog').html(),
+                content: $('#userEditDialog'),
                 success: function (layero, dIndex) {
-                    if (mData) $(layero).find('[name="password"]').parent().parent().remove();
+                    if (mData) {
+                        $(layero).find('[name="password"]').parent().parent().remove();
+                        $('#img-avatar').attr('src', mData.avatarText);
+                    }
                     // 回显表单数据
                     form.val('userEditForm', mData);
+                    form.render();
                     // 表单提交事件
                     form.on('submit(userEditSubmit)', function (data) {
                         data.field.roleIds = insRoleSel.getValue('value');
@@ -253,6 +259,11 @@
                     }
                     // 禁止弹窗出现滚动条
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                },
+                end: function () {
+                    $('#userEditForm')[0].reset();
+                    $('#img-avatar').attr('src', '');
+                    form.render();
                 }
             });
         }

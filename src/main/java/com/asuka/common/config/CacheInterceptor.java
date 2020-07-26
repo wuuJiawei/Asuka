@@ -64,7 +64,6 @@ public class CacheInterceptor implements Interceptor {
         if (ctx.isUpdate()) {
             if (!StringUtils.isEmpty(cacheKey)) {
                 lfuCache.remove(cacheKey);
-                log.debug("cache[{}] cleared!", cacheKey);
             }
         } else {
             boolean hit = (Boolean) ctx.get("cache.hit");
@@ -103,11 +102,4 @@ public class CacheInterceptor implements Interceptor {
         return tableSql;
     }
 
-    public static void main(String[] args) throws JSQLParserException {
-        String sql = "delete from `sys_user` where id = 1";
-        Statement statement = CCJSqlParserUtil.parse(sql);
-        TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-        List<String> tableList = tablesNamesFinder.getTableList(statement);
-        tableList.forEach(x -> System.out.println(x));
-    }
 }

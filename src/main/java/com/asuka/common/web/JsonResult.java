@@ -112,6 +112,14 @@ public class JsonResult implements Serializable {
         return ok(code, message);
     }
 
+    /**
+     * 开发中
+     * @return
+     */
+    public static JsonResult programing(){
+        return ok(Constants.RESULT_PROGRAMING, "开发中");
+    }
+
     public int getCode() {
         return code;
     }

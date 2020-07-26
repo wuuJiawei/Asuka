@@ -14,9 +14,4 @@ import java.util.List;
 @SqlResource("system.menu")
 public interface MenuDao extends BaseMapper<Menu> {
 
-    /**
-     * 根据用户id查询
-     */
-    List<Menu> listByUserId(Integer userId, Integer menuType);
-
 }

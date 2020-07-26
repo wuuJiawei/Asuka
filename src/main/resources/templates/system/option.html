@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../common/css.html" title="系统配置"/>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <!-- 数据表格 -->
+            <table id="table" lay-filter="table"></table>
+        </div>
+    </div>
+</div>
+<:include file="../common/js.html"/>
+<script>
+    layui.use(['layer', 'form', 'table', 'tableX', 'util', 'laydate', 'admin'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var tableX = layui.tableX;
+        var util = layui.util;
+        var laydate = layui.laydate;
+        var admin = layui.admin;
+
+        /* 渲染表格 */
+        var insTb = tableX.render({
+            elem: '#table',
+            url: '${ctxPath}/sys/option/page',
+            page: true,
+            height: 'full-100',
+            cellMinWidth: 100,
+            limit: 20,
+            cols: [[
+                {field: 'optionKey', align: 'left', title: 'Key', sort: true, edit: true},
+                {field: 'optionValue', align: 'left', title: 'Value', sort: true, edit: true},
+                {field: 'optionDescription', align: 'left', title: 'Description', sort: true, edit: true},
+            ]]
+        });
+
+        // 表格编辑事件
+        table.on('edit(table)', function(obj){
+            let data = obj.data;
+            data[obj.field] = obj.value;
+            admin.req('${ctxPath}/sys/option/update', data, function (res) {
+                if (0 === res.code) {
+                    layer.msg(res.msg, {icon: 1});
+                } else {
+                    layer.msg(res.msg, {icon: 2, anim: 6});
+                }
+            }, 'post');
+        });
+
+    });
+</script>
+</body>
+</html>

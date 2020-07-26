@@ -21,6 +21,15 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <docker.image.prefix>${project.name}</docker.image.prefix>
+
+        <fastjson.version>1.2.47</fastjson.version>
+        <hutool.version>5.1.2</hutool.version>
+        <beetl.starter.version>1.2.33.RELEASE</beetl.starter.version>
+        <beetl.version>3.0.16.RELEASE</beetl.version>
+        <aliyun.oss.version>3.6.0</aliyun.oss.version>
+        <qc.cos.version>5.6.5</qc.cos.version>
+        <qiniu.oss.version>7.2.27</qiniu.oss.version>
     </properties>
 
     <dependencies>
@@ -35,7 +44,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <!-- web -->
         <dependency>
@@ -57,6 +65,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <!--   swagger+knife4j     -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+            <version>2.0.4</version>
+        </dependency>
+        <!--  redis  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
         <!-- mysql -->
         <dependency>
@@ -69,14 +88,14 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.47</version>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <!-- hutool -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.1.2</version>
+            <version>${hutool.version}</version>
         </dependency>
 
         <!-- poi -->
@@ -128,12 +147,12 @@
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl-framework-starter</artifactId>
-            <version>1.2.33.RELEASE</version>
+            <version>${beetl.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.0.16.RELEASE</version>
+            <version>${beetl.version}</version>
         </dependency>
 
         <!-- 解析sql -->
@@ -150,11 +169,29 @@
             <version>1.6.2</version>
         </dependency>
 
+<<<<<<< HEAD
         <!--xxl-job - 分布式任务调度平台-->
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
             <version>2.2.0</version>
+=======
+        <!-- 七牛云、阿里云、腾讯云 -->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>${qiniu.oss.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>${aliyun.oss.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>${qc.cos.version}</version>
+>>>>>>> b09d1fac8d048da5753145fd10decdce65c2143b
         </dependency>
 
     </dependencies>
@@ -165,6 +202,8 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*Mapper.xml</include>
+                    <include>**/*.btl</include>
+                    <include>**/*.json</include>
                 </includes>
             </resource>
             <resource>
@@ -182,6 +221,24 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
+            <!-- Docker maven plugin -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+            <!-- Docker maven plugin -->
         </plugins>
     </build>
 

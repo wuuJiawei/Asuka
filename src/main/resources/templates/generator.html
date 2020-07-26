@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <:include file="./common/css.html" title="Asuka"/>
+    <link rel="stylesheet" href="${ctxPath}/assets/module/generator.css"/>
+    <style>
+        .tpl-textarea {
+            height: calc(500px)!important;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space20">
+        <div class="layui-col-md2">
+            <div class="layui-card" style="margin-top: 20px;">
+                <div class="layui-card-header">模板列表</div>
+                <div class="layui-card-body" style="padding-top: 0;padding-bottom: 15px;">
+                    <div class="gen-tpl-list" style="">
+                        <div class="gen-empty-view">
+                            <i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop"></i>
+                            <p>加载中...</p>
+                        </div>
+                    </div>
+                    <button id="btnUploadTpl" class="layui-btn layui-btn-fluid layui-btn-primary">
+                        <i class="layui-icon">&#xe681;</i><span>上传模板</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header">项目生成</div>
+                <div class="layui-card-body" style="padding-top: 20px;">
+                    <div class="layui-tab layui-steps layui-steps-readonly" lay-filter="generatorTab"
+                         style="visibility: hidden;">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">
+                                <i class="layui-icon layui-icon-ok">1</i>
+                                <span class="layui-steps-title">第一步</span>
+                                <span class="layui-steps-content">配置信息</span>
+                            </li>
+                            <li>
+                                <i class="layui-icon layui-icon-ok">2</i>
+                                <span class="layui-steps-title">第二步</span>
+                                <span class="layui-steps-content">生成</span>
+                            </li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <!-- 第一步 -->
+                            <div class="layui-tab-item layui-form layui-show" lay-filter="generatorFrom1">
+                                <div class="gen-from-body">
+                                    <div class="gen-form-header"><span>项目信息</span></div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label layui-form-required">项目名称:</label>
+                                        <div class="layui-input-block">
+                                            <input name="projectName" class="layui-input" placeholder="例如: egao-cms"
+                                                   value="${artifactId}" lay-verify="required" required/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label layui-form-required">包名:</label>
+                                        <div class="layui-input-block">
+                                            <input name="packageName" class="layui-input" placeholder="例如: com.egao"
+                                                   value="${groupId}" lay-verify="required" required/>
+                                            <div class="layui-form-mid layui-word-aux">建议统一为公司域名</div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label layui-form-required">生成路径:</label>
+                                        <div class="layui-input-block">
+                                            <input name="absoluteFilePath" class="layui-input" placeholder=""
+                                                   value="${absoluteFilePath}" lay-verify="required" required/>
+                                        </div>
+                                    </div>
+                                    <div class="gen-form-header"><span>其它配置</span></div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label layui-form-required">作者名称:</label>
+                                        <div class="layui-input-block">
+                                            <input name="author" class="layui-input" placeholder="请输入作者名称"
+                                                   value="${artifactId}" lay-verify="required" required/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label layui-form-required">权限注解:</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="needPerm" value="true" title="需要" checked/>
+                                            <input type="radio" name="needPerm" value="false" title="不需要"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label layui-form-required">日志注解:</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="needLog" value="true" title="需要" checked>
+                                            <input type="radio" name="needLog" value="false" title="不需要"/>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label layui-form-required">生成菜单：</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="needMenu" value="true" title="需要" checked>
+                                            <input type="radio" name="needMenu" value="false" title="不需要"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <button id="btnGoLast" class="layui-btn layui-btn-primary">直接生成</button>&emsp;
+                                    <button class="layui-btn" lay-filter="generatorSubmit1" lay-submit>选择表</button>
+                                </div>
+                            </div>
+                            <!-- 第二步 -->
+                            <div class="layui-tab-item layui-form" lay-filter="generatorFrom2">
+                                <div class="gen-from-body">
+                                    <form class="layui-form toolbar" lay-filter="tableTbSearchForm">
+                                        <div class="layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">关键字:</label>
+                                                <div class="layui-input-inline">
+                                                    <input name="tableName" class="layui-input" placeholder="表名、注释，支持模糊查询"/>
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">&emsp;
+                                                <button class="layui-btn icon-btn" lay-filter="tableTbSearch" lay-submit>
+                                                    <i class="layui-icon">&#xe615;</i>搜索
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- 数据表格 -->
+                                    <table id="tableTable" lay-filter="tableTable"></table>
+                                </div>
+                                <div class="layui-form-item">
+                                    <button data-steps="prev" class="layui-btn layui-btn-primary">上一步</button>&emsp;
+                                    <button class="layui-btn" lay-filter="generatorSubmit2" lay-submit>立即生成</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 表格操作列 -->
+<script type="text/html" id="tableTbBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="col">查看字段</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="preview">预编辑</a>
+</script>
+<!-- 代码内容模板 -->
+<script type="text/html" id="tplCodeContent">
+    <div class="layui-tab layui-tab-vertical">
+        <ul class="layui-tab-title">
+            <li class="layui-this"><i class="layui-icon"></i>{{d.name.entity}}</li>
+            <li><i class="layui-icon"></i>{{d.name.dao}}</li>
+            <li><i class="layui-icon"></i>{{d.name.daoMd}}</li>
+            <li><i class="layui-icon"></i>{{d.name.service}}</li>
+            <li><i class="layui-icon"></i>{{d.name.controller}}</li>
+            <li><i class="layui-icon"></i>{{d.name.html}}</li>
+            <li><i class="layui-icon"></i>{{d.name.sql}}</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <p class="tpl-path">{{d.path.entity}}</p>
+                <textarea class="layui-textarea tpl-textarea" style="">{{d.content.entity}}</textarea>
+            </div>
+            <div class="layui-tab-item">
+                <p class="tpl-path">{{d.path.dao}}</p>
+                <textarea class="layui-textarea tpl-textarea" style="">{{d.content.dao}}</textarea>
+            </div>
+            <div class="layui-tab-item">
+                <p class="tpl-path">{{d.path.daoMd}}</p>
+                <textarea class="layui-textarea tpl-textarea" style="">{{d.content.daoMd}}</textarea>
+            </div>
+            <div class="layui-tab-item">
+                <p class="tpl-path">{{d.path.service}}</p>
+                <textarea class="layui-textarea tpl-textarea" style="">{{d.content.service}}</textarea>
+            </div>
+            <div class="layui-tab-item">
+                <p class="tpl-path">{{d.path.controller}}</p>
+                <textarea class="layui-textarea tpl-textarea" style="">{{d.content.controller}}</textarea>
+            </div>
+            <div class="layui-tab-item">
+                <p class="tpl-path">{{d.path.html}}</p>
+                <textarea class="layui-textarea tpl-textarea" style="">{{d.content.html}}</textarea>
+            </div>
+            <div class="layui-tab-item">
+                <p class="tpl-path">{{d.path.sql}}</p>
+                <textarea class="layui-textarea tpl-textarea" style="">{{d.content.sql}}</textarea>
+            </div>
+        </div>
+    </div>
+</script>
+<!-- js部分 -->
+<:include file="./common/js.html"/>
+<script>
+    layui.use(['table', 'tableX', 'form', 'xmSelect', 'laytpl', 'steps', 'dropdown', 'util', 'upload', 'element' , 'admin'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var tableX = layui.tableX;
+        var form = layui.form;
+        var element = layui.element;
+        var xmSelect = layui.xmSelect;
+        var laytpl = layui.laytpl;
+        var steps = layui.steps;
+        var util = layui.util;
+        var upload = layui.upload;
+        var admin = layui.admin;
+        var tableInfos = [];   // 表信息
+        var tbSelIns = [];  // 多选下拉实例
+        var tableIns = {}; // 表实例
+        var formData1 = {}, formData2 = {};  // 表单数据
+        var isGoLast = false;  // 是否跳转到最后一步
+        $('[lay-filter="generatorTab"]').css('visibility', 'visible');
+
+        /* 获取模板列表 */
+        function getTplList() {
+            var $list = $('.gen-tpl-list');
+            changeEmptyView($list.children('.gen-empty-view'), '加载中...', 0);
+            $.get('${ctxPath}/sys/generator/templates', function (res) {
+                if (0 === res.code) {
+                    var $sel = $('[lay-filter="generatorFrom3"] select[name="tplName"]');
+                    if (res.data.length === 0) {
+                        changeEmptyView($list.children('.gen-empty-view'), '无数据', 1);
+                        $sel.html('<option value="">请选择框架模板</option>');
+                    } else {
+                        $list.html('');
+                        $sel.html('');
+                        res.data.forEach(function (item) {
+                            $sel.append('<option value="' + item.name + '">' + item.name + '</option>');
+                            var html = '<div class="tpl-list-item">';
+                            html += '      <i class="layui-icon">&#xe628;</i><span class="title">' + item.name + '</span>';
+                            html += '      <a class="time">编辑</a>';
+                            html += '   </div>';
+                            $list.append(html);
+                        });
+                        form.render('select', 'generatorFrom3');
+                    }
+                } else {
+                    changeEmptyView($list.children('.gen-empty-view'), res.msg, 2);
+                }
+            });
+        }
+
+        getTplList();
+
+        /* 获取所有表 */
+        function getTableList(){
+            tableIns = tableX.render({
+                id: 'tableTable',
+                elem: '#tableTable',
+                url: '${ctxPath}/sys/generator/tables',
+                page: true,
+                height: 'full-100',
+                cellMinWidth: 100,
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'tableName', title: '表名', sort: true},
+                    {field: 'comment', title: '注释'},
+                    // {title: '操作', toolbar: '#tableTbBar', align: 'center', minWidth: 200, fixed: 'right'}
+                ]]
+            });
+            form.on('submit(tableTbSearch)', function (data) {
+                tableIns.reload({where: data.field, page: {curr: 1}});
+                return false;
+            });
+            /* 表格工具条点击事件 */
+            table.on('tool(tableTable)', function (obj) {
+                if ('col' === obj.event) { // 字段列表
+                    layer.msg('开发中...');
+                } else if ('preview' === obj.event) {  // 预编辑
+                    var data = formData1;
+                    data.tableName = obj.data.tableName;
+                    admin.req('${ctxPath}/sys/generator/preview', data, function (res) {
+                        if (0 === res.code) {
+                            laytpl(tplCodeContent.innerHTML).render(res.data, function(html){
+                                admin.open({
+                                    type: 1,
+                                    title: '预编辑: ' + obj.data.tableName,
+                                    area: ['96%', '96%'],
+                                    offset: '2%',
+                                    content: html,
+                                    success: function (layero, dIndex) {
+
+                                    }
+                                });
+                            });
+
+
+                        } else {
+                            layer.msg(res.msg, {icon: 2, anim: 6});
+                        }
+                    }, 'get');
+
+
+                }
+            });
+        }
+        getTableList();
+
+        /* 切换空视图状态 */
+        function changeEmptyView(view, text, type) {
+            var $empty = $(view);
+            $empty.children('p').text(text);
+            if (type === 0) {  // 加载中
+                $empty.children('.layui-icon').addClass('layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop');
+                $empty.children('.layui-icon').removeClass('layui-icon-face-cry layui-icon-face-surprised');
+            } else if (type === 1) {  // 空数据
+                $empty.children('.layui-icon').removeClass('layui-icon-face-cry layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop');
+                $empty.children('.layui-icon').addClass('layui-icon-face-surprised');
+            } else {  // 错误
+                $empty.children('.layui-icon').removeClass('layui-icon-face-surprised layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop');
+                $empty.children('.layui-icon').addClass('layui-icon-face-cry');
+            }
+        }
+
+        /* ------------------第一步------------------- */
+
+        // 获取表信息
+        form.on('submit(generatorSubmit1)', function (data) {
+            formData1 = data.field;
+            steps.next('generatorTab');
+            return false;
+        });
+
+        // 最后一步
+        $('#btnGoLast').click(function () {
+            isGoLast = true;
+            $('[lay-filter="generatorSubmit1"]').trigger('click');
+        });
+
+
+        /* ------------------第二步------------------- */
+
+        // 模块配置表单提交
+        form.on('submit(generatorSubmit2)', function (data) {
+            formData2 = table.checkStatus('tableTable').data;
+
+            if (formData2.length === 0) {
+                layer.msg('请选择表');
+            } else {
+                let tableNameList = [];
+                for (const x of formData2) {
+                    tableNameList.push(x.tableName);
+                }
+                formData1.tableNames = tableNameList.join(',');
+                admin.req('${ctxPath}/sys/generator/generate', formData1, function (res) {
+                    layer.alert(res.msg);
+                }, 'post');
+            }
+            return false;
+        });
+
+        /* ------------------第三步------------------- */
+
+        // 项目配置表单提交
+        form.on('submit(generatorSubmit3)', function (data) {
+            if (data.field.packageName === 'common') {
+                return layer.msg('包名不能为common', {icon: 2, anim: 6});
+            }
+            var config = $.extend({}, formData1);
+            config = $.extend(config, formData2);
+            config = $.extend(config, data.field);
+            config.models = [];
+            for (var i = 0; i < tbSelIns.length; i++) {
+                if (tbSelIns[i]) {
+                    config.models.push({
+                        modelName: config['model_' + (i + 1)],
+                        tables: tbSelIns[i].getValue('value'),
+                        prefix: config['table_prefix_' + (i + 1)].split(',')
+                    });
+                }
+            }
+            config.packageName = config.groupId + '.' + config.packageName;
+            // 校验表选择是否有重复
+            for (var j = 0; j < config.models.length; j++) {
+                var tempModelName = config.models[j].modelName;
+                for (var k = 0; k < config.models[j].tables.length; k++) {
+                    var tempTbName = config.models[j].tables[k];
+                    for (var m = 0; m < config.models.length; m++) {
+                        if (config.models[m].modelName !== tempModelName) {
+                            for (var n = 0; n < config.models[m].tables.length; n++) {
+                                var tempTbName2 = config.models[m].tables[n];
+                                if (tempTbName2 === tempTbName) {
+                                    layer.msg('多个模块选择的表有重复', {icon: 2, anim: 6});
+                                    steps.prev('generatorTab');
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //
+            var loadIndex = layer.msg('正在生成中，请稍后...', {icon: 16, shade: 0.01, time: false});
+            $.ajax({
+                url: 'api/generator',
+                data: JSON.stringify(config),
+                method: 'post',
+                dataType: 'json',
+                contentType: "application/json;charset=utf-8",
+                success: function (res) {
+                    layer.close(loadIndex);
+                    if (0 === res.code) {
+                        layer.msg('项目生成完毕，即将开始下载...', {icon: 1});
+                        var $iframe = $('#downloadIframe');
+                        if ($iframe.length === 0) {
+                            $('body').append('<iframe id="downloadIframe" style="display: none;"></iframe>');
+                            $iframe = $('#downloadIframe');
+                        }
+                        $iframe.attr('src', 'api/generator/download?file=' + res.data);
+                        getHistoryList();
+                    } else {
+                        layer.alert(res.msg || '生成失败，请检查配置~', {title: '生成失败', icon: 2, shade: 0.01});
+                    }
+                },
+                error: function (xhr) {
+                    layer.close(loadIndex);
+                    layer.msg(xhr.status + ': ' + xhr.statusText, {icon: 2, anim: 6});
+                }
+            });
+            return false;
+        });
+
+        // groupId改变事件
+        var $packagePrefix = $('input[name="packageName"]').prev();
+        var $groupId = $('input[name="groupId"]');
+        $groupId.on('input', function () {
+            $packagePrefix.text($(this).val() + ".");
+        });
+        $packagePrefix.text($groupId.val() + ".");
+
+        /* 上传模板 */
+        upload.render({
+            elem: '#btnUploadTpl',
+            url: 'api/generator/upload',
+            accept: 'file',
+            exts: 'zip',
+            before: function (obj) {
+                layer.msg('正在上传中，请稍后...', {icon: 16, shade: 0.01, time: false});
+            },
+            done: function (res) {
+                layer.closeAll('loading');
+                if (0 === res.code) {
+                    layer.msg(res.msg, {icon: 1});
+                    getTplList();
+                } else {
+                    layer.msg(res.msg, {icon: 2, anim: 6});
+                }
+            },
+            error: function () {
+                layer.closeAll('loading');
+                layer.msg('上传失败', {icon: 2, anim: 6});
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

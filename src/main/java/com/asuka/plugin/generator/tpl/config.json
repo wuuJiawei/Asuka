@@ -1,0 +1,94 @@
+{
+  "packageName": "com.egao",
+  "pages": [
+    {
+      "tpl": "page.html.btl",
+      "output": "resources/templates/",
+      "nameSuffix": ""
+    }
+  ],
+  "replaces": [
+    {
+      "files": [
+        "pom.xml"
+      ],
+      "items": [
+        {
+          "orgStr": "<groupId>com.egao</groupId>",
+          "newStr": "<groupId>${groupId}</groupId>"
+        },
+        {
+          "orgStr": "<artifactId>easyweb-shiro</artifactId>",
+          "newStr": "<artifactId>${projectName}</artifactId>"
+        },
+        {
+          "orgStr": "<name>easyweb-shiro</name>",
+          "newStr": "<name>${projectName}</name>"
+        },
+        {
+          "orgStr": "<description>easyweb-shiro ",
+          "newStr": "<description>${projectName} "
+        }
+      ]
+    },
+    {
+      "files": [
+        "src/main/resources/application-dev.yml",
+        "src/main/resources/application-prod.yml",
+        "src/main/resources/application-test.yml"
+      ],
+      "items": [
+        {
+          "orgStr": "username: root",
+          "newStr": "username: ${dbUserName}"
+        },
+        {
+          "orgStr": "password: 123456",
+          "newStr": "password: ${dbPassword}"
+        },
+        {
+          "orgStr": "driver-class-name: com.mysql.cj.jdbc.Driver",
+          "newStr": "driver-class-name: ${dbDriverName}"
+        },
+        {
+          "orgStr": "url: jdbc:mysql://localhost:3306/easyweb-shiro?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8",
+          "newStr": "url: ${dbUrl}"
+        },
+        {
+          "orgStr": "name: easyweb-shiro.log",
+          "newStr": "name: ${projectName}.log"
+        }
+      ]
+    },
+    {
+      "files": [
+        "src/main/resources/application.yml"
+      ],
+      "items": [
+        {
+          "orgStr": "aop-patterns: com.egao.*.*.service.*",
+          "newStr": "aop-patterns: ${groupId}.*.*.service.*"
+        },
+        {
+          "orgStr": "typeAliasesPackage: com.egao.**.entity",
+          "newStr": "typeAliasesPackage: ${groupId}.**.entity"
+        },
+        {
+          "orgStr": "mapper-locations: classpath:com/egao/**/*Mapper.xml",
+          "newStr": "mapper-locations: classpath:${groupIdPath}/**/*Mapper.xml"
+        }
+      ]
+    },
+    {
+      "files": [
+        "src/main/java/com/egao/EasyWebApplication.java"
+      ],
+      "items": [
+        {
+          "orgStr": "@MapperScan(\"com.egao.**.mapper\")",
+          "newStr": "@MapperScan(\"${groupId}.**.mapper\")"
+        }
+      ]
+    }
+  ]
+}

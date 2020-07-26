@@ -1,0 +1,17 @@
+package ${package.parent}.${package.service};
+
+import ${cfg.groupId}.common.web.BaseService;
+import ${package.parent}.${package.dao}.${table.firstUpperClassName}Dao;
+import ${package.parent}.${package.entity}.${table.firstUpperClassName};
+import org.springframework.stereotype.Service;
+
+/**
+* ${table.comment!}服务类
+* @author ${cfg.author!}
+* @see
+* @since ${thisDateTime}
+*/
+@Service
+public class ${table.firstUpperClassName}Service extends BaseService<${table.firstUpperClassName}, ${table.firstUpperClassName}Dao> {
+
+}

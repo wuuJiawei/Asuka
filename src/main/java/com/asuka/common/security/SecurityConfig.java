@@ -67,7 +67,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // 允许匿名访问
                 .antMatchers("/error", "/login", "/login/processing").anonymous()
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**").anonymous()
+                .antMatchers("/swagger-ui.html", "/doc.html", "/webjars/**", "/v2/api-docs", "/swagger-resources/**").anonymous()
+                .antMatchers("/api/**").anonymous()
                 // 允许任意访问
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 需要鉴权认证
