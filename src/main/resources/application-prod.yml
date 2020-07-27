@@ -1,15 +1,20 @@
 # 生产环境配置
 
+server:
+  port: 8088
+
 # 数据源配置
 spring:
   datasource:
     master:
-      url: jdbc:mysql://localhost:3306/db_asuka?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+      # 建议填写局域网ip
+      url: jdbc:mysql://172.17.0.4:3306/db_asuka?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
       username: db_asuka
       password: EE7Ftc3JRXKSsXh2
       driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 127.0.0.1
+    # 建议填写局域网ip
+    host: 172.17.0.4
     port: 6379
     # Redis 数据库索引（默认为 0）
     database: 0

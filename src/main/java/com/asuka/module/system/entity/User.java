@@ -4,7 +4,6 @@ import com.asuka.common.annotation.Dict;
 import com.asuka.common.annotation.File;
 import org.beetl.sql.core.TailBean;
 import org.beetl.sql.core.annotatoin.AutoID;
-import org.beetl.sql.core.annotatoin.LogicDelete;
 import org.beetl.sql.core.annotatoin.Table;
 import org.beetl.sql.core.annotatoin.UpdateTime;
 

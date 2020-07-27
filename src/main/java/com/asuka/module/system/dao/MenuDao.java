@@ -4,9 +4,6 @@ import com.asuka.module.system.entity.Menu;
 import org.beetl.sql.core.annotatoin.SqlResource;
 import org.beetl.sql.core.mapper.BaseMapper;
 
-
-import java.util.List;
-
 /**
  * 菜单Mapper接口
  * Created by wangfan on 2018-12-24 16:10

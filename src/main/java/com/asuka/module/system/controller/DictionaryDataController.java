@@ -1,14 +1,18 @@
 package com.asuka.module.system.controller;
 
 import com.asuka.common.Constants;
-import com.asuka.module.system.service.DictionaryDataService;
 import com.asuka.common.annotation.OperLog;
-import com.asuka.common.web.*;
+import com.asuka.common.web.BaseQueryController;
+import com.asuka.common.web.JsonResult;
+import com.asuka.common.web.PageResult;
 import com.asuka.module.system.entity.DictionaryData;
+import com.asuka.module.system.service.DictionaryDataService;
 import org.beetl.sql.core.engine.PageQuery;
 import org.beetl.sql.core.query.Query;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;

@@ -1,7 +1,9 @@
 package com.asuka.module.system.controller;
 
 import com.asuka.common.annotation.OperLog;
-import com.asuka.common.web.*;
+import com.asuka.common.web.BaseQueryController;
+import com.asuka.common.web.JsonResult;
+import com.asuka.common.web.PageResult;
 import com.asuka.module.system.entity.LoginRecord;
 import com.asuka.module.system.service.LoginRecordService;
 import org.beetl.sql.core.engine.PageQuery;

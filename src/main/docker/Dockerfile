@@ -4,5 +4,6 @@ FROM openjdk:8-jdk-alpine
 VOLUME /tmp
 # 拷贝文件并且重命名
 ADD asuka-1.0.0.jar app.jar
+ENV spring.profiles.active="prod"
 # 为了缩短 Tomcat 的启动时间，添加java.security.egd的系统属性指向/dev/urandom作为 ENTRYPOINT
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]

@@ -2,7 +2,6 @@ package com.asuka.common.security.handler;
 
 import com.asuka.common.security.SecurityConstant;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import java.io.IOException;
  * @see
  * @since 2020/6/30
  */
-@Component
 public class AuthenticationEntryPoint implements org.springframework.security.web.AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {

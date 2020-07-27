@@ -4,8 +4,8 @@ import org.beetl.sql.core.annotatoin.AutoID;
 import org.beetl.sql.core.annotatoin.Table;
 import org.beetl.sql.core.annotatoin.UpdateTime;
 
-import java.util.Date;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 组织机构

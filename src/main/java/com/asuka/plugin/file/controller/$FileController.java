@@ -1,8 +1,8 @@
 package com.asuka.plugin.file.controller;
 
 import com.asuka.common.annotation.OperLog;
-import com.asuka.common.web.JsonResult;
 import com.asuka.common.utils.FileUploadUtil;
+import com.asuka.common.web.JsonResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

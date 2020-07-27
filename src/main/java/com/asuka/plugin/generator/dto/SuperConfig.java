@@ -1,7 +1,6 @@
 package com.asuka.plugin.generator.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 项目生成配置

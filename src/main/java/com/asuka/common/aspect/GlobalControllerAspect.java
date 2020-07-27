@@ -8,7 +8,6 @@ import com.asuka.common.web.JsonResult;
 import com.asuka.common.web.PageResult;
 import com.asuka.module.system.entity.DictionaryData;
 import com.asuka.module.system.service.DictionaryDataService;
-import com.asuka.plugin.file.handler.FileHandlerDispatcher;
 import com.asuka.plugin.file.service.FileService;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
@@ -26,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;

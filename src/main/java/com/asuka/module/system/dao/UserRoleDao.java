@@ -1,9 +1,9 @@
 package com.asuka.module.system.dao;
 
 import com.asuka.module.system.entity.Role;
+import com.asuka.module.system.entity.UserRole;
 import org.beetl.sql.core.annotatoin.SqlResource;
 import org.beetl.sql.core.mapper.BaseMapper;
-import com.asuka.module.system.entity.UserRole;
 
 import java.util.List;
 

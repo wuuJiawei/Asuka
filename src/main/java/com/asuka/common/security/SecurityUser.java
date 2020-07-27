@@ -1,13 +1,12 @@
 package com.asuka.common.security;
 
+import com.asuka.module.system.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.Set;
-
-import com.asuka.module.system.entity.User;
-import org.springframework.security.core.GrantedAuthority;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.StringUtils;
 
 /**
  * @author wujiawei0926@yeah.net

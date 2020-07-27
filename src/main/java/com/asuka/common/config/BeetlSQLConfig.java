@@ -1,6 +1,5 @@
 package com.asuka.common.config;
 
-import com.ibeetl.starter.BeetlSqlCustomize;
 import com.ibeetl.starter.BeetlSqlProperties;
 import com.zaxxer.hikari.HikariDataSource;
 import org.beetl.core.fun.ObjectUtil;
@@ -15,14 +14,11 @@ import org.beetl.sql.ext.spring4.SqlManagerFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 

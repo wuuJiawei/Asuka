@@ -5,8 +5,8 @@ import org.beetl.sql.core.annotatoin.Table;
 import org.beetl.sql.core.annotatoin.Tail;
 import org.beetl.sql.core.annotatoin.UpdateTime;
 
-import java.util.Date;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 字典
