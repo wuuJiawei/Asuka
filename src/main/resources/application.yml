@@ -34,14 +34,17 @@ spring:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
             port: 465
-
-<<<<<<< HEAD
   thymeleaf:
     cache: false
     mode: HTML
     encoding: UTF-8
     servlet:
       content-type: text/html
+
+# 定时任务配置
+job:
+  # 类型选择：XXL/Quartz，如果不填则默认为Quartz
+  type: Quartz
 
 # xxl-job - 分布式任务调度平台 配置 appname 为项目名
 xxl:
@@ -56,5 +59,3 @@ xxl:
       address:
     admin:
       addresses: http://localhost:8080/xxl-job-admin
-=======
->>>>>>> b09d1fac8d048da5753145fd10decdce65c2143b

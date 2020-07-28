@@ -1,9 +1,11 @@
-package com.asuka.plugin.xxljob.config;
+package com.asuka.plugin.job.xxljob.config;
 
+import com.asuka.plugin.job.core.JobConstants;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @author xuxueli 2017-04-28
  */
 @Configuration
+@ConditionalOnProperty(value = JobConstants.TYPE, havingValue = JobConstants.XXL)
 public class XxlJobConfig {
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
 

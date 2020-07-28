@@ -1,4 +1,4 @@
-package com.asuka.plugin.xxljob.context;
+package com.asuka.plugin.job.xxljob.context;
 
 /**
  * xxl-job context

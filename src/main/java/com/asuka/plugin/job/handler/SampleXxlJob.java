@@ -1,6 +1,6 @@
-package com.asuka.plugin.xxljob.service.jobhandler;
+package com.asuka.plugin.job.handler;
 
-import com.asuka.plugin.xxljob.context.XxlJobContext;
+import com.asuka.plugin.job.xxljob.context.XxlJobContext;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;

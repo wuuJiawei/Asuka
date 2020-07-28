@@ -170,13 +170,19 @@
             <version>1.6.2</version>
         </dependency>
 
-<<<<<<< HEAD
         <!--xxl-job - 分布式任务调度平台-->
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
             <version>2.2.0</version>
-=======
+        </dependency>
+
+        <!-- Quartz -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
         <!-- 七牛云、阿里云、腾讯云 -->
         <dependency>
             <groupId>com.qiniu</groupId>
@@ -192,7 +198,6 @@
             <groupId>com.qcloud</groupId>
             <artifactId>cos_api</artifactId>
             <version>${qc.cos.version}</version>
->>>>>>> b09d1fac8d048da5753145fd10decdce65c2143b
         </dependency>
 
     </dependencies>

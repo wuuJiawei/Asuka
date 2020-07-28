@@ -6,7 +6,6 @@ import com.asuka.module.system.entity.LoginRecord;
 import com.asuka.module.system.entity.Menu;
 import com.asuka.module.system.service.LoginRecordService;
 import com.asuka.module.system.service.MenuService;
-import com.wf.captcha.utils.CaptchaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -47,12 +44,8 @@ public class MainController extends BaseConsoleController implements ErrorContro
      */
     @ResponseBody
     @GetMapping("/login/processing")
-    public JsonResult login(String username, String password, String code, Boolean remember, HttpServletRequest request) {
+    public JsonResult login(String username, String password, Boolean remember, HttpServletRequest request) {
         if (username == null || username.trim().isEmpty()) return JsonResult.error("请输入账号");
-        if (!CaptchaUtil.ver(code, request)) {
-            loginRecordService.saveAsync(username, LoginRecord.TYPE_ERROR, "验证码错误", request);
-            return JsonResult.error("验证码不正确");
-        }
         Authentication authentication = null;
         try {
             if (remember == null) {
@@ -96,18 +89,6 @@ public class MainController extends BaseConsoleController implements ErrorContro
         List<Menu> menus = menuService.getUserMenu(getLoginUserId(), Menu.TYPE_MENU);
         model.addAttribute("menus", menuService.toMenuTree(menus, 0));
         return "index.html";
-    }
-
-    /**
-     * 图形验证码
-     */
-    @RequestMapping("/assets/captcha")
-    public void captcha(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            CaptchaUtil.out(5, request, response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
