@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 
@@ -33,7 +32,7 @@ public class InitializationConfig {
     /**
      * 持久化头像到文件目录
      */
-    @PostConstruct
+//    @PostConstruct
     public void avatar() {
         ThreadUtil.execute(() -> {
             String usrDir = System.getProperty("user.dir");

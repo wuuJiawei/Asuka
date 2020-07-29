@@ -1,6 +1,6 @@
 <p align=center>
   <a href="https://www.yuque.com/javeys/asuka">
-    <img src="https://wujiawei0926.gitee.io/res/asuka_logo.png" alt="asuka" width="360">
+    <img src="https://wujiawei0926.gitee.io/res/asuka/asuka_logo.png" alt="asuka" width="360">
   </a>
 </p>
 <p align=center>
@@ -71,5 +71,8 @@ Asuka拥有如下优势：
 
 ## 效果图
 
-<img src="https://wujiawei0926.gitee.io/res/asuka_20200630164744.png" alt="asuka" width="360">
+<img src="https://wujiawei0926.gitee.io/res/asuka/asuka-login.png" alt="asuka" width="360">
 
+<img src="https://wujiawei0926.gitee.io/res/asuka/asuka-table.png" alt="asuka" width="360">
+
+<img src="https://wujiawei0926.gitee.io/res/asuka/asuka-generate.png" alt="asuka" width="360">
