@@ -30,7 +30,7 @@
             <li class="layui-nav-item layui-hide-xs" lay-unselect>
                 <a ew-event="fullScreen" title="全屏"><i class="layui-icon layui-icon-screen-full"></i></a>
             </li>
-            <li class="layui-nav-item" lay-unselect>
+            <li class="layui-nav-item" lay-unselect style="margin-right: 12px;">
                 <a>
                     <:if test="${so.principal('avatar')!=null}">
                         <img src="${so.principal('avatar')}" class="layui-nav-img"/>
@@ -47,10 +47,7 @@
                     <dd lay-unselect><a ew-event="logout" data-url="${ctxPath}/logout">退出</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item" lay-unselect>
-                <a ew-event="theme" data-url="${ctxPath}/tpl/theme" title="主题">
-                    <i class="layui-icon layui-icon-more-vertical"></i></a>
-            </li>
+
         </ul>
     </div>
     <!-- 侧边栏 -->

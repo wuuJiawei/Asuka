@@ -198,7 +198,12 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md6 layui-col-sm6">
             <div class="layui-card">
-                <div class="layui-card-header">最新动态</div>
+                <div class="layui-card-header">
+                    简易时间轴
+                    <span class="icon-text pull-right" lay-tips="刷新一下" lay-direction="4" lay-offset="5px,5px">
+                        <i class="layui-icon layui-icon-tips"></i>
+                    </span>
+                </div>
                 <div class="layui-card-body dynamic-card-body mini-bar" style="height: 265px;">
                     <ul class="layui-timeline layui-timeline-dynamic">
                         <% for(x in history){ %>
@@ -335,14 +340,14 @@
                 axisPointer: {lineStyle: {color: '#E0E0E0'}},
                 formatter: '{b}号<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#10B4E8;"></span>{a0}: {c0}<br/><span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#FFA800;"></span>{a1}: {c1}'
             },
-            color: ['#10B4E8', '#FFA800'],
+            color: ['#10B4E8', '#000000'],
             legend: {
                 orient: 'vertical', right: '0px', top: '0px',
-                data: ['已签到', '未签到'], textStyle: {color: '#595959'}
+                data: ['数据A', '数据B'], textStyle: {color: '#595959'}
             },
             grid: {top: '75px', left: '35px', right: '55px', bottom: '40px'},
             xAxis: {
-                name: '日期',
+                name: 'X轴',
                 nameTextStyle: {color: '#595959'},
                 type: 'category',
                 data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
@@ -355,7 +360,7 @@
                 axisTick: {alignWithLabel: true}
             },
             yAxis: {
-                name: '人数',
+                name: 'Y轴',
                 nameTextStyle: {color: '#595959'},
                 type: 'value',
                 boundaryGap: ['0', '20%'],
@@ -367,16 +372,16 @@
                 minInterval: 1
             },
             series: [
-                {name: '已签到', type: 'line', smooth: false},
-                {name: '未签到', type: 'line', smooth: false}
+                {name: '数据A', type: 'line', smooth: false},
+                {name: '数据B', type: 'line', smooth: false}
             ]
         };
         myCharts3.setOption(options3);
         // 赋值
         myCharts3.setOption({
             series: [
-                {data: [15, 14, 13, 13, 13, 14, 15, 16, 17, 18, 19, 18, 18, 19, 20, 19, 18, 16, 14, 12, 10, 10, 12, 14, 16, 16, 14, 13, 12, 11, 10]},
-                {data: [24, 22, 20, 18, 16, 14, 13, 12, 11, 11, 10, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 23, 24, 25, 26, 26, 24, 22, 20, 18, 16]}
+                {data: [15, 22, 13, 13, 13, 14, 15, 16, 17, 1, 19, 18, 11, 19, 34, 19, 18, 9, 14, 12, 10, 10, 9, 14, 7, 16, 14, 13, 43, 11, 10]},
+                {data: [24, 22, 3, 18, 16, 14, 13, 5, 11, 11, 10, 33, 11, 12, 13, 14, 15, 16, 18, 20, 22, 23, 24, 25, 26, 26, 24, 9, 20, 18, 16]}
             ]
         });
 

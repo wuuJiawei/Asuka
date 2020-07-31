@@ -39,7 +39,7 @@ body {
     width: 235px;
     line-height: 50px;
     background-color: rgb(0, 21, 41);
-    box-shadow: 1px 2px 2px 0 rgba(0, 0, 0, .05);
+    box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
     position: relative;
     vertical-align: top;
     white-space: nowrap;
@@ -178,7 +178,7 @@ body {
     top: 50px;
     width: 235px;
     background-color: rgb(0, 21, 41);
-    box-shadow: 1px 2px 2px 0 rgba(0, 0, 0, .05);
+    box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
     -webkit-transition: width .3s;
     transition: width .3s;
     -webkit-user-select: none;
@@ -442,7 +442,7 @@ body {
 }
 
 .layui-nav-tree .layui-this > a:hover {
-    background-color: #009688
+    background-color: #409eff;
 }
 
 .layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-this {
@@ -846,14 +846,13 @@ body {
 
 .layui-layer.layui-layer-admin {
     border: none !important;
-    box-shadow: 1px 1px 50px rgba(0, 0, 0, .3) !important
+    box-shadow: 1px 1px 20px rgba(0, 0, 0, .3) !important
 }
 
 .layui-layer.layui-layer-admin .layui-layer-title {
-    color: #fff;
     height: 50px;
     line-height: 50px;
-    background-color: #191a23;
+    background-color: transparent;
     border: 0
 }
 
@@ -862,7 +861,6 @@ body {
 }
 
 .layui-layer.layui-layer-admin .layui-layer-setwin a {
-    color: #fff;
     font-size: 16px;
     font-style: normal;
     font-family: layui-icon !important;
@@ -901,9 +899,13 @@ body {
     padding-bottom: 15px
 }
 
+.layui-layer.layui-layer-admin .layui-layer-btn a {
+    border-radius: 4px;
+}
+
 .layui-layer.layui-layer-admin .layui-layer-btn .layui-layer-btn0 {
-    border-color: #009688;
-    background-color: #009688
+    border-color: #1890ff;
+    background-color: #1890ff
 }
 
 .layui-layer.layui-layer-admin .layui-layer-btn a {
@@ -1235,7 +1237,13 @@ body > .page-loading {
 }
 
 .layui-input, .layui-textarea {
-    color: #595959
+    color: #606266;
+    border-radius: 4px;
+}
+
+.layui-form-select dl dd.layui-this {
+    background-color: transparent;
+    color: #1890ff;
 }
 
 .layui-form-select .layui-input {
@@ -1283,7 +1291,11 @@ body .layui-form-onswitch em {
 
 .layui-btn {
     -webkit-transition: background-color .2s;
-    transition: background-color .2s
+    transition: background-color .2s;
+    background-color: #1890ff;
+}
+.layui-laypage .layui-laypage-curr .layui-laypage-em{
+    background-color: #1890ff;
 }
 
 body .layui-btn.layui-btn-radius {
@@ -1318,7 +1330,7 @@ body .layui-btn.layui-btn-primary {
 }
 
 body .layui-btn.layui-btn-normal {
-    background-color: #1e9fff
+    background-color: #909399;
 }
 
 body .layui-btn.layui-btn-warm {
@@ -1458,6 +1470,10 @@ span.icon-text > .layui-icon, a.icon-text > .layui-icon, .layui-form-label.icon-
 
 .layui-text a:not(.layui-btn):hover {
     text-decoration: none
+}
+
+.layui-input:focus, .layui-textarea:focus {
+    border-color: #1890ff !important;
 }
 
 .ew-console-wrapper .layui-card {
