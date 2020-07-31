@@ -2,6 +2,7 @@
 <html>
 <head>
     <:include file="../common/css.html" title="字典管理"/>
+    <:include file="../common/js.html"/>
     <style>
         #dictTable + .layui-table-view .layui-table-tool-temp {
             padding-right: 0;
@@ -175,7 +176,7 @@
         </div>
     </form>
 </script>
-<:include file="../common/js.html"/>
+
 <script>
     layui.use(['layer', 'form', 'table', 'util', 'admin', 'dropdown', 'tableX'], function () {
         var $ = layui.jquery;

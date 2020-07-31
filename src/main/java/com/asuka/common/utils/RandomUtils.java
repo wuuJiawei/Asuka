@@ -228,7 +228,7 @@ public class RandomUtils {
      * 生成随机字母+数字组合
      * 排除容易混淆的字母或数字
      *
-     * @param length
+     * @param length 长度
      * @return
      */
     public static String randomStringWithoutConfusedChar(int length) {
@@ -254,4 +254,37 @@ public class RandomUtils {
         return builder.toString();
     }
 
+    /**
+     * 随机时间
+     * 格式为hh:mm
+     *
+     * @return
+     */
+    public static String randomTime() {
+        StringBuilder builder = new StringBuilder();
+        int hh = RandomUtil.randomInt(0, 23);
+        int mm = RandomUtil.randomInt(0, 59);
+        builder.append(prependZero(hh + "", 2)).append(":").append(prependZero(mm + "", 2));
+        return builder.toString();
+    }
+
+    /**
+     * 根据最大长度对原始数字进行前置零补全
+     *
+     * @param num       原始数字
+     * @param maxLength 最大长度
+     * @return
+     */
+    private static String prependZero(String num, int maxLength) {
+        if (num.length() < maxLength) {
+            StringBuilder builder = new StringBuilder();
+            int count = maxLength - num.length();
+            for (int i = 0; i < count; i++) {
+                builder.append("0");
+            }
+            builder.append(num);
+            return builder.toString();
+        }
+        return num;
+    }
 }

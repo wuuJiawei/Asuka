@@ -3,6 +3,7 @@ package com.asuka.module.system.controller;
 import com.asuka.common.web.BaseConsoleController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -15,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DemoController extends BaseConsoleController {
 
     @GetMapping("richtext")
-    public String richText(){
+    public String richText() {
         return "system/demo/richtext.html";
+    }
+
+    @GetMapping("{name}.html")
+    public String autoLoad(@PathVariable String name) {
+        return "system/demo/" + name + ".html";
     }
 
 }
