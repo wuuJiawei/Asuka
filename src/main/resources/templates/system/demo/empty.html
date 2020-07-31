@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../../common/css.html" title="空状态"/>
+    <:include file="../../common/js.html"/>
+    <style>
+        .site-demo-button > div{
+            padding: 42px 24px 50px;
+        }
+    </style>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <blockquote class="layui-elem-quote">空状态时的展示占位图。</blockquote>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+                <legend>基本展示</legend>
+                <div>
+                    <:empty />
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+                <legend>自定义描述</legend>
+                <div>
+                    <:empty description="其他描述文字"/>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'form', 'admin'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var admin = layui.admin;
+
+        /* 表单提交 */
+        form.on('submit(submit)', function (data) {
+            data.field.richText = tinymce.get('editor').getContent();
+            console.log(data.field.richText === '')
+            if (data.field.richText === '') {
+                layer.msg('请输入富文本', {icon: 2, anim: 6});
+                return false;
+            }
+
+            layer.alert(JSON.stringify(data.field))
+
+            // tinymce.get('editor').setContent('');
+
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

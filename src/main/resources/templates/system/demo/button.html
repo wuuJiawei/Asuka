@@ -146,27 +146,10 @@
 </div>
 
 <script>
-    layui.use(['layer', 'form', 'admin'], function () {
+    layui.use(['layer', 'form'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
-        var admin = layui.admin;
-
-        /* 表单提交 */
-        form.on('submit(submit)', function (data) {
-            data.field.richText = tinymce.get('editor').getContent();
-            console.log(data.field.richText === '')
-            if (data.field.richText === '') {
-                layer.msg('请输入富文本', {icon: 2, anim: 6});
-                return false;
-            }
-
-            layer.alert(JSON.stringify(data.field))
-
-            // tinymce.get('editor').setContent('');
-
-            return false;
-        });
 
     });
 </script>
