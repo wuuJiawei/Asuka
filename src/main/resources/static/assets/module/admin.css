@@ -1379,8 +1379,77 @@ body .layui-form-onswitch em {
     vertical-align: initial;
     font-size: inherit!important;
 }
+
 .layui-laypage .layui-laypage-curr .layui-laypage-em{
     background-color: #1890ff;
+}
+
+.layui-elem-quote{
+    box-sizing: border-box;
+    color: rgba(0,0,0,.65);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5;
+    list-style: none;
+    font-feature-settings: "tnum";
+    position: relative;
+    padding: 8px 15px;
+    word-wrap: break-word;
+    border-radius: 4px;
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+}
+
+.layui-form-selectup dl {
+    bottom: 35px;
+}
+
+.layui-form-select dl {
+    top: 35px;
+}
+
+.layui-form-checked, .layui-form-checked:hover {
+    border-color: #1890ff;
+}
+
+.layui-form-checked span, .layui-form-checked:hover span {
+    background-color: #1890ff;
+    border-radius: 4px 0 0 4px;
+}
+
+.layui-form-checkbox span {
+    border-radius: 4px 0 0 4px;
+}
+
+.layui-form-checked i, .layui-form-checked:hover i {
+    color: #1890ff;
+    border-radius: 0 4px 4px 0;
+}
+
+.layui-form-checkbox i{
+    border-radius: 0 4px 4px 0;
+}
+
+.layui-form-pane .layui-form-label {
+    height: 32px;
+    line-height: 1;
+}
+
+.layui-input-block {
+    min-height: 32px;
+}
+
+.layui-form-radio {
+    line-height: 32px;
+    margin: 0 10px 0 0;
+}
+
+.layui-form-switch {
+    margin-top: 4px;
+}
+
+.layui-form-pane .layui-form-radio, .layui-form-pane .layui-form-switch {
+    margin-top: 4px;
 }
 
 body .layui-btn.layui-btn-radius {
