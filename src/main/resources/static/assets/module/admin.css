@@ -1535,10 +1535,11 @@ body .layui-transfer-active .layui-btn {
 }
 
 .icon-date, .date-icon {
-    background-image: url(img/icon_date.png);
+    background-image: url(img/calendar.svg);
     background-repeat: no-repeat;
     background-position: right center;
-    padding-right: 28px
+    background-position-x: 96%;
+    padding-right: 28px;
 }
 
 .icon-search {
