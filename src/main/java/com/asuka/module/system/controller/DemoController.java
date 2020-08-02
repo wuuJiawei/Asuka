@@ -25,4 +25,9 @@ public class DemoController extends BaseConsoleController {
         return "system/demo/" + name + ".html";
     }
 
+    @GetMapping("error/{num}")
+    public String error(@PathVariable String num){
+        return "error/" + num + ".html";
+    }
+
 }

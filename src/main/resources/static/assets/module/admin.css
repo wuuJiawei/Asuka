@@ -22,6 +22,10 @@ body {
     transition: left .3s, right .3s
 }
 
+.layui-layout-admin .layui-body{
+    bottom: 0;
+}
+
 .layui-layout-admin .layui-header {
     position: absolute;
     top: 0;
