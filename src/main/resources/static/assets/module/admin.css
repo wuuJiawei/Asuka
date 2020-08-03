@@ -585,7 +585,8 @@ body {
 .layui-layout-admin .layui-body > .layui-tab > .layui-tab-title {
     line-height: 40px;
     height: 40px;
-    padding: 0 80px 0 40px;
+    /*padding: 0 80px 0 40px;*/
+    padding: 0 14px;
     background-color: #fff;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
     position: absolute;
@@ -593,7 +594,8 @@ body {
     left: 0;
     right: 0;
     border: 0;
-    overflow: hidden;
+    /*overflow: auto;*/
+    overflow-x: auto;
     -webkit-transition: none;
     transition: none;
     z-index: 998
@@ -1680,8 +1682,8 @@ input.layui-disabled, input.layui-disabled:hover, textarea.layui-disabled, texta
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 4px;
+    height: 4px;
     background: transparent
 }
 
