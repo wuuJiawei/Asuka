@@ -780,23 +780,15 @@ body {
 
 .layui-layer.layui-layer-adminRight {
     bottom: 0;
-    top: 50px !important;
+    top: 0 !important;
     border: none !important;
-    box-shadow: 1px 1px 50px rgba(0, 0, 0, .3) !important;
+    box-shadow: -2px 0 8px rgba(0,0,0,.15) !important;
     overflow: auto
 }
 
 .layui-layer.layui-layer-adminRight > .layui-layer-content, .layui-layer.layui-layer-adminRight > .layui-layer-content > iframe {
-    height: 100% !important
-}
-
-.layui-layer.layui-layer-adminRight > .layui-layer-title + .layui-layer-content {
-    position: absolute;
-    top: 43px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: auto !important
+    height: calc(100% - 130px)!important;
+    max-height: initial !important;
 }
 
 .layui-anim-rl {

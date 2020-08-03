@@ -215,7 +215,7 @@
         /* 权限管理 */
         function showPermModel(obj) {
             var mRoleId = obj.data.roleId;
-            admin.open({
+            admin.popupRight({
                 title: '角色权限分配',
                 btn: ['保存', '取消'],
                 content: '<ul id="roleAuthTree" class="ztree" style="padding-left: 15px;min-height: 150px;"></ul>',

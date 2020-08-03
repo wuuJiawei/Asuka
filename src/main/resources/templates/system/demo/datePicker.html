@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <:include file="../../common/css.html" title="日期和时间选择"/>
+    <:include file="../../common/js.html"/>
+    <style>
+        .site-demo-button form{
+            display: block;
+            margin: 20px 30px 10px;
+        }
+    </style>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <blockquote class="layui-elem-quote">友情提示：datePicker组件取材自layui的laydate组件，在保证基础使用的基础上阉割了部分功能</blockquote>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+                <legend>常规用法</legend>
+                <form class="layui-form">
+                    <:datePicker name="picker1" style="margin-bottom: 22px;"/>
+                    <:datePicker name="picker2" label="出生日期" inForm="true" required="true"/>
+                </form>
+            </fieldset>
+            <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+                <legend>各种类型</legend>
+                <form class="layui-form">
+                    <:datePicker name="picker3" type="year" label="年" inForm="true"/>
+                    <:datePicker name="picker4" type="month" label="年月" inForm="true"/>
+                    <:datePicker name="picker5" type="date" label="年月日" inForm="true"/>
+                    <:datePicker name="picker6" type="time" label="时分秒" inForm="true"/>
+                    <:datePicker name="picker7" type="datetime" label="datetime" inForm="true"/>
+                </form>
+            </fieldset>
+            <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+                <legend>范围选择</legend>
+                <form class="layui-form">
+                    <blockquote class="layui-elem-quote">分隔符固定为【 - 】，注意前后有空格</blockquote>
+                    <:datePicker name="picker8" type="year" label="年" inForm="true" range="true"/>
+                    <:datePicker name="picker9" type="month" label="年月" inForm="true" range="true"/>
+                    <:datePicker name="picker10" type="date" label="年月日" inForm="true" range="true"/>
+                    <:datePicker name="picker11" type="time" label="时分秒" inForm="true" range="true"/>
+                    <:datePicker name="picker12" type="datetime" label="datetime" inForm="true" range="true"/>
+                </form>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+
+    });
+</script>
+</body>
+</html>
