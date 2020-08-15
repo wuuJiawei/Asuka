@@ -9,7 +9,7 @@
 
 ---
 
-![](https://img.shields.io/badge/license-Apache-blue) ![](https://img.shields.io/badge/Asuka-v0.9.1-green)
+![](https://img.shields.io/badge/license-Apache-blue) ![](https://img.shields.io/badge/Asuka-v1.0.0-green)
 
 Asuka是一款新时代的SBB开发脚手架，它站在巨人们的肩膀上，构建属于自己的生态。
 
@@ -40,7 +40,7 @@ Asuka拥有如下优势：
 
 - 代码生成器
 
-内置页面版代码生成器，直接生成项目代码
+内置代码生成器，直接生成项目代码
 
 - 前端组件化
 
@@ -52,19 +52,7 @@ Asuka拥有如下优势：
 
 开发文档：[https://www.yuque.com/javeys/asuka](https://www.yuque.com/javeys/asuka)
 
-演示地址：[上线中...](javascript:;)
-
-## Todo
-
-- [ ] 开放仓库为public，编写完整开发文档
-
-- [ ] 提供演示站点
-
-- [ ] 文件统一管理
-
-- [ ] 官网
-
-- [ ] spring-actuator
+演示地址：[http://asuka.easyboot.xyz:8088/](http://asuka.easyboot.xyz:8088/) admin/admin 服务器配置低，访问速度很慢，请耐心等待～
 
 
 ## 效果图
